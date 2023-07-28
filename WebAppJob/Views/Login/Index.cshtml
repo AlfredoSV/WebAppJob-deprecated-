@@ -1,0 +1,25 @@
+﻿
+@{
+    Layout = null;
+}
+@model WebAppJob.Models.UserModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>|
+
+    <form asp-action="LoginSin" method="post" asp-controller="Login">
+
+        <input asp-for="UserName" type="text" />
+        <input asp-for="Password" type="password" />
+        <input type="submit" value="Log in" />
+
+    </form>
+
+</body>
+</html>
