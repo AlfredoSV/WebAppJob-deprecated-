@@ -2,6 +2,7 @@
 @{
     Layout = null;
 }
+
 @model WebAppJob.Models.UserModel
 
 <!DOCTYPE html>
@@ -13,10 +14,14 @@
 </head>
 <body>
 
-    <form asp-action="LoginUser" method="post" asp-controller="Login">
+    <form asp-action="LoginValidation" method="post" asp-controller="Login">
 
-        <input asp-for="UserName" type="text" />
-      
+        <input asp-for="UserName" type="hidden" />
+
+        <label>@Model.UserName</label>
+
+        <input asp-for="Password" type="password" />
+
         <input type="submit" value="Log in" />
 
     </form>

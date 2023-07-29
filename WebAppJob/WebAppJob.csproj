@@ -10,4 +10,10 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.15" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Framework.Security2023">
+      <HintPath>..\Dependencies\Framework.Security2023.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

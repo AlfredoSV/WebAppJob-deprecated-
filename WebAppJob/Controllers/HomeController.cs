@@ -13,9 +13,30 @@ namespace WebAppJob.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index(UserModel user)
+        [HttpGet]     
+        public IActionResult Index(string userName)
+        {
+           
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult About()
         {
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult Jobs()
+        {
+            return View();
+        }
+
+        public IActionResult DetailJob(Guid id) 
+        {
+
+            return View();
+        
         }
 
     }
