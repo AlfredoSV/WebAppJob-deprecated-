@@ -9,10 +9,13 @@ namespace WebAppJob.Controllers
     public class LoginController : Controller
     {
         private readonly IServiceLogin _serviceLogin;
+        private readonly ILogger<LoginController> _logger;
 
-        public LoginController(ServiceLogin serviceLogin)
+        public LoginController(ILogger<LoginController> logger, IServiceLogin serviceLogin)
         {
             this._serviceLogin = serviceLogin;
+            _logger = logger;
+            _logger.LogDebug(1, "NLog injected into LoginController");
         }
 
         public IActionResult Index()
