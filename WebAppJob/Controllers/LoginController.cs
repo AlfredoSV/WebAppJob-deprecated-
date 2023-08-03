@@ -28,7 +28,7 @@ namespace WebAppJob.Controllers
         {
             try
             {
-                if (this._serviceLogin.UserExist(userName))
+                //if (this._serviceLogin.UserExist(userName))
                     return RedirectToAction("LoginValidation", "Login", new { userName });
                
             }
@@ -56,8 +56,8 @@ namespace WebAppJob.Controllers
         {
             try
             {
-                Login login = Login.Create(user.UserName, user.Password);
-                if (this._serviceLogin.Login(login).StatusLog == StatusLogin.Ok)
+                //Login login = Login.Create(user.UserName, user.Password);
+                //if (this._serviceLogin.Login(login).StatusLog == StatusLogin.Ok)
                     return RedirectToAction("Index", "Home", new { user.UserName });
 
                 

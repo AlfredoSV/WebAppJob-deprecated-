@@ -39,5 +39,12 @@ namespace WebAppJob.Controllers
         
         }
 
+        [HttpPost]
+        public IActionResult GetInformationJob(string id)
+        {
+
+            return Json(new { id = Guid.NewGuid(), Name = "Job Example" });
+        }
+
     }
 }
