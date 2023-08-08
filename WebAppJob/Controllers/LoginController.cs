@@ -1,8 +1,13 @@
 ﻿using Framework.Security2023;
 using Framework.Security2023.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
+using System.Net.NetworkInformation;
+using System.Reflection;
 using WebAppJob.Models;
-using static Framework.Security2023.Entities.Login;
+using Framework.Security2023.Entities; 
+using System.Resources;
+using Humanizer.Localisation;
 
 namespace WebAppJob.Controllers
 {
@@ -20,6 +25,10 @@ namespace WebAppJob.Controllers
 
         public IActionResult Index()
         {
+            string culture = CultureInfo.CurrentCulture.TextInfo.CultureName ;
+
+      
+
             return View();
         }
 
@@ -38,8 +47,6 @@ namespace WebAppJob.Controllers
                 throw;
             }
 
-            return View("Index");
-
         }
 
         [HttpGet]
@@ -56,11 +63,13 @@ namespace WebAppJob.Controllers
         {
             try
             {
-                //Login login = Login.Create(user.UserName, user.Password);
-                //if (this._serviceLogin.Login(login).StatusLog == StatusLogin.Ok)
+                
+                    //Login login = Login.Create(user.UserName, user.Password);
+                    //if (this._serviceLogin.Login(login).StatusLog == StatusLogin.Ok)
                     return RedirectToAction("Index", "Home", new { user.UserName });
 
                 
+
             }
             catch (Exception)
             {

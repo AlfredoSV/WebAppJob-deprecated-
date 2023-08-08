@@ -21,7 +21,18 @@ namespace WebAppJob.Controllers
         }
 
         [HttpGet]
-        public IActionResult About()
+        public IActionResult ApplyJob()
+        {
+            ApplyJobModel applyJobModel = new ApplyJobModel();
+            applyJobModel.SurName = "Sanchez";
+            applyJobModel.Birthdate = DateTime.Now.AddDays(-30);
+            applyJobModel.Name = "Alfredo";
+
+            return View(applyJobModel);
+        }
+
+        [HttpPost]
+        public IActionResult RegisterApplyJob(ApplyJobModel applyJobModel)
         {
             return View();
         }
@@ -40,11 +51,17 @@ namespace WebAppJob.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetInformationJob(string id)
+        public IActionResult GetInformationJob([FromBody] Person body)
         {
 
             return Json(new { id = Guid.NewGuid(), Name = "Job Example" });
         }
 
     }
+
+    public class Person
+    {
+        public string Id { get; set; }
+    }
+
 }

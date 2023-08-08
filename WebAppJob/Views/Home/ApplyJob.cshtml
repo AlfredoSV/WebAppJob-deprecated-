@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewData["Title"] = "Apply on Job";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model ApplyJobModel
+
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="RegisterApplyJob" asp-controller="Home" method="post" enctype="multipart/form-data">
+
+    <label>Name:</label>
+    <input type="text" asp-for="Name"/>
+
+    <br />
+    
+    <label>Sur Name:</label>
+    <input type="text" asp-for="SurName" />
+
+    <br />
+
+    <label>Contact number:</label>
+    <input type="text" maxlength="10" asp-for="ContactNumber" />
+    <span asp-validation-for="ContactNumber"></span>
+
+    <br />
+    <label>Birthdate:</label>
+    <input type="date" asp-for="Birthdate" />
+
+    <br />
+
+    <label>Presentation Letter:</label>
+    <textarea cols="20" rows="20" asp-for="PresentationLetter"></textarea>
+
+    <br />
+    <input type="file" />
+    
+    <br />
+
+    <input type="submit" />
+
+</form>

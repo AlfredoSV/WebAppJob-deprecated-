@@ -2,6 +2,7 @@ using Framework.Security2023;
 using NLog;
 using NLog.Web;
 using System;
+using System.Globalization;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");
@@ -12,6 +13,11 @@ try
     // Add services to the container.
     builder.Services.AddControllersWithViews();
 
+   
+
+    string languaje = builder.Configuration.GetSection("DefaultLanguaje").Value;
+
+    CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(languaje);
    
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
@@ -37,7 +43,7 @@ try
 
     app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Login}/{action=Index}/{id?}");
+        pattern: "{controller=Home}/{action=Index}/{id?}");
 
     app.Run();
 }

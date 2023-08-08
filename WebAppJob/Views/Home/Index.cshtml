@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
 <div class="container-fluid">
@@ -12,10 +12,12 @@
                 <td>Title</td>
                 <td>Status</td>
                 <td>Date</td>
+                <td></td>
             </tr>
         </thead>
     </table>
 
     <button id="btnDetail">GetInformation</button>
+    <a asp-action="ApplyJob" asp-controller="Home"> Apply on Job</a>
 
 </div>
