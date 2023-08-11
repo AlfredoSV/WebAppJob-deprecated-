@@ -5,6 +5,7 @@ using WebAppJob.Models;
 
 namespace WebAppJob.Controllers
 {
+    
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -77,10 +78,10 @@ namespace WebAppJob.Controllers
         }
 
 
-        [HttpPost]
-        public IActionResult RegisterApplyJob(ApplyJobModel applyJobModel)
+        [HttpPost("[action]")]
+        public IActionResult RegisterApplyJob([FromBody]ApplyJobModel applyJobModel)
         {
-            return View();
+            return Ok(new { Name = "Alfredo", Age = 26 });
         }
 
         [HttpGet]

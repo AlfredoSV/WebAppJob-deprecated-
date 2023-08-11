@@ -1,8 +1,7 @@
 ﻿
 /*Functions for validation of string (min,max, undifined and required)*/
 function validateStr(idValue, spanMessageIdValue, messageValue, min, max, printInDom) {
-	let isvalid = validateString(max, min, document.getElementById(formInputs.inputName.id).value)
-
+	
 	let formInputs = {
 
 		inputName: {
@@ -13,16 +12,18 @@ function validateStr(idValue, spanMessageIdValue, messageValue, min, max, printI
 
 	}
 
+	let isValid = validateString(max, min, document.getElementById(formInputs.inputName.id).value)
+
 	if (printInDom) {
 
-		if (isvalid)
+		if (isValid)
 			hideMessageValidation(formInputs.inputName.id, formInputs.inputName.spanMessageId)
 		else
 			showMessageValidation(formInputs.inputName.id, formInputs.inputName.spanMessageId, formInputs.inputName.message)
 
 	}
 
-	return isvalid
+	return isValid
 }
 
 

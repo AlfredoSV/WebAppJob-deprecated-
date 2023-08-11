@@ -1,9 +1,9 @@
 ﻿@model WebAppJob.Models.ApplyJobModel
 
+
 @{
     Layout = null;
 }
-
 
 <div class="mb-5">
     <div class="col-12 mb-5">
@@ -24,7 +24,7 @@
             </div>
             <div class="form-group mt-3">
                 <label class="control-label">Birthdate</label>
-                <input type="date" class="form-control" />
+                <input type="date" id="birthdate" class="form-control" />
             </div>
             <div class="form-group mt-3">
                 <label class="control-label">Presentation Letter</label>
@@ -39,14 +39,3 @@
    
 </div>
 
-<script type="text/javascript">
-
-    function eventSubmmit(e){
-
-        alert("Enviando datos");
-
-        e.preventDefault();
-    }
-
-
-</script>
