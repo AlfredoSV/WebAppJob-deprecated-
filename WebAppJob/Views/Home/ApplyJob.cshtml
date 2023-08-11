@@ -1,44 +1,49 @@
-﻿
+﻿@model WebAppJob.Models.ApplyJobModel
+
 @{
-    ViewData["Title"] = "Apply on Job";
+    ViewData["Title"] = "ApplyJob";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@model ApplyJobModel
+<h1>ApplyJob</h1>
 
+<hr />
+<div class="mb-5">
+    <div class="col-md-4 mb-5">
+        <form asp-action="RegisterApplyJob" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="ContactNumber" class="control-label"></label>
+                <input asp-for="ContactNumber" class="form-control" />
+                <span asp-validation-for="ContactNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="Birthdate" class="control-label"></label>
+                <input asp-for="Birthdate" class="form-control" />
+                <span asp-validation-for="Birthdate" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label asp-for="PresentationLetter" class="control-label"></label>
+                <textarea cols="20" rows="10" asp-for="PresentationLetter" class="form-control"></textarea>
+                <span asp-validation-for="PresentationLetter" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3">
+                <input type="submit" value="Crear" class="btn btn-primary" />
+            </div>
+        </form>
 
-<h1>@ViewData["Title"]</h1>
+        <a asp-action="Index">Regresar a lista</a>
+    </div>
+   
+</div>
 
-<form asp-action="RegisterApplyJob" asp-controller="Home" method="post" enctype="multipart/form-data">
-
-    <label>Name:</label>
-    <input type="text" asp-for="Name"/>
-
-    <br />
-    
-    <label>Sur Name:</label>
-    <input type="text" asp-for="SurName" />
-
-    <br />
-
-    <label>Contact number:</label>
-    <input type="text" maxlength="10" asp-for="ContactNumber" />
-    <span asp-validation-for="ContactNumber"></span>
-
-    <br />
-    <label>Birthdate:</label>
-    <input type="date" asp-for="Birthdate" />
-
-    <br />
-
-    <label>Presentation Letter:</label>
-    <textarea cols="20" rows="20" asp-for="PresentationLetter"></textarea>
-
-    <br />
-    <input type="file" />
-    
-    <br />
-
-    <input type="submit" />
-
-</form>

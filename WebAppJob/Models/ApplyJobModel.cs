@@ -8,7 +8,7 @@ namespace WebAppJob.Models
         public string Name { get; set; }
 
         [Required]
-        public string SurName { get; set; }
+        public string LastName { get; set; }
 
         [Required]
         [MaxLength(10)]

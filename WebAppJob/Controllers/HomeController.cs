@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using WebAppJob.Models;
 
@@ -23,13 +24,58 @@ namespace WebAppJob.Controllers
         [HttpGet]
         public IActionResult ApplyJob()
         {
-            ApplyJobModel applyJobModel = new ApplyJobModel();
-            applyJobModel.SurName = "Sanchez";
-            applyJobModel.Birthdate = DateTime.Now.AddDays(-30);
-            applyJobModel.Name = "Alfredo";
-
-            return View(applyJobModel);
+            return View();
         }
+
+        [HttpGet]
+        public IActionResult GetApplicationsJobs()
+        {
+
+            IQueryCollection context =  HttpContext.Request.Query;
+
+            string searchValue = context["search[value]"];
+            string lengtPage = context["length"];
+            string draw = context["draw"];
+            string start = context["start"];
+
+            List<ApplyJob> jobs = new List<ApplyJob>();
+
+            jobs.Add(new ApplyJob() { Id = 1, Company ="Comapny1", DateApply = DateTime.Now.ToString(),Status="In process", Title="Title1" });
+            jobs.Add(new ApplyJob() { Id = 2, Company = "Comapny2", DateApply = DateTime.Now.ToString(), Status = "Close", Title = "Title2" });
+            jobs.Add(new ApplyJob() { Id = 1, Company = "Comapny1", DateApply = DateTime.Now.ToString(), Status = "In process", Title = "Title1" });
+            jobs.Add(new ApplyJob() { Id = 2, Company = "Comapny2", DateApply = DateTime.Now.ToString(), Status = "Close", Title = "Title2" });
+
+            jobs.Add(new ApplyJob() { Id = 1, Company = "Comapny1", DateApply = DateTime.Now.ToString(), Status = "In process", Title = "Title1" });
+            jobs.Add(new ApplyJob() { Id = 2, Company = "Comapny2", DateApply = DateTime.Now.ToString(), Status = "Close", Title = "Title2" });
+
+            jobs.Add(new ApplyJob() { Id = 1, Company = "Comapny1", DateApply = DateTime.Now.ToString(), Status = "In process", Title = "Title1" });
+            jobs.Add(new ApplyJob() { Id = 2, Company = "Comapny2", DateApply = DateTime.Now.ToString(), Status = "Close", Title = "Title2" });
+
+            jobs.Add(new ApplyJob() { Id = 1, Company = "Comapny1", DateApply = DateTime.Now.ToString(), Status = "In process", Title = "Title1" });
+            jobs.Add(new ApplyJob() { Id = 2, Company = "Comapny2", DateApply = DateTime.Now.ToString(), Status = "Close", Title = "Title2" });
+
+            jobs.Add(new ApplyJob() { Id = 1, Company = "Comapny1", DateApply = DateTime.Now.ToString(), Status = "In process", Title = "Title1" });
+            jobs.Add(new ApplyJob() { Id = 2, Company = "Comapny2", DateApply = DateTime.Now.ToString(), Status = "Close", Title = "Title2" });
+
+            jobs.Add(new ApplyJob() { Id = 1, Company = "Comapny1", DateApply = DateTime.Now.ToString(), Status = "In process", Title = "Title1" });
+            jobs.Add(new ApplyJob() { Id = 2, Company = "Comapny2", DateApply = DateTime.Now.ToString(), Status = "Close", Title = "Title2" });
+
+            jobs.Add(new ApplyJob() { Id = 1, Company = "Comapny1", DateApply = DateTime.Now.ToString(), Status = "In process", Title = "Title1" });
+            jobs.Add(new ApplyJob() { Id = 2, Company = "Comapny2", DateApply = DateTime.Now.ToString(), Status = "Close", Title = "Title2" });
+
+            jobs.Add(new ApplyJob() { Id = 1, Company = "Comapny1", DateApply = DateTime.Now.ToString(), Status = "In process", Title = "Title1" });
+            jobs.Add(new ApplyJob() { Id = 2, Company = "Comapny2", DateApply = DateTime.Now.ToString(), Status = "Close", Title = "Title2" });
+
+            jobs.Add(new ApplyJob() { Id = 1, Company = "Comapny1", DateApply = DateTime.Now.ToString(), Status = "In process", Title = "Title1" });
+            jobs.Add(new ApplyJob() { Id = 2, Company = "Comapny2", DateApply = DateTime.Now.ToString(), Status = "Close", Title = "Title2" });
+
+            jobs.Add(new ApplyJob() { Id = 1, Company = "Comapny1", DateApply = DateTime.Now.ToString(), Status = "In process", Title = "Title1" });
+            jobs.Add(new ApplyJob() { Id = 2, Company = "Comapny2", DateApply = DateTime.Now.ToString(), Status = "Close", Title = "Title2" });
+
+
+            return Ok(jobs);
+        }
+
 
         [HttpPost]
         public IActionResult RegisterApplyJob(ApplyJobModel applyJobModel)
@@ -43,15 +89,8 @@ namespace WebAppJob.Controllers
             return View();
         }
 
-        public IActionResult DetailJob(Guid id) 
-        {
-
-            return View();
-        
-        }
-
         [HttpPost]
-        public IActionResult GetInformationJob([FromBody] Person body)
+        public IActionResult GetInformationJob()
         {
 
             return Json(new { id = Guid.NewGuid(), Name = "Job Example" });
@@ -59,9 +98,17 @@ namespace WebAppJob.Controllers
 
     }
 
-    public class Person
+    public class ApplyJob
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
+
+        public string Company { get; set; }
+
+        public string Title { get; set; }
+
+        public string Status { get; set; }
+
+        public string DateApply { get; set; }
     }
 
 }
