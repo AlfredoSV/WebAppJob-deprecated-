@@ -1,4 +1,6 @@
-﻿//let btnDeatil = document.querySelector("#btnDetail");
+﻿
+
+//let btnDeatil = document.querySelector("#btnDetail");
 
 //btnDeatil.addEventListener("click", (e) => {
 
@@ -52,13 +54,53 @@ function getDetailJob(obj) {
 	$(".loader").hide();
 }
 
+const applyJob = document.querySelector("#applyJob");
+
+applyJob.addEventListener("click", (e) => {
+	e.preventDefault();
+	let url = window.location.origin + '/Home/ApplyJob';
+	fetch(url)
+		.then(response => response.text())
+		.then(text => {
+			document.querySelector("#formApply").innerHTML = text;
+			$('#applyJobModal').modal('show');
+			let form = document.getElementById("form");
+			form.addEventListener("submit", eventSubmmit, true);
+			let nameInput = document.getElementById("name");
+			nameInput.addEventListener("change", () => {
+
+				validateStr("name", "nameValidationMessage", "This name is not valid", 6, 10, true);
+
+			}, true);
+			let lastName = document.getElementById("lastName");
+			lastName.addEventListener("change", () => {
+
+				validateStr("lastName", "lastNameValidationMessage", "The last name is not valid", 2, 10, true);
+
+			}, true);
+		});
+	$(".loader").hide();
+	
+
+});
+
+function eventSubmmit(e) {
+
+	e.preventDefault()
+
+
+
+}
+
+
+
 $('#tableApplications').DataTable({
 	"ordering": true,
 	"searching": true,
 	pageLength: 10,
 	"processing": true,
 	deferRender: true,
-	scrollY: 200,
+	scrollY: 400,
 	scrollCollapse: true,
 	scroller: true,
 	async: false,

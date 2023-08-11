@@ -22,9 +22,9 @@ namespace WebAppJob.Controllers
         }
 
         [HttpGet]
-        public IActionResult ApplyJob()
+        public PartialViewResult ApplyJob()
         {
-            return View();
+            return PartialView();
         }
 
         [HttpGet]
