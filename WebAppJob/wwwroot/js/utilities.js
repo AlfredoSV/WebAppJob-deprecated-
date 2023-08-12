@@ -26,7 +26,6 @@ function validateStr(idValue, spanMessageIdValue, messageValue, min, max, printI
 	return isValid
 }
 
-
 function validateString(max, min, str) {
 
 	if (str == undefined || str.trim() == ''
@@ -36,6 +35,45 @@ function validateString(max, min, str) {
 	return true;
 
 }
+
+function validateDate(idValue, spanMessageIdValue, messageValue, printInDom) {
+
+	let formInputs = {
+
+		inputName: {
+			id: idValue,
+			spanMessageId: spanMessageIdValue,
+			message: messageValue
+		}
+
+	}
+
+	let isValid = validateDateAndRange(document.getElementById(formInputs.inputName.id).value)
+
+	if (printInDom) {
+
+		if (isValid)
+			hideMessageValidation(formInputs.inputName.id, formInputs.inputName.spanMessageId)
+		else
+			showMessageValidation(formInputs.inputName.id, formInputs.inputName.spanMessageId, formInputs.inputName.message)
+
+	}
+
+	return isValid
+}
+
+function validateDateAndRange(dateP) {
+
+	if (dateP == undefined || dateP.trim() == ''
+		|| dateP.length > max || dateP.length < min)
+		return false
+
+	return true;
+
+
+}
+
+
 
 function showMessageValidation(idInput, id, message) {
 

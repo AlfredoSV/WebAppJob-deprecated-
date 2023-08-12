@@ -2,6 +2,7 @@ using Framework.Security2023;
 using NLog;
 using NLog.Web;
 using System;
+using System.Configuration;
 using System.Globalization;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
@@ -13,8 +14,6 @@ try
     // Add services to the container.
     builder.Services.AddControllersWithViews();
 
-   
-
     string languaje = builder.Configuration.GetSection("DefaultLanguaje").Value;
 
     CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(languaje);
@@ -23,6 +22,8 @@ try
     builder.Host.UseNLog();
 
     builder.Services.AddTransient<IServiceLogin>(S => new ServiceLogin(""));
+
+    builder.Services.AddTransient<string>(s => builder.Configuration.GetConnectionString("SqlServer"));
 
     var app = builder.Build();
 
