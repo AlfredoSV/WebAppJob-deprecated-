@@ -66,18 +66,29 @@ applyJob.addEventListener("click", (e) => {
 			$('#applyJobModal').modal('show');
 			let form = document.getElementById("form");
 			form.addEventListener("submit", eventSubmit, true);
+
 			let nameInput = document.getElementById("name");
 			nameInput.addEventListener("change", () => {
 
 				validateStr("name", "nameValidationMessage", "This name is not valid", 6, 10, true)
 
 			}, true);
+
 			let lastName = document.getElementById("lastName");
 			lastName.addEventListener("change", () => {
 
 				validateStr("lastName", "lastNameValidationMessage", "The last name is not valid", 2, 10, true)
 
 			}, true);
+
+			let presentationLetter = document.getElementById("presentationLetter");
+			presentationLetter.addEventListener("change", () => {
+
+				validateStr("presentationLetter", "presentationLetterValidationMessage", "The presentation letter  is not valid", 10, 50, true)
+
+			}, true);
+
+			
 		});
 	$(".loader").hide();
 	
@@ -88,11 +99,11 @@ function eventSubmit(e) {
 
 	let api = 'RegisterApplyJob';
 	let data = {
-		name: "alfredo",
-		lastName: "Sanchez",
+		name: document.querySelector("#name").value,
+		lastName: document.querySelector("#lastName").value,
 		contactNumber: "45667",
 		birthdate: "",
-		presentationLetter: "",
+		presentationLetter: document.querySelector("#presentationLetter").value,
             cv: ""
 	}
 	let options = {
@@ -107,8 +118,10 @@ function eventSubmit(e) {
 
 	let isValidName = validateStr("name", "nameValidationMessage", "This name is not valid", 6, 10, true)
 	let isValidLastName = validateStr("lastName", "lastNameValidationMessage", "The last name is not valid", 2, 10, true)
+	let isValidpresentationLetter = validateStr("presentationLetter", "presentationLetterValidationMessage", "The presentation letter  is not valid", 10, 50, true)
 
-	if (isValidLastName && isValidName) {
+
+	if (isValidLastName && isValidName && isValidpresentationLetter) {
 
 		fetch(api, options)
 			.then(response => response.json())

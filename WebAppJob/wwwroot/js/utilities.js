@@ -1,5 +1,6 @@
 ﻿
 /*Functions for validation of string (min,max, undifined and required)*/
+
 function validateStr(idValue, spanMessageIdValue, messageValue, min, max, printInDom) {
 	
 	let formInputs = {
@@ -36,7 +37,11 @@ function validateString(max, min, str) {
 
 }
 
-function validateDate(idValue, spanMessageIdValue, messageValue, printInDom) {
+/*Functions for validation of string (min,max, undifined and required)*/
+
+/*Functions for validation of date (dateMin, dateMaX, undifined and required)*/
+
+function validateDate(idValue, spanMessageIdValue, messageValue, printInDom, isOnlyRequired) {
 
 	let formInputs = {
 
@@ -48,8 +53,13 @@ function validateDate(idValue, spanMessageIdValue, messageValue, printInDom) {
 
 	}
 
-	let isValid = validateDateAndRange(document.getElementById(formInputs.inputName.id).value)
+	let isValid = false
 
+	if (isOnlyRequired) 
+		isValid = validateDateRequired(document.getElementById(formInputs.inputName.id).value)
+	else
+		isValid = validateDateAndRange(document.getElementById(formInputs.inputName.id).value)
+	
 	if (printInDom) {
 
 		if (isValid)
@@ -62,10 +72,9 @@ function validateDate(idValue, spanMessageIdValue, messageValue, printInDom) {
 	return isValid
 }
 
-function validateDateAndRange(dateP) {
+function validateDateRequired(dateP) {
 
-	if (dateP == undefined || dateP.trim() == ''
-		|| dateP.length > max || dateP.length < min)
+	if (dateP == undefined || dateP.trim() == '')
 		return false
 
 	return true;
@@ -73,6 +82,17 @@ function validateDateAndRange(dateP) {
 
 }
 
+function validateDateAndRange(dateP) {
+
+	if (dateP == undefined || dateP.trim() == '')
+		return false
+
+	return true;
+
+
+}
+
+/*Functions for validation of date (dateMin, dateMaX, undifined and required)*/
 
 
 function showMessageValidation(idInput, id, message) {

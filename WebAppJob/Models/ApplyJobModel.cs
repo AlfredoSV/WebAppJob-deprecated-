@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+﻿
 namespace WebAppJob.Models
 {
     public class ApplyJobModel
