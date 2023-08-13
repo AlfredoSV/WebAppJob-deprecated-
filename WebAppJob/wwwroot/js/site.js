@@ -134,41 +134,85 @@ function eventSubmit(e) {
 
 
 
-$('#tableApplications').DataTable({
-	"ordering": true,
-	"searching": true,
-	pageLength: 10,
-	"processing": true,
-	deferRender: true,
-	scrollY: 400,
-	scrollCollapse: true,
-	scroller: true,
-	async: false,
-	"serverSide": false,
-	"filter": true,	
-	"ajax": {
-		"url": "/Home/GetApplicationsJobs",
-		"type": "GET",
-		dataSrc: "",
-		"datatype": "json", error: function (jqXHR, ajaxOptions, thrownError) {
-			//window.location.href = "/Citas/Error"
+//$('#tableApplications').DataTable({
+//	"ordering": true,
+//	"searching": true,
+//	pageLength: 10,
+//	"processing": true,
+//	deferRender: true,
+//	scrollY: 400,
+//	scrollCollapse: true,
+//	scroller: true,
+//	async: false,
+//	"serverSide": false,
+//	"filter": true,
+//	"ajax": {
+//		"url": "/Home/GetApplicationsJobs",
+//		"type": "GET",
+//		dataSrc: "",
+//		"datatype": "json", error: function (jqXHR, ajaxOptions, thrownError) {
+//			//window.location.href = "/Citas/Error"
+//		}
+//	},
+
+//	columns: [
+
+//		{ 'data': 'company' },
+//		{ 'data': 'title' },
+//		{ 'data': 'status' },
+//		{ 'data': 'dateApply' },
+//		{
+//			mRender: function (data, type, row) {
+//				return '<a href="/Home/Eliminar/' + row.id + '">Eliminar</a> | <a data-bs-whatever="mdo" onclick="getDetailJob(this)" href="#'+row.id+'">Detalle</a> | <a data-bs-whatever="mdo" href="Home/Editar/' + row.id + '">Editar</a>'
+//			}
+//		}
+//	],
+//	dom: 'Bfrtip',
+//	"language": {
+//		"url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json",
+//	}
+//});
+
+new gridjs.Grid({
+	columns: ['Id','Company', 'Date apply', 'Status', 'Title'],
+	sort: true,
+	search: {
+		server: {
+			summary: true,
+			url: (prev, text) => `${prev}?textSearch=${text}`
 		}
 	},
-
-	columns: [
-
-		{ 'data': 'company' },
-		{ 'data': 'title' },
-		{ 'data': 'status' },
-		{ 'data': 'dateApply' },
-		{
-			mRender: function (data, type, row) {
-				return '<a href="/Home/Eliminar/' + row.id + '">Eliminar</a> | <a data-bs-whatever="mdo" onclick="getDetailJob(this)" href="#'+row.id+'">Detalle</a> | <a data-bs-whatever="mdo" href="Home/Editar/' + row.id + '">Editar</a>'
-			}
+	pagination: {
+		limit: 5,
+		summary: true,
+		server: {
+			url: (prev, page, limit) => `${prev}?&page=${page}&limit=${limit}&`
 		}
-	],
-	dom: 'Bfrtip',
-	"language": {
-		"url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json",
+		
+	},
+	
+	resizable: true,
+	server: {
+		url: `Home/GetApplicationsJobs`,
+		method : 'GET',
+		then: data => data.map(obj => [obj.id, obj.company, obj.dateApply, obj.status, obj.title]),
+		handle: (res) => {
+			// no matching records found
+			if (res.status === 404) return { data: [] };
+			if (res.ok) return res.json();
+
+			throw Error('oh no :(');
+		},
+	},
+	language: {
+		'search': {
+			'placeholder': 'Buscar...'
+		},
+		'pagination': {
+			'previous': '⬅️',
+			'next': '➡️',
+			'showing': '😃 Visualizar',
+			'results': () => 'Resultado'
+		}
 	}
-});
+}).render(document.getElementById('tableApplications'));
