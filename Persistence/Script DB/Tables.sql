@@ -1,3 +1,4 @@
+
 CREATE DATABASE dbjob;
 GO
 USE dbJOB;

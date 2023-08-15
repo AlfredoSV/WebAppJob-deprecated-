@@ -4,6 +4,8 @@ using NLog.Web;
 using System;
 using System.Configuration;
 using System.Globalization;
+using Microsoft.EntityFrameworkCore;
+using Persistence;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");
@@ -21,13 +23,16 @@ try
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
 
+
     builder.Services.AddTransient<IServiceLogin>(S => new ServiceLogin(""));
 
-    builder.Services.AddTransient<string>(s => builder.Configuration.GetConnectionString("SqlServer"));
+    builder.Services.AddDbContext<JobContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
+
 
     var app = builder.Build();
 
-    // Configure the HTTP request pipeline.
+  
+   // Configure the HTTP request pipeline.
     if (!app.Environment.IsDevelopment())
     {
         app.UseExceptionHandler("/Home/Error");

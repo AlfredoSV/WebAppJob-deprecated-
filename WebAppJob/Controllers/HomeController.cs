@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using Persistence;
 using System.Diagnostics;
+using System.Linq;
 using WebAppJob.Models;
 
 namespace WebAppJob.Controllers
@@ -9,10 +11,11 @@ namespace WebAppJob.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly JobContext _context;
+        public HomeController(ILogger<HomeController> logger, JobContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         [HttpGet]     
@@ -38,6 +41,9 @@ namespace WebAppJob.Controllers
             //string lengtPage = context["length"];
             //string draw = context["draw"];
             //string start = context["start"];
+
+            
+            var res = _context.Areas.ToList();
 
             int limit = Int32.Parse(context["limit"].ToString());
             int page =  Int32.Parse(context["page"].ToString());
