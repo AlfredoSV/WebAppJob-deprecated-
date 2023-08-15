@@ -8,12 +8,16 @@ using System.Threading.Tasks;
 
 namespace Persistence
 {
-    public class JobContext : DbContext
+    public class CatalogContext : DbContext
     {
-        public JobContext(DbContextOptions<JobContext> options)
+        public CatalogContext(DbContextOptions<CatalogContext> options)
         : base(options)
         {
         }
         public DbSet<Area> Areas { get; set; }
+        public DbSet<Status> Status { get; set; }
+        public DbSet<CivilStatus> CivilStatus { get; set;}
+        public DbSet<EnglishLevel> EnglishLevel { get; set; }
+
     }
 }

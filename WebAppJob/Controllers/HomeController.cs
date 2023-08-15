@@ -11,8 +11,8 @@ namespace WebAppJob.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly JobContext _context;
-        public HomeController(ILogger<HomeController> logger, JobContext context)
+        private readonly CatalogContext _context;
+        public HomeController(ILogger<HomeController> logger, CatalogContext context)
         {
             _logger = logger;
             _context = context;

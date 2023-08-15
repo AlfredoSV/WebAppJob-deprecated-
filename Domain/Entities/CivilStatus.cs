@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    [Table("area")]
-    public class Area
+    [Table("civilstatus")]
+    public  class CivilStatus
     {
         public Guid Id { get; set; }
-        public string NameArea { get; set; }
-        public string DescriptionArea { get; set; }
+        public string NameStatus { get; set; }
         public Guid IdUserCreated { get; set; }
         public DateTime UpdateDate { get; set; }
         public DateTime CreateDate { get; set; }
