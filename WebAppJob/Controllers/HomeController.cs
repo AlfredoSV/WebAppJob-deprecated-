@@ -83,6 +83,11 @@ namespace WebAppJob.Controllers
             return Json(new { id = Guid.NewGuid(), Name = "Job Example" });
         }
 
+        public IActionResult About()
+        {
+            return View();
+        }
+
     }
 
     public class ApplyJob
