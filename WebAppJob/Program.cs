@@ -26,7 +26,10 @@ try
 
     builder.Services.AddTransient<IServiceLogin>(S => new ServiceLogin(""));
 
-    builder.Services.AddDbContext<CatalogContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
+    string connectionStr = builder.Configuration.GetConnectionString("SqlServer");
+
+    builder.Services.AddDbContext<CatalogContext>(options => options.UseSqlServer(connectionStr));
+    builder.Services.AddDbContext<JobContext>(options => options.UseSqlServer(connectionStr));
 
 
     var app = builder.Build();
