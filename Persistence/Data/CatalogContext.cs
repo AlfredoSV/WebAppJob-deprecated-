@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Persistence
+namespace Persistence.Data
 {
     public class CatalogContext : DbContext
     {
@@ -16,7 +16,7 @@ namespace Persistence
         }
         public DbSet<Area> Areas { get; set; }
         public DbSet<Status> Status { get; set; }
-        public DbSet<CivilStatus> CivilStatus { get; set;}
+        public DbSet<CivilStatus> CivilStatus { get; set; }
         public DbSet<EnglishLevel> EnglishLevel { get; set; }
 
     }

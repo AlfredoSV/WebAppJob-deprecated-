@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
-using Persistence;
+using Persistence.Data;
 using System.Diagnostics;
 using System.Linq;
 using WebAppJob.Models;
 
 namespace WebAppJob.Controllers
 {
-    
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

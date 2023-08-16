@@ -5,7 +5,7 @@ using System;
 using System.Configuration;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
+using Persistence.Data;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");

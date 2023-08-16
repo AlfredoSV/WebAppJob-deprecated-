@@ -11,9 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="IRepositories\" />
     <Folder Include="Script DB\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
   <ItemGroup>
