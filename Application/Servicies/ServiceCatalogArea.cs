@@ -1,11 +1,6 @@
 ﻿using Application.IServicies;
 using Domain.Entities;
 using Persistence.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Servicies
 {
@@ -17,7 +12,7 @@ namespace Application.Servicies
             _context = catalogContext;  
         }
 
-        public void DeleteArea(Guid id)
+        public void Delete(Guid id)
         {
             _context.Areas.Remove(GetById(id));
             _context.SaveChanges();
@@ -33,13 +28,13 @@ namespace Application.Servicies
             return _context.Areas.Where(ar => ar.Id == id).First();
         }
 
-        public void SaveArea(Area entity)
+        public void Save(Area entity)
         {
             _context.Areas.Add(entity);
             _context.SaveChanges();
         }
 
-        public void UpdateAre(Area entity)
+        public void Update(Area entity)
         {
             Area aree = GetById(entity.Id);
             if (aree != null)
