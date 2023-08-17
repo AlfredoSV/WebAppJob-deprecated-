@@ -174,7 +174,7 @@ function eventSubmit(e) {
 //});
 
 new gridjs.Grid({
-	columns: ['Id','Company', 'Date apply', 'Status', 'Title'],
+	columns: ['Id','Name', 'Date apply', 'Description', 'Vancancy Numbers'],
 	sort: true,
 	search: {
 		server: {
@@ -193,9 +193,9 @@ new gridjs.Grid({
 	
 	resizable: true,
 	server: {
-		url: `Home/GetApplicationsJobs`,
+		url: `Job/GetJobs`,
 		method : 'GET',
-		then: data => data.map(obj => [obj.id, obj.company, obj.dateApply, obj.status, obj.title]),
+		then: data => data.results.map(obj => [obj.id, obj.nameJob, obj.createDate, obj.descriptionJob, obj.vacancyNumbers]),
 		handle: (res) => {
 			// no matching records found
 			if (res.status === 404) return { data: [] };
@@ -203,6 +203,7 @@ new gridjs.Grid({
 
 			throw Error('oh no :(');
 		},
+		total: data => data.count
 	},
 	language: {
 		'search': {

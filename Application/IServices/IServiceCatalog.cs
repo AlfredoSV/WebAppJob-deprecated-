@@ -1,5 +1,5 @@
 ﻿
-namespace Application.IServicies
+namespace Application.IServices
 {
     public interface IServiceCatalog<T>
     {

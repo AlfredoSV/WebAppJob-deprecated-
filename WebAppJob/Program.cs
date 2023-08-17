@@ -6,6 +6,13 @@ using System.Configuration;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
+using Application.Services;
+using Application.IServices;
+using AutoMapper.Execution;
+using AutoMapper;
+using WebAppJob.Models;
+using Domain.Entities;
+using Microsoft.Extensions.DependencyInjection;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");
@@ -25,6 +32,9 @@ try
 
 
     builder.Services.AddTransient<IServiceLogin>(S => new ServiceLogin(""));
+    builder.Services.AddTransient<IServiceJob,ServiceJob>();
+  
+    builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
     string connectionStr = builder.Configuration.GetConnectionString("SqlServer");
 

@@ -1,9 +1,9 @@
-﻿using Application.IServicies;
+﻿using Application.IServices;
 using Domain.Entities;
 using Persistence.Data;
 
 
-namespace Application.Servicies
+namespace Application.Services
 {
     public class ServiceCatalogStatus : IServiceCatalog<Status>
     {
