@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    public class DtoResponse<T>
+    public class DtoRequest<T>
     {
         public T Data { set; get; }
-        public int Count { get; set; }
     }
 }
