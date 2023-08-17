@@ -34,6 +34,7 @@ try
     builder.Services.AddTransient<IServiceLogin>(S => new ServiceLogin(""));
     builder.Services.AddTransient<IServiceJob,ServiceJob>();
   
+  
     builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
     string connectionStr = builder.Configuration.GetConnectionString("SqlServer");
@@ -43,7 +44,6 @@ try
 
 
     var app = builder.Build();
-
   
    // Configure the HTTP request pipeline.
     if (!app.Environment.IsDevelopment())

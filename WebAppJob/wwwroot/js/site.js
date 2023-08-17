@@ -197,11 +197,11 @@ new gridjs.Grid({
 		method : 'GET',
 		then: data => data.results.map(obj => [obj.id, obj.nameJob, obj.createDate, obj.descriptionJob, obj.vacancyNumbers]),
 		handle: (res) => {
-			// no matching records found
+			
 			if (res.status === 404) return { data: [] };
 			if (res.ok) return res.json();
 
-			throw Error('oh no :(');
+			res.json().then((res) => alert(res.error));
 		},
 		total: data => data.count
 	},
