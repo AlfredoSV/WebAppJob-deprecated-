@@ -174,7 +174,11 @@ function eventSubmit(e) {
 //});
 
 new gridjs.Grid({
-	columns: ['Id','Name', 'Date apply', 'Description', 'Vancancy Numbers'],
+	columns: ['Id', 'Name', 'Date apply', 'Description', 'Vancancy Numbers',
+	  {
+		  name: 'Actions',
+		  formatter: (_, row) => gridjs.html(`<a class="btn btn-success" href='mailto:${row.cells[0].data}'>Edit</a>`)
+	  }],
 	sort: true,
 	search: {
 		server: {
