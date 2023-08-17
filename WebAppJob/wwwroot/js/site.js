@@ -173,11 +173,31 @@ function eventSubmit(e) {
 //	}
 //});
 
+function getDetailJob(obj) {
+	let id = obj.hash.replace('#', '');
+	console.log(id);
+
+	const url = "Job/DetailJob/" + id
+
+	const options = {
+		method: 'GET',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type':'application/json'
+		}
+	}
+
+	fetch(url, options).then(response => response.json())
+		.then(json => console.log(json));
+
+}
+
 new gridjs.Grid({
-	columns: ['Id', 'Name', 'Date apply', 'Description', 'Vancancy Numbers',
+	columns: ['Name', 'Date apply', 'Description', 'Vancancy Numbers',
 	  {
 		  name: 'Actions',
-		  formatter: (_, row) => gridjs.html(`<a class="btn btn-success" href='mailto:${row.cells[0].data}'>Edit</a>`)
+		  width : '30%',
+		  formatter: (_, row) => gridjs.html(`<a class="btn btn-info " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Detail</a> | <a class="btn btn-success" onclick="getDetailJob(this)" href=#${row.cells[0].data}>Edit</a> | <a class="btn btn-danger" onclick="getDetailJob(this)" href=#${row.cells[0].data}>Delete</a> | <a class="btn btn-primary " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Apply</a>`)
 	  }],
 	sort: true,
 	search: {
@@ -199,7 +219,7 @@ new gridjs.Grid({
 	server: {
 		url: `Job/GetJobs`,
 		method : 'GET',
-		then: data => data.results.map(obj => [obj.id, obj.nameJob, obj.createDate, obj.descriptionJob, obj.vacancyNumbers]),
+		then: data => data.results.map(obj => [ obj.nameJob, obj.createDate, obj.descriptionJob, obj.vacancyNumbers]),
 		handle: (res) => {
 			
 			if (res.status === 404) return { data: [] };
@@ -221,3 +241,6 @@ new gridjs.Grid({
 		}
 	}
 }).render(document.getElementById('tableApplications'));
+
+
+

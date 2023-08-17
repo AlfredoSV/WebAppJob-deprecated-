@@ -70,11 +70,7 @@ namespace WebAppJob.Controllers
             return Ok(new { Name = "Alfredo", Age = 26 });
         }
 
-        [HttpGet]
-        public IActionResult Jobs()
-        {
-            return View();
-        }
+
 
         [HttpPost]
         public IActionResult GetInformationJob()

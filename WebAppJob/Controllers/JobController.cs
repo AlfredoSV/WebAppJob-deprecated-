@@ -13,7 +13,7 @@ using WebAppJob.Models;
 
 namespace WebAppJob.Controllers
 {
-    
+    [Route("[controller]")]
     public class JobController : Controller
     {
         private readonly IMapper _mapper;
@@ -28,7 +28,7 @@ namespace WebAppJob.Controllers
             _mapper = autoMapper;
         }
 
-        [HttpGet]
+        [HttpGet("[action]")]
         public IActionResult GetJobs()
         {
             try
@@ -67,13 +67,25 @@ namespace WebAppJob.Controllers
         }
 
         [HttpGet("[action]/{id}")]
-        public IActionResult DetailJob(int id)
+        public IActionResult DetailJob(Guid id)
         {
-            JobViewModel jobViewModel = new JobViewModel();
+            try
+            {
+                IQueryCollection context = HttpContext.Request.Query;
+                JobViewModel jobViewModel = new JobViewModel();
 
-            //return StatusCode(400, new { error = "Error desde controller" });
+                _mapper.Map(_serviceJob.GetDetailJob(id).Data,jobViewModel);
 
-            return PartialView(jobViewModel);
+                return Ok(jobViewModel);
+            }
+            catch (Exception ex)
+            {
+                Guid idError = Guid.NewGuid();
+                _logger.LogError(idError + ex.Message);
+                return BadRequest(new { Error = "A error was ocurred, the ticket is: " + idError });
+
+            }
+            
         }
 
         [HttpGet]
