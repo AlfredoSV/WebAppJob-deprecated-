@@ -41,10 +41,10 @@ try
 
     builder.Services.AddDbContext<CatalogContext>(options => options.UseSqlServer(connectionStr));
     builder.Services.AddDbContext<JobContext>(options => options.UseSqlServer(connectionStr));
-
+    builder.Services.AddSession();
 
     var app = builder.Build();
-  
+    app.UseSession();
    // Configure the HTTP request pipeline.
     if (!app.Environment.IsDevelopment())
     {
