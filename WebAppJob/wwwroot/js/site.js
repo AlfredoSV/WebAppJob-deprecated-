@@ -58,7 +58,23 @@ const applyJob = document.querySelector("#applyJob");
 
 applyJob.addEventListener("click", (e) => {
 	e.preventDefault();
-	let url = window.location.origin + '/Home/ApplyJob';
+	let urlCatalog = window.location.origin + '/GetAreas';
+	fetch(urlCatalog).then(res => res.json())
+		.then(json => {
+			const areaSle = document.getElementById('idArea');
+			
+			
+			json.list.forEach((area) => {
+				let newOption = document.createElement('option');
+				newOption.value = area.id;
+				newOption.text =  area.nameArea;
+				areaSle.add(newOption);
+				newOption = undefined;
+			});
+		});
+				
+
+	let url = window.location.origin + '/Job/CreateJob';
 	fetch(url)
 		.then(response => response.text())
 		.then(text => {
@@ -243,4 +259,6 @@ new gridjs.Grid({
 }).render(document.getElementById('tableApplications'));
 
 
-
+function closeBtnModalCreateJob() {
+	$('#applyJobModal').modal('hide');
+}

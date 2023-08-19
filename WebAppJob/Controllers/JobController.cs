@@ -88,12 +88,11 @@ namespace WebAppJob.Controllers
             
         }
 
-        [HttpGet]
+        [HttpGet("[action]")]
         public PartialViewResult CreateJob()
         {
-            JobViewModel jobViewModel = new JobViewModel();
-
-            return PartialView(jobViewModel);
+            
+            return PartialView();
         }
 
         [HttpPost]
