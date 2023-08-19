@@ -114,3 +114,14 @@ function hideMessageValidation(idInput, id) {
 	inputValue.style.border = "";
 
 }
+
+function setOptionsSelect(idSelect, list, valueKey, textKey) {
+	const areaSele = document.getElementById(idSelect);
+	list.forEach((elem) => {
+		let newOption = document.createElement('option');
+		newOption.value = elem[valueKey];
+		newOption.text = elem[textKey];
+		areaSele.add(newOption);
+		newOption = undefined;
+	});
+}

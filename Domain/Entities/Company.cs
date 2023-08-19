@@ -8,7 +8,6 @@ namespace Domain.Entities
     {
         public Guid Id { get; set; }
         public string NameCompany { get; set; }
-        public Guid IdCompany { get; set; }
         public string DescriptionCompany { get; set; }
         public Guid IdUserCreated { get; set; }
         public DateTime UpdateDate { get; set; }

@@ -58,21 +58,19 @@ const applyJob = document.querySelector("#applyJob");
 
 applyJob.addEventListener("click", (e) => {
 	e.preventDefault();
-	let urlCatalog = window.location.origin + '/GetAreas';
-	fetch(urlCatalog).then(res => res.json())
+	let urlCatalogAreas = window.location.origin + '/GetAreas';
+	fetch(urlCatalogAreas).then(res => res.json())
 		.then(json => {
-			const areaSle = document.getElementById('idArea');
-			
-			
-			json.list.forEach((area) => {
-				let newOption = document.createElement('option');
-				newOption.value = area.id;
-				newOption.text =  area.nameArea;
-				areaSle.add(newOption);
-				newOption = undefined;
-			});
+
+			setOptionsSelect('idArea', json.list, 'id', 'nameArea');
 		});
-				
+
+	let urlCatalogCompany = window.location.origin + '/GetCompanies';
+	fetch(urlCatalogCompany).then(res => res.json())
+		.then(json => {
+
+			setOptionsSelect('idCompany', json.list, 'id', 'nameCompany');
+		});			
 
 	let url = window.location.origin + '/Job/CreateJob';
 	fetch(url)
