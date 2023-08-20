@@ -14,6 +14,32 @@ namespace Application.Services
             _jobContext = jobContext;
         }
 
+        public DtoResponse<ApplyCompetitorJob> ApplyNewJob(Guid idCompetitor,Guid idCreated,Guid idJob)
+        {
+            Job? job = _jobContext.Jobs.Where(jb => jb.Id == idJob).FirstOrDefault();
+
+            ArgumentNullException.ThrowIfNull(job);
+
+            Competitor? com = _jobContext.Competitors.Where(com => com.Id == idCompetitor)
+                                                    .FirstOrDefault();
+
+            ArgumentNullException.ThrowIfNull(com);
+
+            if (job.VacancyNumbers <= 0) 
+                throw new ArgumentException("Vacancy Numbers is 0");
+            
+            ApplyCompetitorJob applyCompetitorJob =
+                ApplyCompetitorJob.Create(idCompetitor, idJob, Guid.NewGuid(),
+                idCreated);
+
+            _jobContext.CompetitorJobs.Add(applyCompetitorJob);
+            _jobContext.SaveChanges();
+
+            return new DtoResponse<ApplyCompetitorJob>()
+            { Data = applyCompetitorJob };
+
+        }
+
         public void CreateJob(DtoRequest<Job> dtoRequest)
         {
             _jobContext.Jobs.Add(dtoRequest.Data);
@@ -24,9 +50,12 @@ namespace Application.Services
         {
             DtoResponse<Job> dtoResponse = new DtoResponse<Job>();
 
-            IQueryable<Job> result = _jobContext.Jobs.Where(job => job.Id == jobId).AsQueryable();
+            IQueryable<Job> result = _jobContext.Jobs.Where(job => job.Id == jobId)
+                                                     .AsQueryable();
 
-            dtoResponse.Data = result.First();
+            dtoResponse.Data =  result.FirstOrDefault();
+
+            ArgumentNullException.ThrowIfNull(dtoResponse.Data);
 
             return dtoResponse;
 
@@ -39,11 +68,13 @@ namespace Application.Services
                                 .Skip(skip)
                                 .Take(take)
                                 .ToList();
-            int count = _jobContext.Jobs.Where(job => job.NameJob.Contains(search)).Count();
+
+            int count = _jobContext.Jobs.Where(job => job.NameJob.Contains(search))
+                                        .Count();
 
             return new DtoResponse<List<Job>>() { Data = jobs, Count = count };
         }
-
+        
        
     }
 }

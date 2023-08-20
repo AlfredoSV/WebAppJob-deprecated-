@@ -42,8 +42,12 @@
 //$('#tableApplications').DataTable();
 //console.log(location.origin + "/Jobs")
 
+const applyJob = document.querySelector("#applyJob");
+
 function getDetailJob(obj) {
+
 	$(".loader").show();
+
 	let url = window.location.origin + '/Job/DetailJob/1';
 	fetch(url)
 		.then(response => response.text())
@@ -51,28 +55,17 @@ function getDetailJob(obj) {
 			document.querySelector("#job").innerHTML = text;
 			$('#myModal').modal('show');
 		});
+
 	$(".loader").hide();
 }
 
-const applyJob = document.querySelector("#applyJob");
 
 applyJob.addEventListener("click", (e) => {
+
 	e.preventDefault();
 
-	let urlCatalogAreas = window.location.origin + '/GetAreas';
-	fetch(urlCatalogAreas).then(res => res.json())
-		.then(json => {
-
-			setOptionsSelect('idArea', json.list, 'id', 'nameArea',true);
-		});
-
-	let urlCatalogCompany = window.location.origin + '/GetCompanies';
-	fetch(urlCatalogCompany).then(res => res.json())
-		.then(json => {
-
-			setOptionsSelect('idCompany', json.list, 'id', 'nameCompany', true);
-		});			
-
+	loadCatalogs();
+		
 	let url = window.location.origin + '/Job/CreateJob';
 	fetch(url)
 		.then(response => response.text())
@@ -262,5 +255,26 @@ new gridjs.Grid({
 
 
 function closeBtnModalCreateJob() {
+
 	$('#applyJobModal').modal('hide');
+
+}
+
+function loadCatalogs() {
+
+	let urlCatalogAreas = window.location.origin + '/GetAreas';
+	let urlCatalogCompany = window.location.origin + '/GetCompanies';
+
+	fetch(urlCatalogAreas).then(res => res.json())
+		.then(json => {
+
+			setOptionsSelect('idArea', json.list, 'id', 'nameArea', true);
+		});
+
+	fetch(urlCatalogCompany).then(res => res.json())
+		.then(json => {
+
+			setOptionsSelect('idCompany', json.list, 'id', 'nameCompany', true);
+		});
+
 }

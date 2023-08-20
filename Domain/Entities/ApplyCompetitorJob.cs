@@ -15,5 +15,26 @@ namespace Domain.Entities
         public DateTime UpdateDate { get; set; }
         public DateTime CreateDate { get; set; }
         public bool IsActive { get; set; }
+
+        private ApplyCompetitorJob(Guid idCompetitor, Guid idJob, 
+            Guid idStatus, Guid idUserCreated)
+        {
+            Id = Guid.NewGuid();
+            IdCompetitor = idCompetitor;
+            IdJob = idJob;
+            IdStatus = idStatus;
+            DateApply = DateTime.Now;
+            IdUserCreated = idUserCreated;
+            UpdateDate = DateTime.Now;
+            CreateDate = DateTime.Now;
+            IsActive = true;
+        }
+
+        public static ApplyCompetitorJob Create(Guid idCompetitor, Guid idJob,
+            Guid idStatus, Guid idUserCreated)
+        {
+            return new ApplyCompetitorJob(idCompetitor,  idJob,
+             idStatus, idUserCreated);
+        }
     }
 }
