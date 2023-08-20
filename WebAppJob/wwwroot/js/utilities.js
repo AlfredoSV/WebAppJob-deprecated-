@@ -102,7 +102,7 @@ function showMessageValidation(idInput, id, message) {
 	spanMessage.innerHTML = message;
 	spanMessage.style.color = "red"
 	spanMessage.style.marginTop = "7px";
-	inputValue.style.border = "solid red 1px";
+	inputValue.style.border = "solid red 1.5px";
 
 }
 
@@ -115,8 +115,16 @@ function hideMessageValidation(idInput, id) {
 
 }
 
-function setOptionsSelect(idSelect, list, valueKey, textKey) {
+
+/*Set opntions on select element*/
+function setOptionsSelect(idSelect, list, valueKey, textKey, viewOptionDefault) {
 	const areaSele = document.getElementById(idSelect);
+	if (viewOptionDefault) {
+		let newOptionDefault = document.createElement('option');
+		newOptionDefault.value = "0";
+		newOptionDefault.text = "Select a option";
+		areaSele.add(newOptionDefault);
+	}
 	list.forEach((elem) => {
 		let newOption = document.createElement('option');
 		newOption.value = elem[valueKey];
@@ -124,4 +132,68 @@ function setOptionsSelect(idSelect, list, valueKey, textKey) {
 		areaSele.add(newOption);
 		newOption = undefined;
 	});
+}
+
+
+/*Function of validate the value on select*/
+function validateSelect(idValue, spanMessageIdValue, messageValue, printInDom) {
+
+	let formInputs = {
+
+		inputName: {
+			id: idValue,
+			spanMessageId: spanMessageIdValue,
+			message: messageValue
+		}
+
+	}
+
+	let isValid = false;
+
+	let select = document.querySelector("#" + idValue);
+	isValid = select.value !== "0";
+
+	if (printInDom) {
+
+		if (isValid)
+			hideMessageValidation(formInputs.inputName.id, formInputs.inputName.spanMessageId)
+		else
+			showMessageValidation(formInputs.inputName.id, formInputs.inputName.spanMessageId, formInputs.inputName.message)
+
+	}
+
+	return isValid
+}
+
+/*Function of validate the value on select*/
+function validateIntegerNumber(idValue, spanMessageIdValue, messageValue, printInDom) {
+
+	let formInputs = {
+
+		inputName: {
+			id: idValue,
+			spanMessageId: spanMessageIdValue,
+			message: messageValue
+		}
+
+	}
+
+	let isValid = false;
+
+	let str = document.querySelector("#" + idValue);
+	isValid = /^\d*$/.test(str.value);
+
+	console.log(isValid)
+	console.log(str.value)
+
+	if (printInDom) {
+
+		if (isValid)
+			hideMessageValidation(formInputs.inputName.id, formInputs.inputName.spanMessageId)
+		else
+			showMessageValidation(formInputs.inputName.id, formInputs.inputName.spanMessageId, formInputs.inputName.message)
+
+	}
+
+	return isValid
 }

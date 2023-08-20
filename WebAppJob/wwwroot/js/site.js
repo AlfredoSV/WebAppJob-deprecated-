@@ -58,18 +58,19 @@ const applyJob = document.querySelector("#applyJob");
 
 applyJob.addEventListener("click", (e) => {
 	e.preventDefault();
+
 	let urlCatalogAreas = window.location.origin + '/GetAreas';
 	fetch(urlCatalogAreas).then(res => res.json())
 		.then(json => {
 
-			setOptionsSelect('idArea', json.list, 'id', 'nameArea');
+			setOptionsSelect('idArea', json.list, 'id', 'nameArea',true);
 		});
 
 	let urlCatalogCompany = window.location.origin + '/GetCompanies';
 	fetch(urlCatalogCompany).then(res => res.json())
 		.then(json => {
 
-			setOptionsSelect('idCompany', json.list, 'id', 'nameCompany');
+			setOptionsSelect('idCompany', json.list, 'id', 'nameCompany', true);
 		});			
 
 	let url = window.location.origin + '/Job/CreateJob';
@@ -88,20 +89,19 @@ applyJob.addEventListener("click", (e) => {
 
 			}, true);
 
-			let lastName = document.getElementById("lastName");
+			let lastName = document.getElementById("description");
 			lastName.addEventListener("change", () => {
 
-				validateStr("lastName", "lastNameValidationMessage", "The last name is not valid", 2, 10, true)
+				validateStr("description", "descriptionValidationMessage", "The description is not valid", 2, 80, true)
 
 			}, true);
 
-			let presentationLetter = document.getElementById("presentationLetter");
-			presentationLetter.addEventListener("change", () => {
+			let vacancyNumber = document.getElementById("vacancyNumber");
+			vacancyNumber.addEventListener("change", () => {
 
-				validateStr("presentationLetter", "presentationLetterValidationMessage", "The presentation letter  is not valid", 10, 50, true)
+				validateIntegerNumber("vacancyNumber", "vacancyNumberValidationMessage", "The number is not valid", true)
 
 			}, true);
-
 			
 		});
 	$(".loader").hide();
@@ -114,10 +114,10 @@ function eventSubmit(e) {
 	let api = 'RegisterApplyJob';
 	let data = {
 		name: document.querySelector("#name").value,
-		lastName: document.querySelector("#lastName").value,
+		lastName: "",
 		contactNumber: "45667",
 		birthdate: "",
-		presentationLetter: document.querySelector("#presentationLetter").value,
+		presentationLetter: "",
             cv: ""
 	}
 	let options = {
@@ -131,11 +131,15 @@ function eventSubmit(e) {
 	e.preventDefault()
 
 	let isValidName = validateStr("name", "nameValidationMessage", "This name is not valid", 6, 10, true)
-	let isValidLastName = validateStr("lastName", "lastNameValidationMessage", "The last name is not valid", 2, 10, true)
-	let isValidpresentationLetter = validateStr("presentationLetter", "presentationLetterValidationMessage", "The presentation letter  is not valid", 10, 50, true)
+	let isValidLastName = validateStr("description", "descriptionValidationMessage", "The description is not valid", 2, 80, true)
+	let isValidIdCompany = validateSelect("idCompany", "idCompanyValidationMessage", "The company is not valid", true)
+	let isValidIdArea = validateSelect("idArea", "idAreaValidationMessage", "The area is not valid", true)
+	let isValidVacancyNumber = validateIntegerNumber("vacancyNumber", "vacancyNumberValidationMessage", "The number is not valid", true)
 
+	
 
-	if (isValidLastName && isValidName && isValidpresentationLetter) {
+	if (isValidLastName && isValidName && isValidpresentationLetter && isValidIdCompany
+		&& isValidIdArea && isValidVacancyNumber) {
 
 		fetch(api, options)
 			.then(response => response.json())
