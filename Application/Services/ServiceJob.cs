@@ -1,6 +1,8 @@
 ﻿using Application.IServices;
 using Domain;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Persistence.Data;
 
 namespace Application.Services
@@ -16,6 +18,7 @@ namespace Application.Services
 
         public DtoResponse<ApplyCompetitorJob> ApplyNewJob(Guid idCompetitor,Guid idCreated,Guid idJob)
         {
+            ApplyCompetitorJob? applyCompetitorJob = null;
             Job? job = _jobContext.Jobs.Where(jb => jb.Id == idJob).FirstOrDefault();
 
             ArgumentNullException.ThrowIfNull(job);
@@ -24,16 +27,33 @@ namespace Application.Services
                                                     .FirstOrDefault();
 
             ArgumentNullException.ThrowIfNull(com);
-
-            if (job.VacancyNumbers <= 0) 
-                throw new ArgumentException("Vacancy Numbers is 0");
             
-            ApplyCompetitorJob applyCompetitorJob =
-                ApplyCompetitorJob.Create(idCompetitor, idJob, Guid.NewGuid(),
-                idCreated);
+            using IDbContextTransaction transaction = _jobContext.Database.
+                BeginTransaction();
+            {
+                try
+                {
+                    job.VacancyNumbers = job.VacancyNumbers - 1;
+                    _jobContext.Jobs.Update(job);
+                    _jobContext.SaveChanges();
 
-            _jobContext.CompetitorJobs.Add(applyCompetitorJob);
-            _jobContext.SaveChanges();
+                    if (job.VacancyNumbers <= 0)
+                        throw new ArgumentException("Vacancy Numbers is 0");
+
+                    applyCompetitorJob =
+                        ApplyCompetitorJob.Create(idCompetitor, idJob, Guid.NewGuid(),
+                        idCreated);
+
+                    _jobContext.CompetitorJobs.Add(applyCompetitorJob);
+                    _jobContext.SaveChanges();
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                }
+                
+            }
 
             return new DtoResponse<ApplyCompetitorJob>()
             { Data = applyCompetitorJob };
