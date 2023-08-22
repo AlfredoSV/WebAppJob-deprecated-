@@ -49,6 +49,7 @@ function getDetailJob(obj) {
 	$(".loader").show();
 
 	let url = window.location.origin + '/Job/DetailJob/1';
+
 	fetch(url)
 		.then(response => response.text())
 		.then(text => {
@@ -67,6 +68,7 @@ applyJob.addEventListener("click", (e) => {
 	loadCatalogs();
 		
 	let url = window.location.origin + '/Job/CreateJob';
+
 	fetch(url)
 		.then(response => response.text())
 		.then(text => {
@@ -97,8 +99,8 @@ applyJob.addEventListener("click", (e) => {
 			}, true);
 			
 		});
+
 	$(".loader").hide();
-	
 
 });
 
@@ -137,6 +139,7 @@ function eventSubmit(e) {
 		fetch(api, options)
 			.then(response => response.json())
 			.then(json => console.log(json))
+			.catch();
 
 	}
 
@@ -260,21 +263,34 @@ function closeBtnModalCreateJob() {
 
 }
 
-function loadCatalogs() {
+async function loadCatalogs() {
 
 	let urlCatalogAreas = window.location.origin + '/GetAreas';
 	let urlCatalogCompany = window.location.origin + '/GetCompanies';
 
-	fetch(urlCatalogAreas).then(res => res.json())
-		.then(json => {
+	try {
 
-			setOptionsSelect('idArea', json.list, 'id', 'nameArea', true);
-		});
+		let resCat = await fetch(urlCatalogAreas);
+		let jsonCat = await resCat.json();
+	
+		let resCom = await fetch(urlCatalogCompany);
+		let jsonCom = await resCom.json();
 
-	fetch(urlCatalogCompany).then(res => res.json())
-		.then(json => {
+		if (!resCat.ok) {
+			throw new Error(jsonCat.err);
+		} 
 
-			setOptionsSelect('idCompany', json.list, 'id', 'nameCompany', true);
-		});
+		if (!resCom.ok) {
+			throw new Error(jsonCom.err);
+		} 
+			
+		setOptionsSelect('idCompany', jsonCom.list, 'id', 'nameCompany', true);
+		setOptionsSelect('idArea', jsonCat.list, 'id', 'nameArea', true);
+		
+	} catch (e) {
 
+		alertify.error(e.message); 
+
+    }
+	
 }

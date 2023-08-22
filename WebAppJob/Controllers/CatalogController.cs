@@ -18,7 +18,15 @@ namespace WebAppJob.Controllers
         [HttpGet("[action]")]
         public IActionResult GetAreas()
         {
-            return Ok(new { list = _catalogContext.Areas.ToList() });
+            try
+            {
+                return Ok(new { list = _catalogContext.Areas.ToList() });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500,new { err = ex.Message });
+            }
+            
         }
 
         [HttpGet("[action]")]
