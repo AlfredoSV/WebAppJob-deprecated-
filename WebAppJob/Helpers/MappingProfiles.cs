@@ -10,6 +10,8 @@ namespace WebAppJob.Helpers
         public MappingProfiles()
         {
             CreateMap<Job, JobViewModel>();
+            CreateMap<JobViewModel, Job>();
+
         }
     }
 }

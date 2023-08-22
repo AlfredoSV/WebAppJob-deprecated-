@@ -165,7 +165,7 @@ function validateSelect(idValue, spanMessageIdValue, messageValue, printInDom) {
 	return isValid
 }
 
-/*Function of validate the value on select*/
+/*Function of validate the value integer*/
 function validateIntegerNumber(idValue, spanMessageIdValue, messageValue, printInDom) {
 
 	let formInputs = {
@@ -183,8 +183,41 @@ function validateIntegerNumber(idValue, spanMessageIdValue, messageValue, printI
 	let str = document.querySelector("#" + idValue);
 	isValid = /^\d*$/.test(str.value);
 
-	console.log(isValid)
-	console.log(str.value)
+	if (str.value === '')
+		isValid = false;
+
+	if (printInDom) {
+
+		if (isValid)
+			hideMessageValidation(formInputs.inputName.id, formInputs.inputName.spanMessageId)
+		else
+			showMessageValidation(formInputs.inputName.id, formInputs.inputName.spanMessageId, formInputs.inputName.message)
+
+	}
+
+	return isValid
+}
+
+/*Function of validate the value floating*/
+function validateFloatingNumber(idValue, spanMessageIdValue, messageValue, printInDom) {
+
+	let formInputs = {
+
+		inputName: {
+			id: idValue,
+			spanMessageId: spanMessageIdValue,
+			message: messageValue
+		}
+
+	}
+
+	let isValid = false;
+
+	let str = document.querySelector("#" + idValue);
+	isValid = /^[+-]?([0-9]*[.])?[0-9]+$/.test(str.value);
+
+	if (str.value === '')
+		isValid = false;
 
 	if (printInDom) {
 

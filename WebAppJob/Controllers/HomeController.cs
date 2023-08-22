@@ -44,29 +44,13 @@ namespace WebAppJob.Controllers
             //string start = context["start"];
 
             
-            var res = _context.Areas.ToList();
-
-            int limit = Int32.Parse(context["limit"].ToString());
-            int page =  Int32.Parse(context["page"].ToString());
-            string texSearch = context["textSearch"].ToString();
-            
-            List<ApplyJob> jobs = new List<ApplyJob>();
-
-            jobs.Add(new ApplyJob() { Id = 1, Company ="Comapny1", DateApply = DateTime.Now.ToString(),Status="In process", Title="Title1" });
-            jobs.Add(new ApplyJob() { Id = 2, Company = "Comapny2", DateApply = DateTime.Now.ToString(), Status = "Close", Title = "Title2" });
-            jobs.Add(new ApplyJob() { Id = 1, Company = "Comapny1", DateApply = DateTime.Now.ToString(), Status = "In process", Title = "Title1" });
-            jobs.Add(new ApplyJob() { Id = 2, Company = "Comapny2", DateApply = DateTime.Now.ToString(), Status = "Close", Title = "Title2" });
-
-            jobs.Add(new ApplyJob() { Id = 1, Company = "Comapny1", DateApply = DateTime.Now.ToString(), Status = "In process", Title = "Title1" });
-            jobs.Add(new ApplyJob() { Id = 2, Company = "Comapny2", DateApply = DateTime.Now.ToString(), Status = "Close", Title = "Title2" });
-
-
-            return Ok(jobs);
+        
+            return Ok();
         }
 
 
         [HttpPost("[action]")]
-        public IActionResult RegisterApplyJob([FromBody]ApplyJobModel applyJobModel)
+        public IActionResult RegisterApplyJob([FromBody]JobViewModel job)
         {
             return Ok(new { Name = "Alfredo", Age = 26 });
         }
@@ -96,17 +80,5 @@ namespace WebAppJob.Controllers
 
     }
 
-    public class ApplyJob
-    {
-        public int Id { get; set; }
-
-        public string Company { get; set; }
-
-        public string Title { get; set; }
-
-        public string Status { get; set; }
-
-        public string DateApply { get; set; }
-    }
 
 }

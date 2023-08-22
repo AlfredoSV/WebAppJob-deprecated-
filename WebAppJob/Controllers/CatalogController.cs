@@ -32,7 +32,16 @@ namespace WebAppJob.Controllers
         [HttpGet("[action]")]
         public IActionResult GetCompanies()
         {
-            return Ok(new { list = _jobContext.Companies.ToList()});
+            try
+            {
+                return Ok(new { list = _jobContext.Companies.ToList() });
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, new { err = ex.Message });
+            }
+            
         }
     }
 }

@@ -33,7 +33,7 @@ namespace WebAppJob.Controllers
         {
             try
             {
-                
+
                 IQueryCollection context = HttpContext.Request.Query;
                 //Grid Js
                 int limit = Int32.Parse(context["limit"].ToString());
@@ -45,7 +45,7 @@ namespace WebAppJob.Controllers
                 _mapper.Map(jobsResult.Data, jobs);
 
                 #region Code for Datatable
-                
+
                 //string searchValue = context["search[value]"];
                 //string lengtPage = context["length"];
                 //string draw = context["draw"];
@@ -56,14 +56,14 @@ namespace WebAppJob.Controllers
                 return Ok(new { results = jobs, count = jobsResult.Count });
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Guid  idError = Guid.NewGuid();
+                Guid idError = Guid.NewGuid();
                 _logger.LogError(idError + ex.Message);
                 return BadRequest(new { Error = "A error was ocurred, the ticket is: " + idError });
             }
 
-            
+
         }
 
         [HttpGet("[action]/{id}")]
@@ -74,7 +74,7 @@ namespace WebAppJob.Controllers
                 IQueryCollection context = HttpContext.Request.Query;
                 JobViewModel jobViewModel = new JobViewModel();
 
-                _mapper.Map(_serviceJob.GetDetailJob(id).Data,jobViewModel);
+                _mapper.Map(_serviceJob.GetDetailJob(id).Data, jobViewModel);
 
                 return Ok(jobViewModel);
             }
@@ -85,20 +85,59 @@ namespace WebAppJob.Controllers
                 return BadRequest(new { Error = "A error was ocurred, the ticket is: " + idError });
 
             }
-            
+
         }
 
         [HttpGet("[action]")]
-        public PartialViewResult CreateJob()
+        public PartialViewResult CreateJob() => PartialView();
+
+        [HttpPost("[action]")]
+        public IActionResult CreateJob([FromBody] JobViewModel jobView)
         {
-            
-            return PartialView();
+            try
+            {
+                DtoRequest<Job> dtoRequ = new DtoRequest<Job>();
+                dtoRequ.Data = new Job();
+                _mapper.Map(jobView, dtoRequ.Data);
+
+                dtoRequ.Data.Id = Guid.NewGuid();
+                dtoRequ.Data.IdUserCreated = Guid.NewGuid();
+                dtoRequ.Data.UpdateDate = DateTime.Now;
+                dtoRequ.Data.CreateDate = DateTime.Now;
+
+                _serviceJob.CreateJob(dtoRequ);
+
+                return Ok(new { message = "The job was created successful" });
+            }
+            catch (Exception ex)
+            {
+                Guid idError = Guid.NewGuid();
+                _logger.LogError(idError + ex.Message);
+                return BadRequest(new { Error = "A error was ocurred, the ticket is: " + idError });
+
+            }
+
         }
 
-        [HttpPost]
-        public IActionResult CreateJob(JobViewModel jobView)
+        [HttpDelete("[action]")]
+        public IActionResult DeleteJob(Guid idJob)
         {
-            return Ok(jobView);
+            try
+            {
+
+                return Ok(new { message = "The job was delete successful" });
+            }
+            catch (Exception ex)
+            {
+                Guid idError = Guid.NewGuid();
+                _logger.LogError(idError + ex.Message);
+                return BadRequest(new { Error = "A error was ocurred, the ticket is: " + idError });
+
+            }
+
         }
+
+
+
     }
 }

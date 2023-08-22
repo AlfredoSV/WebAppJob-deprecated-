@@ -97,6 +97,20 @@ applyJob.addEventListener("click", (e) => {
 				validateIntegerNumber("vacancyNumber", "vacancyNumberValidationMessage", "The number is not valid", true)
 
 			}, true);
+
+			let salaryMax = document.getElementById("salaryMax");
+			salaryMax.addEventListener("change", () => {
+
+				validateFloatingNumber("salaryMax", "salaryMaxValidationMessage", "The number is not valid", true)
+
+			}, true);
+
+			let salaryMin = document.getElementById("salaryMin");
+			salaryMin.addEventListener("change", () => {
+
+				validateFloatingNumber("salaryMin", "salaryMinValidationMessage", "The number is not valid", true)
+
+			}, true);
 			
 		});
 
@@ -106,14 +120,16 @@ applyJob.addEventListener("click", (e) => {
 
 function eventSubmit(e) {
 
-	let api = 'RegisterApplyJob';
+	let api = 'Job/CreateJob';
 	let data = {
-		name: document.querySelector("#name").value,
-		lastName: "",
-		contactNumber: "45667",
-		birthdate: "",
-		presentationLetter: "",
-            cv: ""
+	    'nameJob': document.querySelector("#name").value,
+		'idCompany': document.querySelector("#idCompany").value,
+		'salaryMax': document.querySelector("#salaryMax").value,
+		'salaryMin': document.querySelector("#salaryMin").value,
+		'vacancyNumbers': document.querySelector("#vacancyNumber").value,
+		'idArea': document.querySelector("#idArea").value,
+		'descriptionJob': document.querySelector("#description").value,
+		'isActive': document.querySelector("#isActive").value === 'on'
 	}
 	let options = {
 		method: "POST",
@@ -125,24 +141,28 @@ function eventSubmit(e) {
 
 	e.preventDefault()
 
-	let isValidName = validateStr("name", "nameValidationMessage", "This name is not valid", 6, 10, true)
-	let isValidLastName = validateStr("description", "descriptionValidationMessage", "The description is not valid", 2, 80, true)
-	let isValidIdCompany = validateSelect("idCompany", "idCompanyValidationMessage", "The company is not valid", true)
-	let isValidIdArea = validateSelect("idArea", "idAreaValidationMessage", "The area is not valid", true)
-	let isValidVacancyNumber = validateIntegerNumber("vacancyNumber", "vacancyNumberValidationMessage", "The number is not valid", true)
+	let isValidName = validateStr("name", "nameValidationMessage", "This name is not valid", 6, 10, true);
+	let isValidLastName = validateStr("description", "descriptionValidationMessage", "The description is not valid", 2, 80, true);
+	let isValidIdCompany = validateSelect("idCompany", "idCompanyValidationMessage", "The company is not valid", true);
+	let isValidIdArea = validateSelect("idArea", "idAreaValidationMessage", "The area is not valid", true);
+	let isValidVacancyNumber = validateIntegerNumber("vacancyNumber", "vacancyNumberValidationMessage", "The number is not valid", true);
+	let isValidMaxSalary = validateFloatingNumber("salaryMax", "salaryMaxValidationMessage", "The number is not valid", true);
+	let isValidMinSalary = validateFloatingNumber("salaryMin", "salaryMinValidationMessage", "The number is not valid", true);
 
 	
 
-	if (isValidLastName && isValidName && isValidpresentationLetter && isValidIdCompany
-		&& isValidIdArea && isValidVacancyNumber) {
+	if (isValidLastName && isValidName && isValidIdCompany
+		&& isValidIdArea && isValidVacancyNumber && isValidMaxSalary && isValidMinSalary) {
 
 		fetch(api, options)
 			.then(response => response.json())
-			.then(json => console.log(json))
-			.catch();
+			.then(json => {
+				$('#applyJobModal').modal('hide');
+				alertify.success(json.message);
+			})
+			.catch(err => alertify.error(json.error));
 
 	}
-
 
 }
 
