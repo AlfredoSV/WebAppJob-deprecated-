@@ -7,14 +7,14 @@
         <h3>Jobs</h3>
     </div>
     <div class="mb-1">
-        <a href="#" id="applyJob">New Job</a>
+        <a href="#" id="newJob">New Job</a>
     </div>
     
-    <div id="tableApplications"></div>
+    <div id="tableJobs"></div>
 
     <!-- Modal Detail Job-->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="detailJobModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Detail Job</h5>
@@ -22,7 +22,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body" style="margin:auto;" id="job">
+                <div class="modal-body" id="jobDetail">
                     
 
                 </div>
@@ -32,7 +32,7 @@
     
     <!-- Modal Apply Job-->
 
-    <div class="modal fade"  id="applyJobModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+    <div class="modal fade"  id="newJobModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content" style="background-color:#6390B9; color:white;">
                 <div class="modal-header">
@@ -41,7 +41,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body"  id="formApply">
+                <div class="modal-body" id="formApply">
                     
                 </div>
             

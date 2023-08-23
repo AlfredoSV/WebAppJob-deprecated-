@@ -66,6 +66,12 @@ namespace Application.Services
             _jobContext.SaveChanges();
         }
 
+        public void DeleteJob(DtoRequest<Guid> idJob)
+        {
+           _jobContext.Jobs.Remove(_jobContext.Jobs.Where(jb => jb.Id == idJob.Data).First());
+            _jobContext.SaveChanges();
+        }
+
         public DtoResponse<Job> GetDetailJob(Guid jobId)
         {
             DtoResponse<Job> dtoResponse = new DtoResponse<Job>();

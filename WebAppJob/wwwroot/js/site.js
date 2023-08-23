@@ -42,26 +42,9 @@
 //$('#tableApplications').DataTable();
 //console.log(location.origin + "/Jobs")
 
-const applyJob = document.querySelector("#applyJob");
+const newJob = document.querySelector("#newJob");
 
-function getDetailJob(obj) {
-
-	$(".loader").show();
-
-	let url = window.location.origin + '/Job/DetailJob/1';
-
-	fetch(url)
-		.then(response => response.text())
-		.then(text => {
-			document.querySelector("#job").innerHTML = text;
-			$('#myModal').modal('show');
-		});
-
-	$(".loader").hide();
-}
-
-
-applyJob.addEventListener("click", (e) => {
+newJob.addEventListener("click", (e) => {
 
 	e.preventDefault();
 
@@ -72,8 +55,9 @@ applyJob.addEventListener("click", (e) => {
 	fetch(url)
 		.then(response => response.text())
 		.then(text => {
+
 			document.querySelector("#formApply").innerHTML = text;
-			$('#applyJobModal').modal('show');
+			$('#newJobModal').modal('show');
 			let form = document.getElementById("form");
 			form.addEventListener("submit", eventSubmit, true);
 
@@ -150,7 +134,6 @@ function eventSubmit(e) {
 	let isValidMinSalary = validateFloatingNumber("salaryMin", "salaryMinValidationMessage", "The number is not valid", true);
 
 	
-
 	if (isValidLastName && isValidName && isValidIdCompany
 		&& isValidIdArea && isValidVacancyNumber && isValidMaxSalary && isValidMinSalary) {
 
@@ -208,9 +191,22 @@ function eventSubmit(e) {
 //});
 
 function getDetailJob(obj) {
-	let id = obj.hash.replace('#', '');
-	console.log(id);
 
+
+	let urlhtml = window.location.origin + "/Job/GetDetail";
+
+	fetch(urlhtml).then(res => res.text())
+		.then(text => {
+			console.log(text)
+				;			document.querySelector("#jobDetail").innerHTML = text;
+
+		});
+
+
+
+	$('#detailJobModal').modal('show');
+
+	let id = obj.hash.replace('#', '');
 	const url = "Job/DetailJob/" + id
 
 	const options = {
@@ -226,60 +222,91 @@ function getDetailJob(obj) {
 
 }
 
-new gridjs.Grid({
-	columns: ['Name', 'Date apply', 'Description', 'Vancancy Numbers',
-	  {
-		  name: 'Actions',
-		  width : '30%',
-		  formatter: (_, row) => gridjs.html(`<a class="btn btn-info " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Detail</a> | <a class="btn btn-success" onclick="getDetailJob(this)" href=#${row.cells[0].data}>Edit</a> | <a class="btn btn-danger" onclick="getDetailJob(this)" href=#${row.cells[0].data}>Delete</a> | <a class="btn btn-primary " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Apply</a>`)
-	  }],
-	sort: true,
-	search: {
-		server: {
-			summary: true,
-			url: (prev, text) => `${prev}?textSearch=${text}`
-		}
-	},
-	pagination: {
-		limit: 5,
-		summary: true,
-		server: {
-			url: (prev, page, limit) => `${prev}?&page=${page}&limit=${limit}&`
-		}
-		
-	},
-	
-	resizable: true,
-	server: {
-		url: `Job/GetJobs`,
-		method : 'GET',
-		then: data => data.results.map(obj => [ obj.nameJob, obj.createDate, obj.descriptionJob, obj.vacancyNumbers]),
-		handle: (res) => {
-			
-			if (res.status === 404) return { data: [] };
-			if (res.ok) return res.json();
 
-			res.json().then((res) => alert(res.error));
-		},
-		total: data => data.count
-	},
-	language: {
-		'search': {
-			'placeholder': 'Buscar...'
-		},
-		'pagination': {
-			'previous': '⬅️',
-			'next': '➡️',
-			'showing': '😃 Visualizar',
-			'results': () => 'Resultado'
+function deleteJob(obj) {
+	let id = obj.hash.replace('#', '');
+	console.log(id);
+
+	const url = "Job/DeleteJob/" + id
+
+	const options = {
+		method: 'DELETE',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
 		}
 	}
-}).render(document.getElementById('tableApplications'));
 
+	fetch(url, options).then(response => response.json())
+		.then(json => {
+
+			document.getElementById('tableApplications').innerHTML = '';
+			renderGridJobs();
+
+		});
+
+}
+
+
+function renderGridJobs() {
+	new gridjs.Grid({
+		columns: ['Id', 'Name', 'Date apply', 'Description', 'Vancancy Numbers',
+			{
+				name: 'Actions',
+				width: '30%',
+				formatter: (_, row) => gridjs.html(`<a class="btn btn-info " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Detail</a> | <a class="btn btn-success" onclick="getDetailJob(this)" href=#${row.cells[0].data}>Edit</a> | <a class="btn btn-danger" onclick="deleteJob(this)" href=#${row.cells[0].data}>Delete</a> | <a class="btn btn-primary " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Apply</a>`)
+			}],
+		sort: true,
+		search: {
+			server: {
+				summary: true,
+				url: (prev, text) => `${prev}?textSearch=${text}`
+			}
+		},
+		pagination: {
+			limit: 5,
+			summary: true,
+			server: {
+				url: (prev, page, limit) => `${prev}?&page=${page}&limit=${limit}&`
+			}
+
+		},
+
+		resizable: true,
+		server: {
+			url: `Job/GetJobs`,
+			method: 'GET',
+			then: data => data.results.map(obj => [obj.id, obj.nameJob, obj.createDate, obj.descriptionJob, obj.vacancyNumbers]),
+			handle: (res) => {
+
+				if (res.status === 404) return { data: [] };
+				if (res.ok) return res.json();
+
+				res.json().then((res) => alert(res.error));
+			},
+			total: data => data.count
+		},
+		language: {
+			'search': {
+				'placeholder': 'Buscar...'
+			},
+			'pagination': {
+				'previous': '⬅️',
+				'next': '➡️',
+				'showing': '😃 Visualizar',
+				'results': () => 'Resultado'
+			}
+		}
+	}).render(document.getElementById('tableJobs'));
+
+
+}
+
+renderGridJobs();
 
 function closeBtnModalCreateJob() {
 
-	$('#applyJobModal').modal('hide');
+	$('#newJobModal').modal('hide');
 
 }
 

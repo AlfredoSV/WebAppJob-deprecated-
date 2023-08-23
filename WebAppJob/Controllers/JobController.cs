@@ -1,14 +1,8 @@
 ﻿using Application.IServices;
-using Application.Services;
 using AutoMapper;
 using Domain;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NLog;
-using NLog.Fluent;
-using Persistence.Data;
-using System;
 using WebAppJob.Models;
 
 namespace WebAppJob.Controllers
@@ -91,6 +85,9 @@ namespace WebAppJob.Controllers
         [HttpGet("[action]")]
         public PartialViewResult CreateJob() => PartialView();
 
+        [HttpGet("[action]")]
+        public PartialViewResult GetDetail() => PartialView("DetailJob");
+
         [HttpPost("[action]")]
         public IActionResult CreateJob([FromBody] JobViewModel jobView)
         {
@@ -119,12 +116,12 @@ namespace WebAppJob.Controllers
 
         }
 
-        [HttpDelete("[action]")]
-        public IActionResult DeleteJob(Guid idJob)
+        [HttpDelete("[action]/{id}")]
+        public IActionResult DeleteJob(Guid id)
         {
             try
             {
-
+                _serviceJob.DeleteJob(new DtoRequest<Guid> { Data = id });
                 return Ok(new { message = "The job was delete successful" });
             }
             catch (Exception ex)

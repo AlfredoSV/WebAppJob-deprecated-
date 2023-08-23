@@ -10,6 +10,7 @@ namespace Application.IServices
         DtoResponse<Job> GetDetailJob(Guid jobId);
         DtoResponse<ApplyCompetitorJob> ApplyNewJob(Guid idCompetitor,
             Guid idCreated, Guid idJob);
+        void DeleteJob(DtoRequest<Guid> idJob);
 
     }
 }
