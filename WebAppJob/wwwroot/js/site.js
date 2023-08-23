@@ -56,8 +56,8 @@ newJob.addEventListener("click", (e) => {
 		.then(response => response.text())
 		.then(text => {
 
-			document.querySelector("#formApply").innerHTML = text;
-			$('#newJobModal').modal('show');
+			document.querySelector("#formJob").innerHTML = text;
+			$('#createJobModal').modal('show');
 			let form = document.getElementById("form");
 			form.addEventListener("submit", eventSubmit, true);
 
@@ -190,18 +190,19 @@ function eventSubmit(e) {
 //	}
 //});
 
-function getDetailJob(obj) {
+async function getDetailJob(obj) {
 
 
 	let urlhtml = window.location.origin + "/Job/GetDetail";
 
 	fetch(urlhtml).then(res => res.text())
 		.then(text => {
-			console.log(text)
-				;			document.querySelector("#jobDetail").innerHTML = text;
+
+			document.querySelector("#jobDetail").innerHTML = text;
 
 		});
 
+	await loadCatalogs();
 
 
 	$('#detailJobModal').modal('show');
@@ -218,8 +219,37 @@ function getDetailJob(obj) {
 	}
 
 	fetch(url, options).then(response => response.json())
-		.then(json => console.log(json));
+		.then(json => {
 
+			let area = document.querySelector("#idArea");
+			area.value = json.idArea.toString();
+
+			let company = document.querySelector("#idCompany"); 
+			company.value = json.idCompany;
+
+			let isActive = document.querySelector("#isActive");
+			isActive.checked = json.isActive;
+
+			let nameJob = document.querySelector("#name");
+			nameJob.value = json.nameJob;
+
+			let salaryMax = document.querySelector("#salaryMax");
+			salaryMax.value = json.salaryMax;
+
+			let salaryMin = document.querySelector("#salaryMin");
+			salaryMin.value = json.salaryMin;
+
+			let vacancyNumber = document.querySelector("#vacancyNumber");
+			vacancyNumber.value = json.vacancyNumbers;
+
+			
+			let description = document.querySelector("#description");
+			description.value = json.descriptionJob;
+
+
+			console.log(json)
+			
+		});
 }
 
 
@@ -306,7 +336,15 @@ renderGridJobs();
 
 function closeBtnModalCreateJob() {
 
-	$('#newJobModal').modal('hide');
+	$('#createJobModal').modal('hide');
+	document.querySelector("#formJob").innerHTML = '';
+
+}
+
+function closeBtnModalDetailJob() {
+
+	$('#detailJobModal').modal('hide');
+	document.querySelector("#jobDetail").innerHTML = '';
 
 }
 
