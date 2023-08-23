@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Humanizer.Localisation;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Persistence.Data;
 
 namespace WebAppJob.Controllers
@@ -8,7 +10,7 @@ namespace WebAppJob.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly CatalogContext _context;
-        public HomeController(ILogger<HomeController> logger, CatalogContext context)
+		public HomeController(ILogger<HomeController> logger, CatalogContext context)
         {
             
             _logger = logger;

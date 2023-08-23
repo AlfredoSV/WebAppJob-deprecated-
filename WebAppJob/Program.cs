@@ -13,6 +13,8 @@ using AutoMapper;
 using WebAppJob.Models;
 using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Localization;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");
@@ -25,7 +27,7 @@ try
 
     string languaje = builder.Configuration.GetSection("DefaultLanguaje").Value;
 
-    CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(languaje);
+    //CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(languaje);
    
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
@@ -42,11 +44,23 @@ try
     builder.Services.AddDbContext<CatalogContext>(options => options.UseSqlServer(connectionStr));
     builder.Services.AddDbContext<JobContext>(options => options.UseSqlServer(connectionStr));
     builder.Services.AddSession();
-
-    var app = builder.Build();
+	builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+    builder.Services.AddMvc().AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix).AddDataAnnotationsLocalization();
+	var app = builder.Build();
     app.UseSession();
-   // Configure the HTTP request pipeline.
-    if (!app.Environment.IsDevelopment())
+
+	var supportedCultures = new[]
+    {
+	    "es"
+    };
+    var options = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
+        .AddSupportedCultures(supportedCultures).AddSupportedUICultures(supportedCultures);
+	
+
+	app.UseRequestLocalization(options);
+
+	// Configure the HTTP request pipeline.
+	if (!app.Environment.IsDevelopment())
     {
         app.UseExceptionHandler("/Home/Error");
         // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.

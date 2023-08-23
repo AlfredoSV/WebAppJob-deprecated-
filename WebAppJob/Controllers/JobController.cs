@@ -3,6 +3,7 @@ using AutoMapper;
 using Domain;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using WebAppJob.Models;
 
 namespace WebAppJob.Controllers
@@ -93,7 +94,8 @@ namespace WebAppJob.Controllers
         {
             try
             {
-                DtoRequest<Job> dtoRequ = new DtoRequest<Job>();
+		
+				DtoRequest<Job> dtoRequ = new DtoRequest<Job>();
                 dtoRequ.Data = new Job();
                 _mapper.Map(jobView, dtoRequ.Data);
 
