@@ -89,7 +89,10 @@ namespace WebAppJob.Controllers
         [HttpGet("[action]")]
         public PartialViewResult GetDetail() => PartialView("DetailJob");
 
-        [HttpPost("[action]")]
+		[HttpGet("[action]")]
+		public PartialViewResult EditJob() => PartialView("EditJob");
+
+		[HttpPost("[action]")]
         public IActionResult CreateJob([FromBody] JobViewModel jobView)
         {
             try
@@ -135,8 +138,6 @@ namespace WebAppJob.Controllers
             }
 
         }
-
-
 
     }
 }

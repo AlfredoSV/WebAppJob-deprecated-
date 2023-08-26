@@ -1,0 +1,60 @@
+﻿@{
+    Layout = null;
+}
+
+<div class="mb-5">
+    <div class="col-12 mb-5">
+        <form id="form">
+            <input type="hidden" id="id" />
+            <div class="form-group">
+                <label class="control-label">Name</label>
+                <input id="name" autocomplete="off" class="form-control" />
+                <span id="nameValidationMessage"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label class="control-label">Company</label>
+                <select id="idCompany" class="form-control">
+                </select>
+                <span id="idCompanyValidationMessage"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label class="control-label">Salary Max</label>
+                <input id="salaryMax" class="form-control" type="number" step="0.1" />
+                <span id="salaryMaxValidationMessage"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label class="control-label">Salary Min</label>
+                <input id="salaryMin" class="form-control" step="0.1" type="number" />
+                <span id="salaryMinValidationMessage"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label class="control-label">Vacancy Number</label>
+                <input class="form-control" id="vacancyNumber" type="number"/>
+                <span id="vacancyNumberValidationMessage"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label class="control-label">Area</label>
+                <select id="idArea" class="form-control">
+                </select>
+                <span id="idAreaValidationMessage"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label class="control-label">Description</label>
+                <textarea id="description" cols="20" rows="10" class="form-control"></textarea>
+                <span id="descriptionValidationMessage"></span>
+            </div>
+            <div class="form-group mt-3">
+                <label class="control-label">Active</label>
+                <input id="isActive" class="form-check-input" type="checkbox" />
+                <span id="isActiveValidationMessage"></span>
+            </div>
+            <div class="form-group mt-3">
+                <input type="submit" value="Editar" class="btn btn-primary btn-lg" />
+            </div>
+        </form>
+
+    </div>
+
+</div>
+
+

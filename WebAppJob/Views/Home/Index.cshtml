@@ -4,8 +4,7 @@
 @inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer;
 
 
-@{
-	
+@{	
 	var title = @Localizer["WelcomeTitle"];
 }
 
@@ -38,7 +37,6 @@
     </div>
     
     <!-- Modal Create Job-->
-
     <div class="modal fade" id="createJobModal" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content" style="background-color:#6390B9; color:white;">
@@ -56,53 +54,27 @@
         </div>
     </div>
 
+	<!-- Modal Edit Job-->
+	<div class="modal fade" id="editJobModal" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content" style="background-color:#6390B9; color:white;">
+				<div class="modal-header">
+					<h5 class="modal-title">Edit Job</h5>
+					<button type="button" onclick="closeBtnModalEditJob()" class="close" data-dismiss="modal1" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body" id="formJobedit">
+				</div>
+
+			</div>
+		</div>
+	</div>
+
 
 </div>
 @section scripts{
 	<script type="text/javascript">
-
-
-		//let btnDeatil = document.querySelector("#btnDetail");
-
-		//btnDeatil.addEventListener("click", (e) => {
-
-		//    alert(e.type);
-
-		//    const httpRequest = new XMLHttpRequest();
-		//    httpRequest.onload = (response) => {
-
-		//        if (httpRequest.status == 200)
-		//            console.log(JSON.parse(response.target.response));
-
-		//        if (httpRequest.status == 500)
-		//            alert("Error");
-
-		//    }
-
-		//    const body = JSON.stringify({
-		//        Id: "48"
-		//    });
-
-		//    httpRequest.open("POST", "Home/GetInformationJob/",
-		//        false);
-		//    httpRequest.setRequestHeader("Content-Type", "application/json; charset=UTF-8")
-
-		//    httpRequest.send(body);
-
-		//});
-
-
-		//$('#tableApplications').DataTable({
-		//    ajax: {
-		//        url: location.origin + "/Home/Jobs",
-		//        type: 'GET'
-		//    },
-		//    processing: true,
-		//    serverSide : true
-		//});
-
-		//$('#tableApplications').DataTable();
-		//console.log(location.origin + "/Jobs")
 
 		const newJob = document.querySelector("#newJob");
 
@@ -197,13 +169,17 @@
 
 
 			if (isValidLastName && isValidName && isValidIdCompany
-				&& isValidIdArea && isValidVacancyNumber && isValidMaxSalary && isValidMinSalary) {
+				&& isValidIdArea && isValidVacancyNumber &&
+				isValidMaxSalary && isValidMinSalary) {
 
 				fetch(api, options)
 					.then(response => response.json())
 					.then(json => {
 						$('#applyJobModal').modal('hide');
 						alertify.success(json.message);
+
+						setTimeout(() => { window.location.reload(); },2000);
+					
 					})
 					.catch(err => alertify.error(json.error));
 
@@ -211,49 +187,7 @@
 
 		}
 
-
-
-		//$('#tableApplications').DataTable({
-		//	"ordering": true,
-		//	"searching": true,
-		//	pageLength: 10,
-		//	"processing": true,
-		//	deferRender: true,
-		//	scrollY: 400,
-		//	scrollCollapse: true,
-		//	scroller: true,
-		//	async: false,
-		//	"serverSide": false,
-		//	"filter": true,
-		//	"ajax": {
-		//		"url": "/Home/GetApplicationsJobs",
-		//		"type": "GET",
-		//		dataSrc: "",
-		//		"datatype": "json", error: function (jqXHR, ajaxOptions, thrownError) {
-		//			//window.location.href = "/Citas/Error"
-		//		}
-		//	},
-
-		//	columns: [
-
-		//		{ 'data': 'company' },
-		//		{ 'data': 'title' },
-		//		{ 'data': 'status' },
-		//		{ 'data': 'dateApply' },
-		//		{
-		//			mRender: function (data, type, row) {
-		//				return '<a href="/Home/Eliminar/' + row.id + '">Eliminar</a> | <a data-bs-whatever="mdo" onclick="getDetailJob(this)" href="#'+row.id+'">Detalle</a> | <a data-bs-whatever="mdo" href="Home/Editar/' + row.id + '">Editar</a>'
-		//			}
-		//		}
-		//	],
-		//	dom: 'Bfrtip',
-		//	"language": {
-		//		"url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json",
-		//	}
-		//});
-
 		async function getDetailJob(obj) {
-
 
 			let urlhtml = window.location.origin + "/Job/GetDetail";
 
@@ -265,7 +199,6 @@
 				});
 
 			await loadCatalogs();
-
 
 			$('#detailJobModal').modal('show');
 
@@ -308,16 +241,71 @@
 					let description = document.querySelector("#description");
 					description.value = json.descriptionJob;
 
+				});
+		}
 
-					console.log(json)
+		async function getEdit(obj) {
+
+
+			let urlhtml = window.location.origin + "/Job/EditJob";
+
+			fetch(urlhtml).then(res => res.text())
+				.then(text => {
+
+					document.querySelector("#formJobedit").innerHTML = text;
+
+				});
+
+			await loadCatalogs();
+
+
+			$('#editJobModal').modal('show');
+
+			let id = obj.hash.replace('#', '');
+			const url = "Job/DetailJob/" + id
+
+			const options = {
+				method: 'GET',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				}
+			}
+
+			fetch(url, options).then(response => response.json())
+				.then(json => {
+
+					let area = document.querySelector("#idArea");
+					area.value = json.idArea.toString();
+
+					let company = document.querySelector("#idCompany");
+					company.value = json.idCompany;
+
+					let isActive = document.querySelector("#isActive");
+					isActive.checked = json.isActive;
+
+					let nameJob = document.querySelector("#name");
+					nameJob.value = json.nameJob;
+
+					let salaryMax = document.querySelector("#salaryMax");
+					salaryMax.value = json.salaryMax;
+
+					let salaryMin = document.querySelector("#salaryMin");
+					salaryMin.value = json.salaryMin;
+
+					let vacancyNumber = document.querySelector("#vacancyNumber");
+					vacancyNumber.value = json.vacancyNumbers;
+
+
+					let description = document.querySelector("#description");
+					description.value = json.descriptionJob;
 
 				});
 		}
 
-
 		function deleteJob(obj) {
+
 			let id = obj.hash.replace('#', '');
-			console.log(id);
 
 			const url = "Job/DeleteJob/" + id
 
@@ -332,21 +320,21 @@
 			fetch(url, options).then(response => response.json())
 				.then(json => {
 
-					document.getElementById('tableApplications').innerHTML = '';
-					renderGridJobs();
+					alertify.success(json.message);
 
+					setTimeout(() => { window.location.reload(); },2000);
 				});
 
 		}
 
-
 		function renderGridJobs() {
+
 			new gridjs.Grid({
 				columns: ['Id', 'Name', 'Date apply', 'Description', 'Vancancy Numbers',
 					{
 						name: 'Actions',
 						width: '30%',
-						formatter: (_, row) => gridjs.html(`<a class="btn btn-info " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Detail</a> | <a class="btn btn-success" onclick="getDetailJob(this)" href=#${row.cells[0].data}>Edit</a> | <a class="btn btn-danger" onclick="deleteJob(this)" href=#${row.cells[0].data}>Delete</a> | <a class="btn btn-primary " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Apply</a>`)
+						formatter: (_, row) => gridjs.html(`<a class="btn btn-info " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Detail</a> | <a class="btn btn-success" onclick="getEdit(this)" href=#${row.cells[0].data}>Edit</a> | <a class="btn btn-danger" onclick="deleteJob(this)" href=#${row.cells[0].data}>Delete</a> | <a class="btn btn-primary " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Apply</a>`)
 					}],
 				sort: true,
 				search: {
@@ -391,7 +379,6 @@
 				}
 			}).render(document.getElementById('tableJobs'));
 
-
 		}
 
 		renderGridJobs();
@@ -407,6 +394,13 @@
 
 			$('#detailJobModal').modal('hide');
 			document.querySelector("#jobDetail").innerHTML = '';
+
+		}
+
+		function closeBtnModalEditJob() {
+
+			$('#editJobModal').modal('hide');
+			document.querySelector("#formJobedit").innerHTML = '';
 
 		}
 
@@ -441,6 +435,7 @@
 			}
 
 		}
+
 	</script>
 }
 
