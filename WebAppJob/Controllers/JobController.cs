@@ -101,12 +101,6 @@ namespace WebAppJob.Controllers
 				DtoRequest<Job> dtoRequ = new DtoRequest<Job>();
                 dtoRequ.Data = new Job();
                 _mapper.Map(jobView, dtoRequ.Data);
-
-                dtoRequ.Data.Id = Guid.NewGuid();
-                dtoRequ.Data.IdUserCreated = Guid.NewGuid();
-                dtoRequ.Data.UpdateDate = DateTime.Now;
-                dtoRequ.Data.CreateDate = DateTime.Now;
-
                 _serviceJob.CreateJob(dtoRequ);
 
                 return Ok(new { message = "The job was created successful" });

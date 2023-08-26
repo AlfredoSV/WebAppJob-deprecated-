@@ -62,7 +62,11 @@ namespace Application.Services
 
         public void CreateJob(DtoRequest<Job> dtoRequest)
         {
-            _jobContext.Jobs.Add(dtoRequest.Data);
+			dtoRequest.Data.Id = Guid.NewGuid();
+			dtoRequest.Data.IdUserCreated = Guid.NewGuid();
+			dtoRequest.Data.UpdateDate = DateTime.Now;
+			dtoRequest.Data.CreateDate = DateTime.Now;
+			_jobContext.Jobs.Add(dtoRequest.Data);
             _jobContext.SaveChanges();
         }
 
