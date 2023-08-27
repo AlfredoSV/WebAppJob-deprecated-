@@ -92,8 +92,11 @@
 
 					document.querySelector("#formJob").innerHTML = text;
 					$('#createJobModal').modal('show');
-					let form = document.getElementById("form");
-					form.addEventListener("submit", eventSubmit, true);
+
+					let createJobForm = document.getElementById("createJobForm");
+
+					createJobForm.addEventListener("submit", eventSubmit, true);
+								
 
 					let nameInput = document.getElementById("name");
 					nameInput.addEventListener("change", () => {
@@ -138,7 +141,15 @@
 
 		function eventSubmit(e) {
 
-			let api = 'Job/CreateJob';
+			let api = '';
+			let createJobForm = document.getElementById("createJobForm");
+			let editJobForm = document.getElementById("editJobForm");
+
+			if (createJobForm == undefined)
+				api = 'Job/EditJob';
+			else
+				api = 'Job/CreateJob';
+			
 			let data = {
 				'nameJob': document.querySelector("#name").value,
 				'idCompany': document.querySelector("#idCompany").value,
@@ -301,6 +312,10 @@
 					description.value = json.descriptionJob;
 
 				});
+
+			let editJobForm = document.getElementById("editJobForm");
+
+			editJobForm.addEventListener("submit", eventSubmit, true);
 		}
 
 		function deleteJob(obj) {
@@ -344,14 +359,13 @@
 					}
 				},
 				pagination: {
-					limit: 5,
+					limit: 3,
 					summary: true,
 					server: {
 						url: (prev, page, limit) => `${prev}?&page=${page}&limit=${limit}&`
 					}
 
 				},
-
 				resizable: true,
 				server: {
 					url: `Job/GetJobs`,

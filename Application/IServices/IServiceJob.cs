@@ -11,6 +11,8 @@ namespace Application.IServices
         DtoResponse<ApplyCompetitorJob> ApplyNewJob(Guid idCompetitor,
             Guid idCreated, Guid idJob);
         void DeleteJob(DtoRequest<Guid> idJob);
+        void UpdateJob(DtoRequest<Job> dtoRequest);
 
-    }
+
+	}
 }

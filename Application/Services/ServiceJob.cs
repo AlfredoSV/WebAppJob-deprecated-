@@ -105,6 +105,13 @@ namespace Application.Services
             return new DtoResponse<List<Job>>() { Data = jobs, Count = count };
         }
         
+        public void UpdateJob(DtoRequest<Job> dtoRequest)
+        {
+	
+			dtoRequest.Data.UpdateDate = DateTime.Now;
+			_jobContext.Jobs.Update(dtoRequest.Data);
+			_jobContext.SaveChanges();
+		}
        
     }
 }

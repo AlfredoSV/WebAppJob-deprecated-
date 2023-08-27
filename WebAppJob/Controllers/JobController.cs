@@ -133,5 +133,29 @@ namespace WebAppJob.Controllers
 
         }
 
-    }
+		[HttpPost("[action]")]
+		public IActionResult EditJob([FromBody] JobViewModel jobView)
+		{
+			try
+			{
+
+				DtoRequest<Job> dtoRequ = new DtoRequest<Job>();
+				dtoRequ.Data = new Job();
+				_mapper.Map(jobView, dtoRequ.Data);
+				_serviceJob.UpdateJob(dtoRequ);
+
+				return Ok(new { message = "The job was created successful" });
+			}
+			catch (Exception ex)
+			{
+				Guid idError = Guid.NewGuid();
+				_logger.LogError(idError + ex.Message);
+				return BadRequest(new { Error = "A error was ocurred, the ticket is: " + idError });
+
+			}
+
+		}
+
+
+	}
 }
