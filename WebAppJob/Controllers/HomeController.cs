@@ -1,4 +1,5 @@
-﻿using Humanizer.Localisation;
+﻿using Framework.Security2023;
+using Humanizer.Localisation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Persistence.Data;
@@ -20,7 +21,9 @@ namespace WebAppJob.Controllers
         [HttpGet]     
         public IActionResult Index(string userName)
         {
-            HttpContext.Session.SetString("User", "F672DD51-56CE-41F9-B5F4-81D80EEEFF41");
+            var str = SlqConnectionStr.Instance.SqlConnectionString;
+
+			HttpContext.Session.SetString("User", "F672DD51-56CE-41F9-B5F4-81D80EEEFF41");
             return View();
         }
 

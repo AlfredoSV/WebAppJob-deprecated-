@@ -8,13 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
 using Application.Services;
 using Application.IServices;
-using AutoMapper.Execution;
-using AutoMapper;
-using WebAppJob.Models;
-using Domain.Entities;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Localization;
+using Framework.Security2023;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");
@@ -31,15 +25,17 @@ try
    
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
+	string connectionStr = builder.Configuration.GetConnectionString("SqlServer");
+	SlqConnectionStr.Instance.SqlConnectionString = connectionStr;
 
 
-    builder.Services.AddTransient<IServiceLogin>(S => new ServiceLogin(""));
+	builder.Services.AddTransient<IServiceLogin, ServiceLogin>();
     builder.Services.AddTransient<IServiceJob,ServiceJob>();
   
   
     builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-    string connectionStr = builder.Configuration.GetConnectionString("SqlServer");
+
 
     builder.Services.AddDbContext<CatalogContext>(options => options.UseSqlServer(connectionStr));
     builder.Services.AddDbContext<JobContext>(options => options.UseSqlServer(connectionStr));
