@@ -189,8 +189,59 @@
 						$('#applyJobModal').modal('hide');
 						alertify.success(json.message);
 
-						setTimeout(() => { window.location.reload(); },2000);
-					
+						setTimeout(() => {
+
+							new gridjs.updateConfig({
+								columns: ['Id', 'Name', 'Date apply', 'Description', 'Vancancy Numbers',
+									{
+										name: 'Actions',
+										width: '30%',
+										formatter: (_, row) => gridjs.html(`<a class="btn btn-info " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Detail</a> | <a class="btn btn-success" onclick="getEdit(this)" href=#${row.cells[0].data}>Edit</a> | <a class="btn btn-danger" onclick="deleteJob(this)" href=#${row.cells[0].data}>Delete</a> | <a class="btn btn-primary " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Apply</a>`)
+									}],
+								sort: true,
+								search: {
+									server: {
+										summary: true,
+										url: (prev, text) => `${prev}?textSearch=${text}`
+									}
+								},
+								pagination: {
+									limit: 3,
+									summary: true,
+									server: {
+										url: (prev, page, limit) => `${prev}?&page=${page}&limit=${limit}&`
+									}
+
+								},
+								resizable: true,
+								server: {
+									url: `Job/GetJobs`,
+									method: 'GET',
+									then: data => data.results.map(obj => [obj.id, obj.nameJob, obj.createDate, obj.descriptionJob, obj.vacancyNumbers]),
+									handle: (res) => {
+
+										if (res.status === 404) return { data: [] };
+										if (res.ok) return res.json();
+
+										res.json().then((res) => alert(res.error));
+									},
+									total: data => data.count
+								},
+								language: {
+									'search': {
+										'placeholder': 'Buscar...'
+									},
+									'pagination': {
+										'previous': '⬅️',
+										'next': '➡️',
+										'showing': '😃 Visualizar',
+										'results': () => 'Resultado'
+									}
+								}
+							}).forceRender(document.getElementById('tableJobs'));
+						
+						}, 2000);
+						
 					})
 					.catch(err => alertify.error(json.error));
 
@@ -342,9 +393,8 @@
 
 		}
 
-		function renderGridJobs() {
-
-			new gridjs.Grid({
+	
+		new gridjs.Grid({
 				columns: ['Id', 'Name', 'Date apply', 'Description', 'Vancancy Numbers',
 					{
 						name: 'Actions',
@@ -393,7 +443,7 @@
 				}
 			}).render(document.getElementById('tableJobs'));
 
-		}
+		
 
 		renderGridJobs();
 
