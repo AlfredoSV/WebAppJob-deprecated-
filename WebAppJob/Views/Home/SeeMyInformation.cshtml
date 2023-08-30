@@ -1,10 +1,30 @@
-﻿
+﻿@model UserViewModel
 @{
     ViewData["Title"] = "SeeMyInformation";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>My information</h1>
+<hr />
+<br />
+<ul>
+    <li>@Model.Id</li>
 
+    <li>@Model.UserName</li>
 
+    <li>@Model.Name</li>
+
+    <li>@Model.LastName</li>
+
+    <li>@Model.NameRol</li>
+
+    <li>@Model.DateCreated</li>
+
+    <li>@Model.Age</li>
+
+    <li>@Model.Address</li>
+
+    <li>@Model.Email</li>
+
+</ul>
 

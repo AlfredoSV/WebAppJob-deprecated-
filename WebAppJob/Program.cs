@@ -26,14 +26,16 @@ try
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
 	string connectionStr = builder.Configuration.GetConnectionString("SqlServer");
-	SlqConnectionStr.Instance.SqlConnectionString = connectionStr;
+    string connectionStrFkw = builder.Configuration.GetConnectionString("SqlServerFkw"); 
+	SlqConnectionStr.Instance.SqlConnectionString = connectionStrFkw;
 
 
 	builder.Services.AddTransient<IServiceLogin, ServiceLogin>();
     builder.Services.AddTransient<IServiceJob,ServiceJob>();
-  
-  
-    builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+	builder.Services.AddTransient<IServiceUser, ServiceUser>();
+
+
+	builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
 
