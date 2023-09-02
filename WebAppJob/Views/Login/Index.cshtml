@@ -16,8 +16,10 @@
     <form asp-action="LoginUser" method="post" asp-controller="Login">
 
         <input asp-for="UserName" type="text" />
-      
+       
         <input type="submit" value="Log in" />
+
+        <span asp-validation-for="UserName"></span>
 
     </form>
 

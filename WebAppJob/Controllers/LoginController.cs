@@ -8,16 +8,19 @@ using WebAppJob.Models;
 using Framework.Security2023.Entities; 
 using System.Resources;
 using Humanizer.Localisation;
+using static Framework.Security2023.Entities.Login;
 
 namespace WebAppJob.Controllers
 {
     public class LoginController : Controller
     {
         private readonly IServiceLogin _serviceLogin;
+        private readonly IServiceUser _serviceUser;
         private readonly ILogger<LoginController> _logger;
 
-        public LoginController(ILogger<LoginController> logger, IServiceLogin serviceLogin)
+        public LoginController(ILogger<LoginController> logger, IServiceUser serviceUser, IServiceLogin serviceLogin)
         {
+            _serviceUser = serviceUser;
             this._serviceLogin = serviceLogin;
             _logger = logger;
             _logger.LogDebug(1, "NLog injected into LoginController");
@@ -25,10 +28,7 @@ namespace WebAppJob.Controllers
 
         public IActionResult Index()
         {
-            string culture = CultureInfo.CurrentCulture.TextInfo.CultureName ;
-
-      
-
+            //string culture = CultureInfo.CurrentCulture.TextInfo.CultureName ;
             return View();
         }
 
@@ -37,15 +37,19 @@ namespace WebAppJob.Controllers
         {
             try
             {
-                //if (this._serviceLogin.UserExist(userName))
+                if (_serviceUser.UserExist(userName))
                     return RedirectToAction("LoginValidation", "Login", new { userName });
                
-            }
-            catch (Exception)
-            {
+                ModelState.AddModelError("UserName", "The user was not found");
 
-                throw;
             }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("UserName", "An error occurred while searching for the user");
+
+            }
+
+            return View("Index");
 
         }
 
@@ -63,22 +67,20 @@ namespace WebAppJob.Controllers
         {
             try
             {
-                
-                    //Login login = Login.Create(user.UserName, user.Password);
-                    //if (this._serviceLogin.Login(login).StatusLog == StatusLogin.Ok)
-                    return RedirectToAction("Index", "Home", new { user.UserName });
 
-                
+                Login login = Login.Create(user.UserName, user.Password);
+                if (this._serviceLogin.Login(login).StatusLog == StatusLogin.Ok)
+                    return RedirectToAction("Index", "Home", new { user.UserName });
 
             }
             catch (Exception)
             {
 
-                throw;
+                ModelState.AddModelError("Password", "An error occurred while searching for the information of user");
             }
 
-            return RedirectToAction("LoginValidation", "Login", new { userName = user.UserName });
-
+            return View(user);
+          
         }
     }
 }
