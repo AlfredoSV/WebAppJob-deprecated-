@@ -69,8 +69,13 @@ namespace WebAppJob.Controllers
             {
 
                 Login login = Login.Create(user.UserName, user.Password);
-                if (this._serviceLogin.Login(login).StatusLog == StatusLogin.Ok)
+                Login userLogin = _serviceLogin.Login(login);
+                if (userLogin.StatusLog == StatusLogin.Ok)
+                {
+                    HttpContext.Session.SetString("User", userLogin.User.Id.ToString());
                     return RedirectToAction("Index", "Home", new { user.UserName });
+                }
+                    
 
             }
             catch (Exception)

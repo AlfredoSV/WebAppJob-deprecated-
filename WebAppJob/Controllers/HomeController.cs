@@ -1,8 +1,6 @@
 ﻿using Framework.Security2023;
 using Framework.Security2023.Entities;
-using Humanizer.Localisation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 using Persistence.Data;
 using WebAppJob.Models;
 
