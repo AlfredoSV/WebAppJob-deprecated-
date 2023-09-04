@@ -37,15 +37,39 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Jobs">New Application</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Jobs">New application</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Users
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item text-success" href="#">New</a>
+                                <a class="dropdown-item text-danger" href="#">Delete</a>
+                                <div class="dropdown-divider">Disable</div>
+                                <a class="dropdown-item text-success" href="#">Active</a>
+                            </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="SeeMyInformation">See my profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About Application</a>
                         </li>
                     </ul>
+
+                    <ul class="navbar-nav d-flex justify-content-end mr-10">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                UserName
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item text-danger" href="#">Sing out</a>
+                                <a class="dropdown-item text-danger" href="#">Setings</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-primary" href="#">Inbox</a>
+                            </div>
+                        </li>
+                    </ul>
+
+                    
                 </div>
             </div>
         </nav>
@@ -62,14 +86,14 @@
         </div>
     </footer>
     <!-- JavaScript Alertify-->
-    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script> 
     <script src="https://unpkg.com/gridjs@5.1.0/dist/gridjs.umd.js" asp-append-version="true"></script>
     <script src="~/js/utilities.js" asp-append-version="true"></script>
     <!--script src="~/js/site.js" asp-append-version="true"></script>-->
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     
     @await RenderSectionAsync("Scripts", required: false)
 </body>
