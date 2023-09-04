@@ -28,7 +28,6 @@ namespace WebAppJob.Controllers
 
         public IActionResult Index()
         {
-            //string culture = CultureInfo.CurrentCulture.TextInfo.CultureName ;
             return View();
         }
 
@@ -46,7 +45,6 @@ namespace WebAppJob.Controllers
             catch (Exception e)
             {
                 ModelState.AddModelError("UserName", "An error occurred while searching for the user");
-
             }
 
             return View("Index");
@@ -84,8 +82,17 @@ namespace WebAppJob.Controllers
                 ModelState.AddModelError("Password", "An error occurred while searching for the information of user");
             }
 
-            return View(user);
+            return RedirectToAction("LoginValidation", new { username = user.UserName});
           
         }
-    }
+
+        [HttpGet]
+        public IActionResult Singout()
+        {
+            HttpContext.Session.Remove("User");
+
+            return RedirectToAction("Index");
+        }
+
+	}
 }

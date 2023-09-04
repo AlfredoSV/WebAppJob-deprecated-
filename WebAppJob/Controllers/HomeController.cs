@@ -33,6 +33,7 @@ namespace WebAppJob.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult SeeMyInformation()
         {
             //Guid id = Guid.Parse(HttpContext.Session.GetString("User")??"");}
@@ -41,7 +42,7 @@ namespace WebAppJob.Controllers
             UserFkw userFkw = _serviceUser.GetUserById(id);
 
             UserViewModel userViewModel = UserViewModel.Create(userFkw.Id,userFkw.UserName,
-                userFkw.DateCreated,"Example rol",userFkw.UserInformation.Name,
+                userFkw.DateCreated,Guid.NewGuid(),userFkw.UserInformation.Name,
                 userFkw.UserInformation.LastName,userFkw.UserInformation.Age,
                 userFkw.UserInformation.Address,userFkw.UserInformation.Email);
 
