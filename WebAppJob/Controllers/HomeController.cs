@@ -3,6 +3,7 @@ using Framework.Security2023.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Persistence.Data;
 using WebAppJob.Models;
+using WebAppJob.Filters;
 
 namespace WebAppJob.Controllers
 {
@@ -10,15 +11,14 @@ namespace WebAppJob.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly CatalogContext _context;
         private readonly IServiceUser _serviceUser;
-		public HomeController(ILogger<HomeController> logger, CatalogContext context, IServiceUser serviceUser)
+		public HomeController(ILogger<HomeController> logger, IServiceUser serviceUser)
         {
 			_serviceUser = serviceUser;
 			_logger = logger;
-            _context = context;
         }
 
+        //[AuthFilter("Admin")]
         [HttpGet]     
         public IActionResult Index(string userName)
         {
