@@ -10,18 +10,37 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Index</title>
+    <link rel="stylesheet" href="~/lib/tailwindcss/tailwind.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 </head>
-<body>
+<body class="bg-dark">
+    <div class="container-fluid  text-white d-flex justify-content-center">
+    
+        <div class="mt-40 shadow rounded p-10">
+            <h3 class="m-7 sh">Web App Job</h3>
 
-    <form asp-action="LoginUser" method="post" asp-controller="Login">
+            <form asp-action="LoginUser" method="post" asp-controller="Login">
+                <div class="form-group">
 
-        <input asp-for="UserName" type="text" />
-       
-        <input type="submit" value="Log in" />
+                    <label class="form-label">User name</label>
+                    <input autocomplete="off" asp-for="UserName" class="form-control" type="text" />
 
-        <span asp-validation-for="UserName"></span>
+                </div>
 
-    </form>
+                <div class="form-group mt-4">
+                    <input class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="submit" value="Log in" />
+                    <a href="#">Register</a>
+                </div>
 
+                <div class="form-group mt-4">
+                    <span class="text-danger" asp-validation-for="UserName"></span>
+                </div>
+
+            </form>
+
+
+        </div>
+
+    </div>
 </body>
 </html>
