@@ -107,10 +107,13 @@ namespace Application.Services
         
         public void UpdateJob(DtoRequest<Job> dtoRequest)
         {
-	
-			dtoRequest.Data.UpdateDate = DateTime.Now;
-			_jobContext.Jobs.Update(dtoRequest.Data);
-			_jobContext.SaveChanges();
+            //Job job = GetDetailJob(dtoRequest.Data.Id).Data;
+
+            //job.UpdateDate = DateTime.Now;
+            //job.IdArea = dtoRequest.Data.IdArea;
+
+            _jobContext.Jobs.Update(dtoRequest.Data);
+            _jobContext.SaveChanges();
 		}
        
     }

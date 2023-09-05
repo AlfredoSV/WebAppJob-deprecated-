@@ -152,6 +152,7 @@
 				api = 'Job/CreateJob';
 			
 			let data = {
+				'id': document.querySelector("#id").value,
 				'nameJob': document.querySelector("#name").value,
 				'idCompany': document.querySelector("#idCompany").value,
 				'salaryMax': document.querySelector("#salaryMax").value,
@@ -338,6 +339,9 @@
 			fetch(url, options).then(response => response.json())
 				.then(json => {
 
+					let id = document.querySelector("#id");
+					id.value = json.id.toString();
+
 					let area = document.querySelector("#idArea");
 					area.value = json.idArea.toString();
 
@@ -393,14 +397,36 @@
 				});
 
 		}
-
-	
+		
 		new gridjs.Grid({
 				columns: ['Id', 'Name', 'Date apply', 'Description', 'Vancancy Numbers',
 					{
 						name: 'Actions',
 						width: '30%',
-						formatter: (_, row) => gridjs.html(`<a class="btn btn-info " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Detail</a> | <a class="btn btn-success" onclick="getEdit(this)" href=#${row.cells[0].data}>Edit</a> | <a class="btn btn-danger" onclick="deleteJob(this)" href=#${row.cells[0].data}>Delete</a> | <a class="btn btn-primary " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Apply</a>`)
+						formatter: (_, row) =>{
+							let cadFinal;
+							let cadEdit = '<a class="btn btn-success" onclick="getEdit(this)" href=#'+row.cells[0].data+'>Edit</a>';
+							let cadDelete = '<a class= "btn btn-danger" onclick = "deleteJob(this)" href = #'+row.cells[0].data+'>Delete</a> |';
+							let cadDeatil = `<a class="btn btn-primary " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Apply</a > `;
+							let cadApply = `<a class="btn btn-info " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Detail</a> | `;
+
+							@if (false)
+							{
+								<text>
+									cadFinal = cadEdit;
+								</text>
+							}
+							else
+							{
+								<text>
+									cadFinal = cadEdit +'|'+ cadDelete;
+									
+								</text>
+							}
+
+							return gridjs.html(cadFinal);
+						}
+						
 					}],
 				sort: true,
 				search: {
@@ -443,8 +469,6 @@
 					}
 				}
 			}).render(document.getElementById('tableJobs'));
-
-	
 
 		function closeBtnModalCreateJob() {
 

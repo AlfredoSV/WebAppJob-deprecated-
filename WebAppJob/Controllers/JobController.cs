@@ -144,7 +144,7 @@ namespace WebAppJob.Controllers
 				_mapper.Map(jobView, dtoRequ.Data);
 				_serviceJob.UpdateJob(dtoRequ);
 
-				return Ok(new { message = "The job was created successful" });
+				return Ok(new { message = "The job was edited successful" });
 			}
 			catch (Exception ex)
 			{
