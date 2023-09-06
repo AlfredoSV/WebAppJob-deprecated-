@@ -1,30 +1,45 @@
 ﻿
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
 }
 
 @model WebAppJob.Models.UserModel
 
-<!DOCTYPE html>
+<div class="container-fluid text-white d-flex justify-content-center">
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
+    <div class="mt-20 shadow rounded p-5">
+        <h3 class="m-7 sh">Web App Job</h3>
 
-    <form asp-action="LoginValidation" method="post" asp-controller="Login">
+        <form asp-action="LoginValidation" method="post" asp-controller="Login">
+            <div class="form-group">
 
-        <input asp-for="UserName" type="hidden" />
+                <label class="form-label">User name</label>
+                <input autocomplete="off" readonly asp-for="UserName" class="form-control" type="text" />
 
-        <label>@Model.UserName</label>
+            </div>
 
-        <input asp-for="Password" type="password" />
+            <div class="form-group">
 
-        <input type="submit" value="Log in" />
+                <label class="form-label">User name</label>
+                <input autocomplete="off" asp-for="Password" class="form-control" type="text" />
+                </div>
 
-    </form>
+            <div class="form-group mt-4 d-flex justify-content-center align-center">
+                <input class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="submit" value="Log in" />
+            </div>
+            <div class="form-group">
+                <a asp-action="Register" asp-controller="Login">Register</a>
+                <br />
+                <a asp-action="ForgotPassword" asp-fragment="Login">
+                    Forgot password?
+                </a>
+            </div>
+            <div class="form-group mt-4">
+                <span class="text-danger" asp-validation-for="UserName"></span>
+            </div>
 
-</body>
-</html>
+        </form>
+
+
+    </div>
+</div>
