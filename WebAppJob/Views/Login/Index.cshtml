@@ -3,7 +3,7 @@
 }
 @model WebAppJob.Models.UserModel
 
-<div class="container-fluid  text-white d-flex justify-content-center">
+<div class="container-fluid text-white d-flex justify-content-center">
 
     <div class="mt-20 shadow rounded p-5">
         <h3 class="m-7 sh">Web App Job</h3>
@@ -20,7 +20,7 @@
                 <input class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="submit" value="Log in" />
             </div>
             <div class="form-group">         
-                <a asp-action="Register" asp-fragment="Login">Register</a>
+                <a asp-action="Register" asp-controller="Login">Register</a>
                 <br />
                 <a asp-action="ForgotPassword" asp-fragment="Login">
                     Forgot password?

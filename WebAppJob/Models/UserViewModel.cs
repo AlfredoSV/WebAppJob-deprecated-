@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net;
 using System.Xml.Linq;
-
+using System.ComponentModel.DataAnnotations;
 namespace WebAppJob.Models
 {
 	public class UserViewModel
 	{
 		public Guid Id { get; private set; }
 		public string UserName { get; private set; }
+		public string Password { get; private set; }
+		public string ConfirmPasword { get; private set; }
 		public DateTime DateCreated { get; private set; }
 		public Guid RoleId { get; set; }
 		public string Name { get; private set; }

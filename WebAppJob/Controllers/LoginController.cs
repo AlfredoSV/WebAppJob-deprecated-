@@ -94,5 +94,11 @@ namespace WebAppJob.Controllers
             return RedirectToAction("Index");
         }
 
-	}
+        [HttpGet]
+        public IActionResult Register() => View();
+
+        [HttpGet]
+        public IActionResult ForgotPassword() => View();
+
+    }
 }
