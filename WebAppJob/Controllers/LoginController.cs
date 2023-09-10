@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using WebAppJob.Models;
-using Framework.Security2023.Entities; 
+using Framework.Security2023.Entities;
 using System.Resources;
 using Humanizer.Localisation;
 using static Framework.Security2023.Entities.Login;
@@ -38,7 +38,7 @@ namespace WebAppJob.Controllers
             {
                 if (_serviceUser.UserExist(userName))
                     return RedirectToAction("LoginValidation", "Login", new { userName });
-               
+
                 ModelState.AddModelError("UserName", "The user was not found");
 
             }
@@ -69,14 +69,15 @@ namespace WebAppJob.Controllers
                 Login login = Login.Create(user.UserName, user.Password);
                 Login userLogin = _serviceLogin.Login(login);
 
-                if(string.IsNullOrEmpty(user.Password))
+                if (string.IsNullOrEmpty(user.Password))
                     ModelState.AddModelError("Password", "The credentials was not correct.");
 
                 if (userLogin.StatusLog == StatusLogin.Ok)
                 {
                     HttpContext.Session.SetString("User", userLogin.User.Id.ToString());
                     return RedirectToAction("Index", "Home", new { user.UserName });
-                }else
+                }
+                else
                     ModelState.AddModelError("Password", "The credentials was not correct.");
             }
             catch (Exception)
@@ -85,8 +86,8 @@ namespace WebAppJob.Controllers
                 ModelState.AddModelError("Password", "An error occurred while searching for the information of user");
             }
 
-            return RedirectToAction("LoginValidation", new { username = user.UserName});
-          
+            return RedirectToAction("LoginValidation", new { username = user.UserName });
+
         }
 
         [HttpGet]
@@ -102,6 +103,24 @@ namespace WebAppJob.Controllers
 
         [HttpGet]
         public IActionResult ForgotPassword() => View();
+
+        [HttpPost]
+        public IActionResult ForgotPassword(UserForgotPasswordViewModel userForgotPassword)
+        {
+            bool valuesRequiredUserName = string.IsNullOrEmpty(userForgotPassword.UserName);
+            bool valuesRequiredUserPassword =  string.IsNullOrEmpty(userForgotPassword.Email);
+            
+            if (valuesRequiredUserName)
+                ModelState.AddModelError("UserName", "The username was required.");
+
+            if (valuesRequiredUserPassword)
+                ModelState.AddModelError("Email", "The email was required.");
+
+            if (valuesRequiredUserName || valuesRequiredUserPassword)
+                return View("ForgotPassword", userForgotPassword);
+
+            return RedirectToAction("Index", "Login");
+        }
 
     }
 }
