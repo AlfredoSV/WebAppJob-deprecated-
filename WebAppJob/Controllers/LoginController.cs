@@ -68,13 +68,16 @@ namespace WebAppJob.Controllers
 
                 Login login = Login.Create(user.UserName, user.Password);
                 Login userLogin = _serviceLogin.Login(login);
+
+                if(string.IsNullOrEmpty(user.Password))
+                    ModelState.AddModelError("Password", "The credentials was not correct.");
+
                 if (userLogin.StatusLog == StatusLogin.Ok)
                 {
                     HttpContext.Session.SetString("User", userLogin.User.Id.ToString());
                     return RedirectToAction("Index", "Home", new { user.UserName });
-                }
-                    
-
+                }else
+                    ModelState.AddModelError("Password", "The credentials was not correct.");
             }
             catch (Exception)
             {
