@@ -11,9 +11,9 @@ namespace WebAppJob.Filters
 		public IServiceUser _serviceUser;
 		private string _role;
 
-		public AuthFilter(string role)
+		public AuthFilter()
 		{
-			_role = role;
+			_role = string.Empty;
 			_serviceUser = new ServiceUser();
 		}
 
@@ -38,19 +38,19 @@ namespace WebAppJob.Filters
 					{ "Action", "Index" } });
 					context.Result.ExecuteResultAsync(context);
 			}
-			else
-			{
-				//Validate the Role
-				if (user.Role is null &&
-					user.Role.NameRol.ToUpper().Equals(_role.ToUpper()))
-				{
-					context.Result = new RedirectToRouteResult(new RouteValueDictionary
-					{{ "Controller", "Home" },
-					{ "Action", "NoAuthorization" } });
+			//else
+			//{
+			//	//Validate the Role
+			//	if (user.Role is null &&
+			//		user.Role.NameRol.ToUpper().Equals(_role.ToUpper()))
+			//	{
+			//		context.Result = new RedirectToRouteResult(new RouteValueDictionary
+			//		{{ "Controller", "Home" },
+			//		{ "Action", "NoAuthorization" } });
 
-					context.Result.ExecuteResultAsync(context);
-				}
-			}
+			//		context.Result.ExecuteResultAsync(context);
+			//	}
+			//}
 
 		}
 	}

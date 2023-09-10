@@ -62,10 +62,10 @@ namespace Application.Services
 
         public void CreateJob(DtoRequest<Job> dtoRequest)
         {
-			dtoRequest.Data.Id = Guid.NewGuid();
-			dtoRequest.Data.IdUserCreated = Guid.NewGuid();
-			dtoRequest.Data.UpdateDate = DateTime.Now;
-			dtoRequest.Data.CreateDate = DateTime.Now;
+            dtoRequest.Data.Id = Guid.NewGuid();
+            dtoRequest.Data.IdUserCreated = Guid.NewGuid();
+            dtoRequest.Data.UpdateDate = DateTime.Now;
+            dtoRequest.Data.CreateDate = DateTime.Now; 
 			_jobContext.Jobs.Add(dtoRequest.Data);
             _jobContext.SaveChanges();
         }
@@ -107,10 +107,11 @@ namespace Application.Services
         
         public void UpdateJob(DtoRequest<Job> dtoRequest)
         {
-            //Job job = GetDetailJob(dtoRequest.Data.Id).Data;
+            Job job = GetDetailJob(dtoRequest.Data.Id).Data;
 
-            //job.UpdateDate = DateTime.Now;
-            //job.IdArea = dtoRequest.Data.IdArea;
+            dtoRequest.Data.UpdateDate = DateTime.Now;
+			dtoRequest.Data.CreateDate = job.CreateDate;
+            dtoRequest.Data.IdUserCreated = job.IdUserCreated;
 
             _jobContext.Jobs.Update(dtoRequest.Data);
             _jobContext.SaveChanges();

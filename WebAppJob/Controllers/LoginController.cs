@@ -109,17 +109,29 @@ namespace WebAppJob.Controllers
         {
             bool valuesRequiredUserName = string.IsNullOrEmpty(userForgotPassword.UserName);
             bool valuesRequiredUserPassword =  string.IsNullOrEmpty(userForgotPassword.Email);
-            
-            if (valuesRequiredUserName)
-                ModelState.AddModelError("UserName", "The username was required.");
 
-            if (valuesRequiredUserPassword)
-                ModelState.AddModelError("Email", "The email was required.");
+            try
+            {
 
-            if (valuesRequiredUserName || valuesRequiredUserPassword)
-                return View("ForgotPassword", userForgotPassword);
+                if (valuesRequiredUserName)
+                    ModelState.AddModelError("UserName", "The username was required.");
 
-            return RedirectToAction("Index", "Login");
+                if (valuesRequiredUserPassword)
+                    ModelState.AddModelError("Email", "The email was required.");
+
+                if (valuesRequiredUserName || valuesRequiredUserPassword)
+                    return View("ForgotPassword", userForgotPassword);
+
+
+
+                return RedirectToAction("Index", "Login");
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
         }
 
     }

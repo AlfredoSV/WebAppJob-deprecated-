@@ -151,8 +151,7 @@
 			else
 				api = 'Job/CreateJob';
 			
-			let data = {
-				'id': document.querySelector("#id").value,
+			let data = {			
 				'nameJob': document.querySelector("#name").value,
 				'idCompany': document.querySelector("#idCompany").value,
 				'salaryMax': document.querySelector("#salaryMax").value,
@@ -162,6 +161,13 @@
 				'descriptionJob': document.querySelector("#description").value,
 				'isActive': document.querySelector("#isActive").value === 'on'
 			}
+
+			if (createJobForm == undefined){
+				data["id"] = document.querySelector("#id").value;
+				alert("")
+			}
+				
+
 			let options = {
 				method: "POST",
 				headers: {
@@ -194,7 +200,7 @@
 						setTimeout(() => {
 
 							new gridjs.updateConfig({
-								columns: ['Id', 'Name', 'Date apply', 'Description', 'Vancancy Numbers',
+								columns: ['Id', 'Name', 'Date created', 'Description', 'Vancancy Numbers',
 									{
 										name: 'Actions',
 										width: '30%',
@@ -231,7 +237,7 @@
 								},
 								language: {
 									'search': {
-										'placeholder': 'Buscar...'
+										'placeholder': 'Search...'
 									},
 									'pagination': {
 										'previous': '⬅️',

@@ -11,4 +11,10 @@
     <ProjectReference Include="..\Persistence\Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Framework.Security2023">
+      <HintPath>..\WebAppJob\Dependencies\Framework.Security2023.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

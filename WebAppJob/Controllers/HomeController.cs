@@ -18,7 +18,7 @@ namespace WebAppJob.Controllers
 			_logger = logger;
         }
 
-        //[AuthFilter("Admin")]
+        //[AuthFilter]
         [HttpGet]     
         public IActionResult Index(string userName)
         {
