@@ -453,7 +453,7 @@
 				server: {
 					url: `Job/GetJobs`,
 					method: 'GET',
-					then: data => data.results.map(obj => [obj.id, obj.nameJob, obj.createDate, obj.descriptionJob, obj.vacancyNumbers]),
+					then: data => data.results.map(obj => [obj.id, obj.nameJob, obj.createDate, obj.descriptionJob.substring(1,20) +"...", obj.vacancyNumbers]),
 					handle: (res) => {
 
 						if (res.status === 404) return { data: [] };

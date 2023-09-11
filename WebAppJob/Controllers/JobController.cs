@@ -156,6 +156,8 @@ namespace WebAppJob.Controllers
 
 		}
 
+        [HttpGet]
+        public IActionResult ApplicationsJobs() => View();
 
     }
 }

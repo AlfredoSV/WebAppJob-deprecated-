@@ -17,6 +17,7 @@ namespace WebAppJob.Models
 		public int Age { get; private set; }
 		public string Address { get; set; }
 		public string Email { get; set; }
+		public IFormFile CvFile { get; set; }
 
 		private UserViewModel(Guid id, string userName, DateTime dateCreated,
 			Guid roleId, string name, string lastName, int age, string address, string email)
