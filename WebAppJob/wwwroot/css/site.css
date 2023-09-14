@@ -60,9 +60,32 @@ input-text:hover{
     border:none;
 }
 
-.card{
-    padding:20px;
-    border:#ccc solid 1.5px !important;
-    border-radius:0px !important;
-    background-color:#f6f6f6 !important;
+.card {
+    padding: 10px;
+    /*border: #ccc solid 1.5px !important;*/
+    border-radius: 10px !important;
+    background-color: #f6f6f6 !important;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.img-card img{
+    width:140px;
+    border-radius:10px;
+}
+
+.title-card a {
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.labels-card ul {
+    list-style: circle;
+    color: #3a687e;
+    font-size: 13px;
+}
+
+.description-card {
+    font-size: 13px;
+    text-align: justify;
+    text-justify: inter-word;
 }

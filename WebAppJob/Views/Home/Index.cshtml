@@ -1,98 +1,31 @@
-﻿
-@using System.Globalization;
+﻿@using System.Globalization;
 @using WebAppJob.Controllers;
 @inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer;
 
 
-@{	
-	var title = @Localizer["WelcomeTitle"];
+@{
+    var title = @Localizer["WelcomeTitle"];
 }
 
 <div class="container-fluid">
-    <div class="mb-3">
-        <h3>@title.Value</h3>
+    <div class="mb-3 row">
+        <h3>@title.Value - @@User</h3>
     </div>
-    <div class="mb-3">
-		<a class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" href="#" id="newJob">New Job
-		</a>
+    <div class="mb-3 row">
+        <div class="col-3">
+            <a class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" href="#" id="newJob">
+                New Job
+            </a>
+        </div>
+
     </div>
 
-    <div id="tableJobs"></div>
 
-	<div class="container">
 
-		<div class="row">
-			<div class="col-4">
-
-				<div class="card">
-					<div class="img-card">
-						<img class="h-full w-auto" src="https://d31i9b8skgubvn.cloudfront.net/folder/logos/4255_logo_11mTq3XMPhe0ALVG.png" alt="Logo">
-					</div>
-					<div class="title-card">
-						<h3>Example</h3>
-					</div>
-					<div class="description-card">
-						<p>loremwssjnjnkdjkdajhdsajhkdjhksdhjk</p>
-					</div>
-					<div class="labels-card">
-						<ul>
-							<li>Nuevo León</li>
-							<li>Empleado de tiempo completo</li>
-						</ul>
-					</div>
-				</div>
-
-			</div>
-			<div class="col-4">
-
-				<div class="card">
-					<div class="img-card">
-						<img class="h-full w-auto" src="https://d31i9b8skgubvn.cloudfront.net/folder/logos/4255_logo_11mTq3XMPhe0ALVG.png" alt="Logo">
-					</div>
-					<div class="title-card">
-						<h3>Example</h3>
-					</div>
-					<div class="description-card">
-						<p>loremwssjnjnkdjkdajhdsajhkdjhksdhjk</p>
-					</div>
-					<div class="labels-card">
-						<ul>
-							<li>Nuevo León</li>
-							<li>Empleado de tiempo completo</li>
-						</ul>
-					</div>
-				</div>
-
-			</div>
-			<div class="col-4">
-
-				<div class="card">
-					<div class="img-card">
-						<img class="h-full w-auto" src="https://d31i9b8skgubvn.cloudfront.net/folder/logos/4255_logo_11mTq3XMPhe0ALVG.png" alt="Logo">
-					</div>
-					<div class="title-card">
-						<h3>Example</h3>
-					</div>
-					<div class="description-card">
-						<p>loremwssjnjnkdjkdajhdsajhkdjhksdhjk</p>
-					</div>
-					<div class="labels-card">
-						<ul>
-							<li>Nuevo León</li>
-							<li>Empleado de tiempo completo</li>
-						</ul>
-					</div>
-				</div>
-
-			</div>
-		</div>
-
-	</div>
-	
     <!-- Modal Detail Job-->
     <div class="modal fade" id="detailJobModal" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content" style="background-color:#353535; color:white;">
+            <div class="modal-content" style="background-color:#353535; color:white;">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Detail Job</h5>
                     <button type="button" onclick="closeBtnModalDetailJob()" class="close" data-dismiss="myModal" aria-label="Close">
@@ -100,505 +33,584 @@
                     </button>
                 </div>
                 <div class="modal-body" id="jobDetail">
-                    
-
                 </div>
             </div>
         </div>
     </div>
-    
+
     <!-- Modal Create Job-->
     <div class="modal fade" id="createJobModal" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content" style="background-color:#353535; color:white;">
+            <div class="modal-content" style="background-color:#353535; color:white;">
                 <div class="modal-header">
                     <h5 class="modal-title">New Job</h5>
-                    <button type="button" onclick="closeBtnModalCreateJob()"  class="close" data-dismiss="modal1" aria-label="Close">
+                    <button type="button" onclick="closeBtnModalCreateJob()" class="close" data-dismiss="modal1" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body" id="formJob">
-                    
                 </div>
-            
+
             </div>
         </div>
     </div>
 
-	<!-- Modal Edit Job-->
-	<div class="modal fade" id="editJobModal" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content" style="background-color:#353535; color:white;">
-				<div class="modal-header">
-					<h5 class="modal-title">Edit Job</h5>
-					<button type="button" onclick="closeBtnModalEditJob()" class="close" data-dismiss="modal1" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body" id="formJobedit">
-				</div>
+    <!-- Modal Edit Job-->
+    <div class="modal fade" id="editJobModal" tabindex="-1" data-bs-backdrop="static" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="background-color:#353535; color:white;">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Job</h5>
+                    <button type="button" onclick="closeBtnModalEditJob()" class="close" data-dismiss="modal1" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="formJobedit">
+                </div>
 
-			</div>
-		</div>
-	</div>
+            </div>
+        </div>
+    </div>
 
 
 </div>
+
+<div class="container-fluid mt-10">
+
+    <div class="row">
+        <div class="col-6">
+
+            <div class="card">
+                <div class="img-card">
+                    <img src="https://d31i9b8skgubvn.cloudfront.net/folder/logos/4255_logo_11mTq3XMPhe0ALVG.png" alt="Logo">
+                </div>
+                <div class="title-card mt-3">
+                    <h3><a href="www.google.com.mx">Desarrollador .Net</a></h3>
+                </div>
+                <div class="description-card mt-3">
+                    <p>Empresa Mexicana ubicada en Santa Fe, Ciudad de México; Líder en el desarrollo, implementación y gestión de soluciones de tecnología, requiere para trabajar en una de sus unidades de negocios dedicada a la investigación y...</p>
+                </div>
+                <div class="labels-card">
+                    <ul>
+                        <li>Nuevo León</li>
+                        <li>Empleado de tiempo completo</li>
+                    </ul>
+                </div>
+                <div class="mt-3 mb-2">
+                    <a class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" href="#" id="newJob">
+                        Edit
+                    </a>
+                    <a class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" href="#" id="newJob">
+                        Delete
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-6">
+
+            <div class="card">
+                <div class="img-card">
+                    <img src="https://d31i9b8skgubvn.cloudfront.net/folder/logos/4255_logo_11mTq3XMPhe0ALVG.png" alt="Logo">
+                </div>
+                <div class="title-card mt-3">
+                    <h3><a href="www.google.com.mx">Desarrollador .Net</a></h3>
+                </div>
+                <div class="description-card mt-3">
+                    <p>Empresa Mexicana ubicada en Santa Fe, Ciudad de México; Líder en el desarrollo, implementación y gestión de soluciones de tecnología, requiere para trabajar en una de sus unidades de negocios dedicada a la investigación y...</p>
+                </div>
+                <div class="labels-card">
+                    <ul>
+                        <li>Nuevo León</li>
+                        <li>Empleado de tiempo completo</li>
+                    </ul>
+                </div>
+                <div class="mt-3 mb-2">
+                    <a class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" href="#" id="newJob">
+                        Edit
+                    </a>
+                    <a class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" href="#" id="newJob">
+                        Delete
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div class="row mt-5">
+        <div class="flex">
+            <!-- Previous Button -->
+            <a href="#" class="flex items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                Previous
+            </a>
+
+            <!-- Next Button -->
+            <a href="#" class="flex items-center justify-center px-3 h-8 ml-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                Next
+            </a>
+        </div>
+    </div>
+
+</div>
+
 @section scripts{
-	<script type="text/javascript">
+    <script type="text/javascript">
 
-		const newJob = document.querySelector("#newJob");
+        const newJob = document.querySelector("#newJob");
 
-		newJob.addEventListener("click", (e) => {
+        newJob.addEventListener("click", (e) => {
 
-			e.preventDefault();
+            e.preventDefault();
 
-			loadCatalogs();
+            loadCatalogs();
 
-			let url = window.location.origin + '/Job/CreateJob';
+            let url = window.location.origin + '/Job/CreateJob';
 
-			fetch(url)
-				.then(response => response.text())
-				.then(text => {
+            fetch(url)
+                .then(response => response.text())
+                .then(text => {
 
-					document.querySelector("#formJob").innerHTML = text;
-					$('#createJobModal').modal('show');
+                    document.querySelector("#formJob").innerHTML = text;
+                    $('#createJobModal').modal('show');
 
-					let createJobForm = document.getElementById("createJobForm");
+                    let createJobForm = document.getElementById("createJobForm");
 
-					createJobForm.addEventListener("submit", eventSubmit, true);
-								
+                    createJobForm.addEventListener("submit", eventSubmit, true);
 
-					let nameInput = document.getElementById("name");
-					nameInput.addEventListener("change", () => {
 
-						validateStr("name", "nameValidationMessage", "This name is not valid", 6, 10, true)
+                    let nameInput = document.getElementById("name");
+                    nameInput.addEventListener("change", () => {
 
-					}, true);
+                        validateStr("name", "nameValidationMessage", "This name is not valid", 6, 10, true)
 
-					let lastName = document.getElementById("description");
-					lastName.addEventListener("change", () => {
+                    }, true);
 
-						validateStr("description", "descriptionValidationMessage", "The description is not valid", 2, 80, true)
+                    let lastName = document.getElementById("description");
+                    lastName.addEventListener("change", () => {
 
-					}, true);
+                        validateStr("description", "descriptionValidationMessage", "The description is not valid", 2, 80, true)
 
-					let vacancyNumber = document.getElementById("vacancyNumber");
-					vacancyNumber.addEventListener("change", () => {
+                    }, true);
 
-						validateIntegerNumber("vacancyNumber", "vacancyNumberValidationMessage", "The number is not valid", true)
+                    let vacancyNumber = document.getElementById("vacancyNumber");
+                    vacancyNumber.addEventListener("change", () => {
 
-					}, true);
+                        validateIntegerNumber("vacancyNumber", "vacancyNumberValidationMessage", "The number is not valid", true)
 
-					let salaryMax = document.getElementById("salaryMax");
-					salaryMax.addEventListener("change", () => {
+                    }, true);
 
-						validateFloatingNumber("salaryMax", "salaryMaxValidationMessage", "The number is not valid", true)
+                    let salaryMax = document.getElementById("salaryMax");
+                    salaryMax.addEventListener("change", () => {
 
-					}, true);
+                        validateFloatingNumber("salaryMax", "salaryMaxValidationMessage", "The number is not valid", true)
 
-					let salaryMin = document.getElementById("salaryMin");
-					salaryMin.addEventListener("change", () => {
+                    }, true);
 
-						validateFloatingNumber("salaryMin", "salaryMinValidationMessage", "The number is not valid", true)
+                    let salaryMin = document.getElementById("salaryMin");
+                    salaryMin.addEventListener("change", () => {
 
-					}, true);
+                        validateFloatingNumber("salaryMin", "salaryMinValidationMessage", "The number is not valid", true)
 
-				});
+                    }, true);
 
-			$(".loader").hide();
+                });
 
-		});
+            $(".loader").hide();
 
-		function eventSubmit(e) {
+        });
 
-			let api = '';
-			let createJobForm = document.getElementById("createJobForm");
-			let editJobForm = document.getElementById("editJobForm");
-
-			if (createJobForm == undefined)
-				api = 'Job/EditJob';
-			else
-				api = 'Job/CreateJob';
-			
-			let data = {			
-				'nameJob': document.querySelector("#name").value,
-				'idCompany': document.querySelector("#idCompany").value,
-				'salaryMax': document.querySelector("#salaryMax").value,
-				'salaryMin': document.querySelector("#salaryMin").value,
-				'vacancyNumbers': document.querySelector("#vacancyNumber").value,
-				'idArea': document.querySelector("#idArea").value,
-				'descriptionJob': document.querySelector("#description").value,
-				'isActive': document.querySelector("#isActive").value === 'on'
-			}
+        function eventSubmit(e) {
 
-			if (createJobForm == undefined){
-				data["id"] = document.querySelector("#id").value;
-				alert("")
-			}
-				
+            let api = '';
+            let createJobForm = document.getElementById("createJobForm");
+            let editJobForm = document.getElementById("editJobForm");
 
-			let options = {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(data),
-			}
+            if (createJobForm == undefined)
+                api = 'Job/EditJob';
+            else
+                api = 'Job/CreateJob';
 
-			e.preventDefault()
-
-			let isValidName = validateStr("name", "nameValidationMessage", "This name is not valid", 6, 10, true);
-			let isValidLastName = validateStr("description", "descriptionValidationMessage", "The description is not valid", 2, 80, true);
-			let isValidIdCompany = validateSelect("idCompany", "idCompanyValidationMessage", "The company is not valid", true);
-			let isValidIdArea = validateSelect("idArea", "idAreaValidationMessage", "The area is not valid", true);
-			let isValidVacancyNumber = validateIntegerNumber("vacancyNumber", "vacancyNumberValidationMessage", "The number is not valid", true);
-			let isValidMaxSalary = validateFloatingNumber("salaryMax", "salaryMaxValidationMessage", "The number is not valid", true);
-			let isValidMinSalary = validateFloatingNumber("salaryMin", "salaryMinValidationMessage", "The number is not valid", true);
-
-
-			if (isValidLastName && isValidName && isValidIdCompany
-				&& isValidIdArea && isValidVacancyNumber &&
-				isValidMaxSalary && isValidMinSalary) {
-
-				fetch(api, options)
-					.then(response => response.json())
-					.then(json => {
-						$('#applyJobModal').modal('hide');
-						alertify.success(json.message);
-
-						setTimeout(() => {
-
-							new gridjs.updateConfig({
-								columns: ['Id', 'Name', 'Date created', 'Description', 'Vancancy Numbers',
-									{
-										name: 'Actions',
-										width: '30%',
-										formatter: (_, row) => gridjs.html(`<a class="btn btn-info " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Detail</a> | <a class="btn btn-success" onclick="getEdit(this)" href=#${row.cells[0].data}>Edit</a> | <a class="btn btn-danger" onclick="deleteJob(this)" href=#${row.cells[0].data}>Delete</a> | <a class="btn btn-primary " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Apply</a>`)
-									}],
-								sort: true,
-								search: {
-									server: {
-										summary: true,
-										url: (prev, text) => `${prev}?textSearch=${text}`
-									}
-								},
-								pagination: {
-									limit: 3,
-									summary: true,
-									server: {
-										url: (prev, page, limit) => `${prev}?&page=${page}&limit=${limit}&`
-									}
+            let data = {
+                'nameJob': document.querySelector("#name").value,
+                'idCompany': document.querySelector("#idCompany").value,
+                'salaryMax': document.querySelector("#salaryMax").value,
+                'salaryMin': document.querySelector("#salaryMin").value,
+                'vacancyNumbers': document.querySelector("#vacancyNumber").value,
+                'idArea': document.querySelector("#idArea").value,
+                'descriptionJob': document.querySelector("#description").value,
+                'isActive': document.querySelector("#isActive").value === 'on'
+            }
 
-								},
-								resizable: true,
-								server: {
-									url: `Job/GetJobs`,
-									method: 'GET',
-									then: data => data.results.map(obj => [obj.id, obj.nameJob, obj.createDate, obj.descriptionJob, obj.vacancyNumbers]),
-									handle: (res) => {
+            if (createJobForm == undefined) {
+                data["id"] = document.querySelector("#id").value;
+                alert("")
+            }
 
-										if (res.status === 404) return { data: [] };
-										if (res.ok) return res.json();
 
-										res.json().then((res) => alert(res.error));
-									},
-									total: data => data.count
-								},
-								language: {
-									'search': {
-										'placeholder': 'Search...'
-									},
-									'pagination': {
-										'previous': '⬅️',
-										'next': '➡️',
-										'showing': '😃 Visualizar',
-										'results': () => 'Resultado'
-									}
-								}
-							}).forceRender(document.getElementById('tableJobs'));
-						
-						}, 2000);
-						
-					})
-					.catch(err => alertify.error(json.error));
+            let options = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            }
 
-			}
+            e.preventDefault()
+
+            let isValidName = validateStr("name", "nameValidationMessage", "This name is not valid", 6, 10, true);
+            let isValidLastName = validateStr("description", "descriptionValidationMessage", "The description is not valid", 2, 80, true);
+            let isValidIdCompany = validateSelect("idCompany", "idCompanyValidationMessage", "The company is not valid", true);
+            let isValidIdArea = validateSelect("idArea", "idAreaValidationMessage", "The area is not valid", true);
+            let isValidVacancyNumber = validateIntegerNumber("vacancyNumber", "vacancyNumberValidationMessage", "The number is not valid", true);
+            let isValidMaxSalary = validateFloatingNumber("salaryMax", "salaryMaxValidationMessage", "The number is not valid", true);
+            let isValidMinSalary = validateFloatingNumber("salaryMin", "salaryMinValidationMessage", "The number is not valid", true);
+
+
+            if (isValidLastName && isValidName && isValidIdCompany
+                && isValidIdArea && isValidVacancyNumber &&
+                isValidMaxSalary && isValidMinSalary) {
+
+                fetch(api, options)
+                    .then(response => response.json())
+                    .then(json => {
+                        $('#applyJobModal').modal('hide');
+                        alertify.success(json.message);
+
+                        setTimeout(() => {
+
+                            new gridjs.updateConfig({
+                                columns: ['Id', 'Name', 'Date created', 'Description', 'Vancancy Numbers',
+                                    {
+                                        name: 'Actions',
+                                        width: '30%',
+                                        formatter: (_, row) => gridjs.html(`<a class="btn btn-info " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Detail</a> | <a class="btn btn-success" onclick="getEdit(this)" href=#${row.cells[0].data}>Edit</a> | <a class="btn btn-danger" onclick="deleteJob(this)" href=#${row.cells[0].data}>Delete</a> | <a class="btn btn-primary " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Apply</a>`)
+                                    }],
+                                sort: true,
+                                search: {
+                                    server: {
+                                        summary: true,
+                                        url: (prev, text) => `${prev}?textSearch=${text}`
+                                    }
+                                },
+                                pagination: {
+                                    limit: 3,
+                                    summary: true,
+                                    server: {
+                                        url: (prev, page, limit) => `${prev}?&page=${page}&limit=${limit}&`
+                                    }
 
-		}
+                                },
+                                resizable: true,
+                                server: {
+                                    url: `Job/GetJobs`,
+                                    method: 'GET',
+                                    then: data => data.results.map(obj => [obj.id, obj.nameJob, obj.createDate, obj.descriptionJob, obj.vacancyNumbers]),
+                                    handle: (res) => {
 
-		async function getDetailJob(obj) {
+                                        if (res.status === 404) return { data: [] };
+                                        if (res.ok) return res.json();
 
-			let urlhtml = window.location.origin + "/Job/GetDetail";
+                                        res.json().then((res) => alert(res.error));
+                                    },
+                                    total: data => data.count
+                                },
+                                language: {
+                                    'search': {
+                                        'placeholder': 'Search...'
+                                    },
+                                    'pagination': {
+                                        'previous': '⬅️',
+                                        'next': '➡️',
+                                        'showing': '😃 Visualizar',
+                                        'results': () => 'Resultado'
+                                    }
+                                }
+                            }).forceRender(document.getElementById('tableJobs'));
 
-			fetch(urlhtml).then(res => res.text())
-				.then(text => {
+                        }, 2000);
 
-					document.querySelector("#jobDetail").innerHTML = text;
+                    })
+                    .catch(err => alertify.error(json.error));
 
-				});
+            }
 
-			await loadCatalogs();
+        }
 
-			$('#detailJobModal').modal('show');
+        async function getDetailJob(obj) {
 
-			let id = obj.hash.replace('#', '');
-			const url = "Job/DetailJob/" + id
+            let urlhtml = window.location.origin + "/Job/GetDetail";
 
-			const options = {
-				method: 'GET',
-				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json'
-				}
-			}
+            fetch(urlhtml).then(res => res.text())
+                .then(text => {
 
-			fetch(url, options).then(response => response.json())
-				.then(json => {
+                    document.querySelector("#jobDetail").innerHTML = text;
 
-					let area = document.querySelector("#idArea");
-					area.value = json.idArea.toString();
+                });
 
-					let company = document.querySelector("#idCompany");
-					company.value = json.idCompany;
+            await loadCatalogs();
 
-					let isActive = document.querySelector("#isActive");
-					isActive.checked = json.isActive;
+            $('#detailJobModal').modal('show');
 
-					let nameJob = document.querySelector("#name");
-					nameJob.value = json.nameJob;
+            let id = obj.hash.replace('#', '');
+            const url = "Job/DetailJob/" + id
 
-					let salaryMax = document.querySelector("#salaryMax");
-					salaryMax.value = json.salaryMax;
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }
 
-					let salaryMin = document.querySelector("#salaryMin");
-					salaryMin.value = json.salaryMin;
+            fetch(url, options).then(response => response.json())
+                .then(json => {
 
-					let vacancyNumber = document.querySelector("#vacancyNumber");
-					vacancyNumber.value = json.vacancyNumbers;
+                    let area = document.querySelector("#idArea");
+                    area.value = json.idArea.toString();
 
+                    let company = document.querySelector("#idCompany");
+                    company.value = json.idCompany;
 
-					let description = document.querySelector("#description");
-					description.value = json.descriptionJob;
+                    let isActive = document.querySelector("#isActive");
+                    isActive.checked = json.isActive;
 
-				});
-		}
+                    let nameJob = document.querySelector("#name");
+                    nameJob.value = json.nameJob;
 
-		async function getEdit(obj) {
+                    let salaryMax = document.querySelector("#salaryMax");
+                    salaryMax.value = json.salaryMax;
 
+                    let salaryMin = document.querySelector("#salaryMin");
+                    salaryMin.value = json.salaryMin;
 
-			let urlhtml = window.location.origin + "/Job/EditJob";
+                    let vacancyNumber = document.querySelector("#vacancyNumber");
+                    vacancyNumber.value = json.vacancyNumbers;
 
-			fetch(urlhtml).then(res => res.text())
-				.then(text => {
 
-					document.querySelector("#formJobedit").innerHTML = text;
+                    let description = document.querySelector("#description");
+                    description.value = json.descriptionJob;
 
-				});
+                });
+        }
 
-			await loadCatalogs();
+        async function getEdit(obj) {
 
 
-			$('#editJobModal').modal('show');
+            let urlhtml = window.location.origin + "/Job/EditJob";
 
-			let id = obj.hash.replace('#', '');
-			const url = "Job/DetailJob/" + id
+            fetch(urlhtml).then(res => res.text())
+                .then(text => {
 
-			const options = {
-				method: 'GET',
-				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json'
-				}
-			}
+                    document.querySelector("#formJobedit").innerHTML = text;
 
-			fetch(url, options).then(response => response.json())
-				.then(json => {
-
-					let id = document.querySelector("#id");
-					id.value = json.id.toString();
-
-					let area = document.querySelector("#idArea");
-					area.value = json.idArea.toString();
-
-					let company = document.querySelector("#idCompany");
-					company.value = json.idCompany;
-
-					let isActive = document.querySelector("#isActive");
-					isActive.checked = json.isActive;
-
-					let nameJob = document.querySelector("#name");
-					nameJob.value = json.nameJob;
-
-					let salaryMax = document.querySelector("#salaryMax");
-					salaryMax.value = json.salaryMax;
-
-					let salaryMin = document.querySelector("#salaryMin");
-					salaryMin.value = json.salaryMin;
-
-					let vacancyNumber = document.querySelector("#vacancyNumber");
-					vacancyNumber.value = json.vacancyNumbers;
-
-
-					let description = document.querySelector("#description");
-					description.value = json.descriptionJob;
-
-				});
-
-			let editJobForm = document.getElementById("editJobForm");
-
-			editJobForm.addEventListener("submit", eventSubmit, true);
-		}
-
-		function deleteJob(obj) {
-
-			let id = obj.hash.replace('#', '');
-
-			const url = "Job/DeleteJob/" + id
-
-			const options = {
-				method: 'DELETE',
-				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json'
-				}
-			}
-
-			fetch(url, options).then(response => response.json())
-				.then(json => {
-
-					alertify.success(json.message);
-
-					setTimeout(() => { window.location.reload(); },2000);
-				});
-
-		}
-		
-		new gridjs.Grid({
-				columns: ['Id', 'Name', 'Date apply', 'Description', 'Vancancy Numbers',
-					{
-						name: 'Actions',
-						width: '30%',
-						formatter: (_, row) =>{
-							let cadFinal;
-							let cadEdit = '<a class="btn btn-success" onclick="getEdit(this)" href=#'+row.cells[0].data+'>Edit</a>';
-							let cadDelete = '<a class= "btn btn-danger" onclick = "deleteJob(this)" href = #'+row.cells[0].data+'>Delete</a> |';
-							let cadDeatil = `<a class="btn btn-primary " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Apply</a > `;
-							let cadApply = `<a class="btn btn-info " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Detail</a> | `;
+                });
 
-							@if (false)
-							{
-								<text>
-									cadFinal = cadEdit;
-								</text>
-							}
-							else
-							{
-								<text>
-									cadFinal = cadEdit +'|'+ cadDelete;
-									
-								</text>
-							}
+            await loadCatalogs();
 
-							return gridjs.html(cadFinal);
-						}
-						
-					}],
-				sort: true,
-				search: {
-					server: {
-						summary: true,
-						url: (prev, text) => `${prev}?textSearch=${text}`
-					}
-				},
-				pagination: {
-					limit: 3,
-					summary: true,
-					server: {
-						url: (prev, page, limit) => `${prev}?&page=${page}&limit=${limit}&`
-					}
 
-				},
-				resizable: true,
-				server: {
-					url: `Job/GetJobs`,
-					method: 'GET',
-					then: data => data.results.map(obj => [obj.id, obj.nameJob, obj.createDate, obj.descriptionJob.substring(1,20) +"...", obj.vacancyNumbers]),
-					handle: (res) => {
+            $('#editJobModal').modal('show');
 
-						if (res.status === 404) return { data: [] };
-						if (res.ok) return res.json();
+            let id = obj.hash.replace('#', '');
+            const url = "Job/DetailJob/" + id
 
-						res.json().then((res) => alert(res.error));
-					},
-					total: data => data.count
-				},
-				language: {
-					'search': {
-						'placeholder': 'Buscar...'
-					},
-					'pagination': {
-						'previous': '⬅️',
-						'next': '➡️',
-						'showing': '😃 Visualizar',
-						'results': () => 'Resultado'
-					}
-				}
-			}).render(document.getElementById('tableJobs'));
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }
 
-		function closeBtnModalCreateJob() {
+            fetch(url, options).then(response => response.json())
+                .then(json => {
 
-			$('#createJobModal').modal('hide');
-			document.querySelector("#formJob").innerHTML = '';
+                    let id = document.querySelector("#id");
+                    id.value = json.id.toString();
 
-		}
+                    let area = document.querySelector("#idArea");
+                    area.value = json.idArea.toString();
 
-		function closeBtnModalDetailJob() {
+                    let company = document.querySelector("#idCompany");
+                    company.value = json.idCompany;
 
-			$('#detailJobModal').modal('hide');
-			document.querySelector("#jobDetail").innerHTML = '';
+                    let isActive = document.querySelector("#isActive");
+                    isActive.checked = json.isActive;
 
-		}
+                    let nameJob = document.querySelector("#name");
+                    nameJob.value = json.nameJob;
 
-		function closeBtnModalEditJob() {
+                    let salaryMax = document.querySelector("#salaryMax");
+                    salaryMax.value = json.salaryMax;
 
-			$('#editJobModal').modal('hide');
-			document.querySelector("#formJobedit").innerHTML = '';
+                    let salaryMin = document.querySelector("#salaryMin");
+                    salaryMin.value = json.salaryMin;
 
-		}
+                    let vacancyNumber = document.querySelector("#vacancyNumber");
+                    vacancyNumber.value = json.vacancyNumbers;
 
-		async function loadCatalogs() {
 
-			let urlCatalogAreas = window.location.origin + '/GetAreas';
-			let urlCatalogCompany = window.location.origin + '/GetCompanies';
+                    let description = document.querySelector("#description");
+                    description.value = json.descriptionJob;
 
-			try {
+                });
 
-				let resCat = await fetch(urlCatalogAreas);
-				let jsonCat = await resCat.json();
+            let editJobForm = document.getElementById("editJobForm");
 
-				let resCom = await fetch(urlCatalogCompany);
-				let jsonCom = await resCom.json();
+            editJobForm.addEventListener("submit", eventSubmit, true);
+        }
 
-				if (!resCat.ok) {
-					throw new Error(jsonCat.err);
-				}
+        function deleteJob(obj) {
 
-				if (!resCom.ok) {
-					throw new Error(jsonCom.err);
-				}
+            let id = obj.hash.replace('#', '');
 
-				setOptionsSelect('idCompany', jsonCom.list, 'id', 'nameCompany', true);
-				setOptionsSelect('idArea', jsonCat.list, 'id', 'nameArea', true);
+            const url = "Job/DeleteJob/" + id
 
-			} catch (e) {
+            const options = {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }
 
-				alertify.error(e.message);
+            fetch(url, options).then(response => response.json())
+                .then(json => {
 
-			}
+                    alertify.success(json.message);
 
-		}
+                    setTimeout(() => { window.location.reload(); }, 2000);
+                });
 
-	</script>
+        }
+
+        new gridjs.Grid({
+            columns: ['Id', 'Name', 'Date apply', 'Description', 'Vancancy Numbers',
+                {
+                    name: 'Actions',
+                    width: '30%',
+                    formatter: (_, row) => {
+                        let cadFinal;
+                        let cadEdit = '<a class="btn btn-success" onclick="getEdit(this)" href=#' + row.cells[0].data + '>Edit</a>';
+                        let cadDelete = '<a class= "btn btn-danger" onclick = "deleteJob(this)" href = #' + row.cells[0].data + '>Delete</a> |';
+                        let cadDeatil = `<a class="btn btn-primary " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Apply</a > `;
+                        let cadApply = `<a class="btn btn-info " onclick="getDetailJob(this)" href=#${row.cells[0].data}>Detail</a> | `;
+
+        @if (false)
+        {
+            <text>
+                                cadFinal = cadEdit;
+            </text>
+        }
+        else
+        {
+            <text>
+                                cadFinal = cadEdit + '|' + cadDelete;
+
+            </text>
+        }
+
+                                            return gridjs.html(cadFinal);
+                    }
+
+                }],
+            sort: true,
+            search: {
+                server: {
+                    summary: true,
+                    url: (prev, text) => `${prev}?textSearch=${text}`
+                }
+            },
+            pagination: {
+                limit: 3,
+                summary: true,
+                server: {
+                    url: (prev, page, limit) => `${prev}?&page=${page}&limit=${limit}&`
+                }
+
+            },
+            resizable: true,
+            server: {
+                url: `Job/GetJobs`,
+                method: 'GET',
+                then: data => data.results.map(obj => [obj.id, obj.nameJob, obj.createDate, obj.descriptionJob.substring(1, 20) + "...", obj.vacancyNumbers]),
+                handle: (res) => {
+
+                    if (res.status === 404) return { data: [] };
+                    if (res.ok) return res.json();
+
+                    res.json().then((res) => alert(res.error));
+                },
+                total: data => data.count
+            },
+            language: {
+                'search': {
+                    'placeholder': 'Buscar...'
+                },
+                'pagination': {
+                    'previous': '⬅️',
+                    'next': '➡️',
+                    'showing': '😃 Visualizar',
+                    'results': () => 'Resultado'
+                }
+            }
+        }).render(document.getElementById('tableJobs'));
+
+        function closeBtnModalCreateJob() {
+
+            $('#createJobModal').modal('hide');
+            document.querySelector("#formJob").innerHTML = '';
+
+        }
+
+        function closeBtnModalDetailJob() {
+
+            $('#detailJobModal').modal('hide');
+            document.querySelector("#jobDetail").innerHTML = '';
+
+        }
+
+        function closeBtnModalEditJob() {
+
+            $('#editJobModal').modal('hide');
+            document.querySelector("#formJobedit").innerHTML = '';
+
+        }
+
+        async function loadCatalogs() {
+
+            let urlCatalogAreas = window.location.origin + '/GetAreas';
+            let urlCatalogCompany = window.location.origin + '/GetCompanies';
+
+            try {
+
+                let resCat = await fetch(urlCatalogAreas);
+                let jsonCat = await resCat.json();
+
+                let resCom = await fetch(urlCatalogCompany);
+                let jsonCom = await resCom.json();
+
+                if (!resCat.ok) {
+                    throw new Error(jsonCat.err);
+                }
+
+                if (!resCom.ok) {
+                    throw new Error(jsonCom.err);
+                }
+
+                setOptionsSelect('idCompany', jsonCom.list, 'id', 'nameCompany', true);
+                setOptionsSelect('idArea', jsonCat.list, 'id', 'nameArea', true);
+
+            } catch (e) {
+
+                alertify.error(e.message);
+
+            }
+
+        }
+
+    </script>
 }
 
