@@ -47,3 +47,22 @@ body {
         transform: rotate(360deg);
     }
 }
+
+
+/*---------------------------------*/
+
+.input-text {
+    border-radius: 0px !important;
+    border: #cccc 2.1px solid !important;
+}
+
+input-text:hover{
+    border:none;
+}
+
+.card{
+    padding:20px;
+    border:#ccc solid 1.5px !important;
+    border-radius:0px !important;
+    background-color:#f6f6f6 !important;
+}
