@@ -7,17 +7,21 @@
     var title = @Localizer["WelcomeTitle"];
 }
 
-<div class="container-fluid">
+<div class="container-fluid cardSearch">
     <div class="mb-3 row">
-        <h3>@title.Value - @@User</h3>
+        <h3 class="titleCardSearch">@title.Value - @@User</h3>
     </div>
     <form>
         <div class="mb-3 row">
             <div class="col-4">
-                <input type="text" placeholder="Search" class="form-control input-text" />
+                <input type="text" placeholder="What, Keywords, Position" class="inputCardSearch form-control input-text" />
             </div>
             <div class="col-4">
-                <select type="text" placeholder="State" class="form-control input-text"></select>
+                <select class="inputCardSearch form-control input-text">
+
+                    <option value="0">Where, City</option>
+
+                </select>
             </div>
             <div class="col-2">
                 <button class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
