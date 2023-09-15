@@ -108,3 +108,6 @@ input-text:hover{
 .titleCardSearch {
     color:#80b1da;
 }
+.nav-link:hover {
+    border-bottom: 1px solid blue !important;
+}
