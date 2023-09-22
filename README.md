@@ -4,7 +4,6 @@ Frameworks and libraries:
 
 * Bootstrap
 * Tailwind CSS
-* Grid.js
 * Vanilla Js
 * .net 6
 * Alertify JS

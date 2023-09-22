@@ -1,13 +1,7 @@
 ﻿using Framework.Security2023;
 using Framework.Security2023.Entities;
 using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
-using System.Net.NetworkInformation;
-using System.Reflection;
 using WebAppJob.Models;
-using Framework.Security2023.Entities;
-using System.Resources;
-using Humanizer.Localisation;
 using static Framework.Security2023.Entities.Login;
 
 namespace WebAppJob.Controllers
@@ -20,16 +14,20 @@ namespace WebAppJob.Controllers
 
         public LoginController(ILogger<LoginController> logger, IServiceUser serviceUser, IServiceLogin serviceLogin)
         {
-            _serviceUser = serviceUser;
+            this._serviceUser = serviceUser;
             this._serviceLogin = serviceLogin;
-            _logger = logger;
-            _logger.LogDebug(1, "NLog injected into LoginController");
+            this._logger = logger;
+            _logger.LogDebug("NLog injected into LoginController");
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        [HttpGet]
+        public IActionResult Index() => View();
+
+        [HttpGet]
+        public IActionResult Register() => View();
+
+        [HttpGet]
+        public IActionResult ForgotPassword() => View();
 
         [HttpPost]
         public IActionResult LoginUser(string userName)
@@ -98,12 +96,6 @@ namespace WebAppJob.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
-        public IActionResult Register() => View();
-
-        [HttpGet]
-        public IActionResult ForgotPassword() => View();
-
         [HttpPost]
         public IActionResult ForgotPassword(UserForgotPasswordViewModel userForgotPassword)
         {
@@ -112,7 +104,6 @@ namespace WebAppJob.Controllers
 
             try
             {
-
                 if (valuesRequiredUserName)
                     ModelState.AddModelError("UserName", "The username was required.");
 
@@ -122,15 +113,15 @@ namespace WebAppJob.Controllers
                 if (valuesRequiredUserName || valuesRequiredUserPassword)
                     return View("ForgotPassword", userForgotPassword);
 
-
-
                 return RedirectToAction("Index", "Login");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
-                throw;
+                ModelState.AddModelError("Password", "An error occurred while update for the password of user");
             }
+
+            return RedirectToAction("ForgotPassword", new { username = userForgotPassword.UserName });
 
         }
 
