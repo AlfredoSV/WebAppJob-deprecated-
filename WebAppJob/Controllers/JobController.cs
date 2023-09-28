@@ -159,5 +159,8 @@ namespace WebAppJob.Controllers
         [HttpGet]
         public IActionResult ApplicationsJobs() => View();
 
+        [HttpGet("[action]")]
+        public PartialViewResult ListJobs() => PartialView("_ListJobs");
+
     }
 }
