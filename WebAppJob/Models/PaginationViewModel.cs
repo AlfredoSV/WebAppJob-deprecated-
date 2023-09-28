@@ -1,8 +1,7 @@
 ﻿namespace WebAppJob.Models
 {
-    public class PaginationViewModel<T>
-    {
-        public IEnumerable<T> Data { get; set; }   
+    public class PaginationViewModel
+    {          
         public int PageIndex { get; set; }
         public int PageSize { get; set; }
         public int PageCount { get; set; }

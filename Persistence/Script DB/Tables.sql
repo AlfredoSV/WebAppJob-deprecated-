@@ -4,6 +4,8 @@ GO
 USE dbJOB;
 GO
 
+---Tables
+
 create table job(
 id UNIQUEIDENTIFIER,
 namejob varchar(30), 
@@ -16,7 +18,9 @@ descriptionjob varchar(max),
 idusercreated uniqueidentifier,
 updatedate date, 
 createdate date,
-isactive bit);
+isactive bit,
+tags varchar(500),
+logo varchar(max));
 
 create table company(
 id UNIQUEIDENTIFIER,
@@ -103,3 +107,4 @@ numbercontact varchar(30),
 idusercreated uniqueidentifier,
 updatedate date, 
 createdate date);
+

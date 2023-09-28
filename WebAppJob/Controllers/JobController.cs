@@ -89,16 +89,16 @@ namespace WebAppJob.Controllers
         [HttpGet("[action]")]
         public PartialViewResult GetDetail() => PartialView("_DetailJob");
 
-		[HttpGet("[action]")]
-		public PartialViewResult EditJob() => PartialView("_EditJob");
+        [HttpGet("[action]")]
+        public PartialViewResult EditJob() => PartialView("_EditJob");
 
-		[HttpPost("[action]")]
+        [HttpPost("[action]")]
         public IActionResult CreateJob([FromBody] JobViewModel jobView)
         {
             try
             {
-		
-				DtoRequest<Job> dtoRequ = new DtoRequest<Job>();
+
+                DtoRequest<Job> dtoRequ = new DtoRequest<Job>();
                 dtoRequ.Data = new Job();
                 _mapper.Map(jobView, dtoRequ.Data);
                 _serviceJob.CreateJob(dtoRequ);
@@ -133,34 +133,42 @@ namespace WebAppJob.Controllers
 
         }
 
-		[HttpPost("[action]")]
-		public IActionResult EditJob([FromBody] JobViewModel jobView)
-		{
-			try
-			{
-                
-				DtoRequest<Job> dtoRequ = new DtoRequest<Job>();
-				dtoRequ.Data = new Job();
-				_mapper.Map(jobView, dtoRequ.Data);
-				_serviceJob.UpdateJob(dtoRequ);
+        [HttpPost("[action]")]
+        public IActionResult EditJob([FromBody] JobViewModel jobView)
+        {
+            try
+            {
 
-				return Ok(new { message = "The job was edited successful" });
-			}
-			catch (Exception ex)
-			{
-				Guid idError = Guid.NewGuid();
-				_logger.LogError(idError + ex.Message);
-				return BadRequest(new { Error = "A error was ocurred, the ticket is: " + idError });
+                DtoRequest<Job> dtoRequ = new DtoRequest<Job>();
+                dtoRequ.Data = new Job();
+                _mapper.Map(jobView, dtoRequ.Data);
+                _serviceJob.UpdateJob(dtoRequ);
 
-			}
+                return Ok(new { message = "The job was edited successful" });
+            }
+            catch (Exception ex)
+            {
+                Guid idError = Guid.NewGuid();
+                _logger.LogError(idError + ex.Message);
+                return BadRequest(new { Error = "A error was ocurred, the ticket is: " + idError });
 
-		}
+            }
+
+        }
 
         [HttpGet]
         public IActionResult ApplicationsJobs() => View();
 
         [HttpGet("[action]")]
-        public PartialViewResult ListJobs() => PartialView("_ListJobs");
+        public PartialViewResult ListJobs()
+        {
+            DtoPaginationViewModel<JobViewModel> dtoPaginationViewModel = 
+                new DtoPaginationViewModel<JobViewModel>();
+
+
+            return PartialView("_ListJobs", dtoPaginationViewModel);
+
+        }
 
     }
 }
