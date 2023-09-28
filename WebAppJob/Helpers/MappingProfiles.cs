@@ -11,6 +11,7 @@ namespace WebAppJob.Helpers
         {
             CreateMap<Job, JobViewModel>();
             CreateMap<JobViewModel, Job>();
+            CreateMap<List<JobViewModel>, List<Job>>();
 
         }
     }

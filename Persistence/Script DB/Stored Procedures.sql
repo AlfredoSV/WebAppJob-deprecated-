@@ -10,7 +10,7 @@ WHERE SPECIFIC_SCHEMA = N'dbo'
 DROP PROCEDURE dbo.GetJobs
 GO
 
-CREATE OR ALTER PROCEDURE dbo.GetJobs(@pageSize integer, @page integer)
+CREATE OR ALTER PROCEDURE dbo.GetJobs(@pageSize integer, @page integer, @count integer out)
 
 AS
 BEGIN

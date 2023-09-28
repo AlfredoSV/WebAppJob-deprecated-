@@ -1,6 +1,8 @@
 ﻿using Application.IServices;
 using Domain;
 using Domain.Entities;
+using Domain.IRepositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Persistence.Data;
@@ -10,10 +12,12 @@ namespace Application.Services
     public class ServiceJob : IServiceJob
     {
         private readonly JobContext _jobContext;
+        private readonly IRepositoryJob _repositoryJob;
 
-        public ServiceJob(JobContext jobContext)
+        public ServiceJob(JobContext jobContext, IRepositoryJob repositoryJob)
         {
             _jobContext = jobContext;
+            _repositoryJob = repositoryJob;
         }
 
         public DtoResponse<ApplyCompetitorJob> ApplyNewJob(Guid idCompetitor,Guid idCreated,Guid idJob)
@@ -93,16 +97,9 @@ namespace Application.Services
 
         public DtoResponse<List<Job>> GetJobsList(int take, int skip, string search)
         {
-            List<Job> jobs = 
-                _jobContext.Jobs.Where(job => job.NameJob.Contains(search))
-                                .Skip(skip)
-                                .Take(take)
-                                .ToList();
+            PaginationList<List<Job>> jobs = _repositoryJob.ListJobsByPage(skip,take,search);
 
-            int count = _jobContext.Jobs.Where(job => job.NameJob.Contains(search))
-                                        .Count();
-
-            return new DtoResponse<List<Job>>() { Data = jobs, Count = count };
+            return new DtoResponse<List<Job>>() { Data = jobs.Data, Count = jobs.Count };
         }
         
         public void UpdateJob(DtoRequest<Job> dtoRequest)

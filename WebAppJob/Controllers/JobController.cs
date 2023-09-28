@@ -3,6 +3,8 @@ using AutoMapper;
 using Domain;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Collections.Generic;
 using System.Globalization;
 using WebAppJob.Models;
 
@@ -36,7 +38,7 @@ namespace WebAppJob.Controllers
                 string texSearch = context["textSearch"].ToString().TrimEnd('?');
 
                 List<JobViewModel> jobs = new List<JobViewModel>();
-                DtoResponse<List<Job>> jobsResult = _serviceJob.GetJobsList(limit, (page * limit), texSearch);
+                DtoResponse<List<Job>> jobsResult = _serviceJob.GetJobsList(limit, page, texSearch);
                 _mapper.Map(jobsResult.Data, jobs);
 
                 #region Code for Datatable
@@ -160,11 +162,16 @@ namespace WebAppJob.Controllers
         public IActionResult ApplicationsJobs() => View();
 
         [HttpGet("[action]")]
-        public PartialViewResult ListJobs()
+        public PartialViewResult ListJobs(int page, int pageSize, string searchText)
         {
-            DtoPaginationViewModel<JobViewModel> dtoPaginationViewModel = 
-                new DtoPaginationViewModel<JobViewModel>();
+            DtoPaginationViewModel<JobViewModel> dtoPaginationViewModel =
+            new DtoPaginationViewModel<JobViewModel>();
 
+            List<JobViewModel> jobsResult = new List<JobViewModel>();
+
+            _mapper.Map(jobsResult, _serviceJob.GetJobsList(page, pageSize, searchText).Data);
+            
+            dtoPaginationViewModel.Data = jobsResult;
 
             return PartialView("_ListJobs", dtoPaginationViewModel);
 
