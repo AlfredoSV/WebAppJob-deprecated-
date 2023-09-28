@@ -1,6 +1,6 @@
 ﻿using Application.IServices;
 using Framework.Security2023;
-
+using Framework.Security2023.IServices;
 
 namespace Application.Services
 {

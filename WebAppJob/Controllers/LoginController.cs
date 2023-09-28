@@ -1,8 +1,8 @@
-﻿using Framework.Security2023;
+﻿
 using Framework.Security2023.Entities;
+using Framework.Security2023.IServices;
 using Microsoft.AspNetCore.Mvc;
 using WebAppJob.Models;
-using static Framework.Security2023.Entities.Login;
 
 namespace WebAppJob.Controllers
 {

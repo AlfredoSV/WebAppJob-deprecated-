@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
 using Application.Services;
 using Application.IServices;
+using Framework.Security2023.Services;
+using Framework.Security2023.IServices;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");
