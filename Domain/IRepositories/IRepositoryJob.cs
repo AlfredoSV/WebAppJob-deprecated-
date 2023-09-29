@@ -6,7 +6,7 @@ namespace Domain.IRepositories
 {
     public interface IRepositoryJob
     {
-        PaginationList<List<Job>> ListJobsByPage(int skip, int take, string search);
+        PaginationList<List<Job>> ListJobsByPage(int page, int pageSize, string search);
         
     }
 }

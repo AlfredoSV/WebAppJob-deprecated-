@@ -20,20 +20,20 @@ namespace Domain.Repositories
             _jobContext = jobContext;
         }
 
-        public PaginationList<List<Job>> ListJobsByPage(int skip, int take, string search)
+        public PaginationList<List<Job>> ListJobsByPage(int page, int pageSize, string search)
         {
             int count = 0;
             SqlParameter[] param = new SqlParameter[] {
                         new SqlParameter() {
-                            ParameterName = "@skip",
+                            ParameterName = "@page",
                             SqlDbType =  System.Data.SqlDbType.Int,
                             Direction = System.Data.ParameterDirection.Input,
-                            Value = skip                        },
+                            Value = page                        },
                         new SqlParameter() {
-                            ParameterName = "@take",
+                            ParameterName = "@pageSize",
                             SqlDbType =  System.Data.SqlDbType.Int,
                             Direction = System.Data.ParameterDirection.Input,
-                            Value = take
+                            Value = pageSize
                         },
                         new SqlParameter() {
                             ParameterName = "@count",
@@ -43,7 +43,7 @@ namespace Domain.Repositories
                         }};
 
             List<Job> jobs = _jobContext
-                    .Jobs.FromSqlRaw("exec dbo.GetJobs @take, @skip, @count out", param).ToList();
+                    .Jobs.FromSqlRaw("exec dbo.GetJobs @page, @pageSize, @count out", param).ToList();
 
             PaginationList<List<Job>> response = new PaginationList<List<Job>>();
 

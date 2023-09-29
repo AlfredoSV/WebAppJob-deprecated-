@@ -95,9 +95,9 @@ namespace Application.Services
 
         }
 
-        public DtoResponse<List<Job>> GetJobsList(int take, int skip, string search)
+        public DtoResponse<List<Job>> GetJobsList(int page, int pageSize, string search)
         {
-            PaginationList<List<Job>> jobs = _repositoryJob.ListJobsByPage(take, skip, search);
+            PaginationList<List<Job>> jobs = _repositoryJob.ListJobsByPage(page, pageSize, search);
 
             return new DtoResponse<List<Job>>() { Data = jobs.Data, Count = jobs.Count };
         }

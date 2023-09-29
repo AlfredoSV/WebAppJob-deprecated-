@@ -170,7 +170,7 @@ namespace WebAppJob.Controllers
 
             List<JobViewModel> jobsResult = new List<JobViewModel>();
 
-            DtoResponse<List<Job>> response = _serviceJob.GetJobsList(pageSize, page, searchText);
+            DtoResponse<List<Job>> response = _serviceJob.GetJobsList(page, pageSize, searchText);
 
             _mapper.Map(response.Data,jobsResult);
             
