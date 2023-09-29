@@ -4,6 +4,6 @@
     {
         public PaginationViewModel PaginationViewModel { get; set; }
 
-        public IEnumerable<T> Data { get; set; }
+        public List<T> Data { get; set; }
     }
 }

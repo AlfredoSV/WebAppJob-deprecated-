@@ -4,6 +4,7 @@ using Domain;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.ResponseCompression;
 using System.Collections.Generic;
 using System.Globalization;
 using WebAppJob.Models;
@@ -169,9 +170,12 @@ namespace WebAppJob.Controllers
 
             List<JobViewModel> jobsResult = new List<JobViewModel>();
 
-            _mapper.Map(jobsResult, _serviceJob.GetJobsList(pageSize, page, searchText).Data);
+            DtoResponse<List<Job>> response = _serviceJob.GetJobsList(pageSize, page, searchText);
+
+            _mapper.Map(response.Data,jobsResult);
             
             dtoPaginationViewModel.Data = jobsResult;
+            dtoPaginationViewModel.PaginationViewModel = new PaginationViewModel() { TotalCount = response.Count };
 
             return PartialView("_ListJobs", dtoPaginationViewModel);
 
