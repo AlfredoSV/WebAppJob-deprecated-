@@ -14,6 +14,7 @@ CREATE OR ALTER PROCEDURE dbo.GetJobs(@pageSize integer, @page integer, @count i
 
 AS
 BEGIN
+    SET @count = 1;
     SELECT * from Job where isactive = 1 order by namejob
     offset @pageSize*@page rows 
     fetch next @pageSize rows only;

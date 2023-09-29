@@ -99,14 +99,23 @@
 
         const loadJobs = ()=>{
 
-            let url = window.location.origin + '/Job/ListJobs';
+            let dataVal = {
+                page:1,
+                pageSize :2,
+                searchText: 'A'
+            }
 
-            fetch(url)
+            let options = {
+                method :"POST"
+            }
+
+            let url = window.location.origin + '/Job/ListJobs?' + new URLSearchParams(dataVal);
+            fetch(url, options)
                 .then(response => response.text())
                 .then(text => {
 
                     document.querySelector("#listJobs").innerHTML = text;
-                });
+                }).catch((err) => console.log(err));
 
         }
 

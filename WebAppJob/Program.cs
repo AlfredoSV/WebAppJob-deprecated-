@@ -10,6 +10,8 @@ using Application.Services;
 using Application.IServices;
 using Framework.Security2023.Services;
 using Framework.Security2023.IServices;
+using Domain.IRepositories;
+using Domain.Repositories;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");
@@ -35,6 +37,7 @@ try
     builder.Services.AddTransient<IServiceJob,ServiceJob>();
 	builder.Services.AddTransient<IServiceUser, ServiceUser>();
 
+    builder.Services.AddTransient<IRepositoryJob, RepositoryJob>();
 
 	builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

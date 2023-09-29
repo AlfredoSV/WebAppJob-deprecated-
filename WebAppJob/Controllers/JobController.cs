@@ -161,7 +161,7 @@ namespace WebAppJob.Controllers
         [HttpGet]
         public IActionResult ApplicationsJobs() => View();
 
-        [HttpGet("[action]")]
+        [HttpPost("[action]")]
         public PartialViewResult ListJobs(int page, int pageSize, string searchText)
         {
             DtoPaginationViewModel<JobViewModel> dtoPaginationViewModel =
@@ -169,7 +169,7 @@ namespace WebAppJob.Controllers
 
             List<JobViewModel> jobsResult = new List<JobViewModel>();
 
-            _mapper.Map(jobsResult, _serviceJob.GetJobsList(page, pageSize, searchText).Data);
+            _mapper.Map(jobsResult, _serviceJob.GetJobsList(pageSize, page, searchText).Data);
             
             dtoPaginationViewModel.Data = jobsResult;
 
