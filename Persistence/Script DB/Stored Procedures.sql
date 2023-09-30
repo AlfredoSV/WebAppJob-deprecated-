@@ -10,7 +10,7 @@ WHERE SPECIFIC_SCHEMA = N'dbo'
 DROP PROCEDURE dbo.GetJobs
 GO
 
-CREATE OR ALTER PROCEDURE dbo.GetJobs(@page integer, @pageSize integer, @count integer OUTPUT)
+CREATE OR ALTER PROCEDURE dbo.GetJobs(@page integer, @pageSize integer, @textSearch varchar(200), @count integer OUTPUT)
 
 AS
 BEGIN
@@ -19,12 +19,25 @@ BEGIN
     ELSE
         SET @page = 0;
 
-    SELECT @count = COUNT(*) from Job where isactive = 1;
 
-    
-    SELECT * from Job where isactive = 1 order by namejob
-    offset @pageSize*@page rows 
-    fetch next @pageSize rows only;
+    IF @textSearch <> ''
+    BEGIN
+            SELECT @count = COUNT(*) from Job where isactive = 1 and 
+            namejob like  CONCAT('%', @textSearch,'%') and descriptionjob like  CONCAT('%', @textSearch,'%');
+
+            SELECT * from Job where isactive = 1 and 
+            namejob like  CONCAT('%', @textSearch,'%') and descriptionjob like  CONCAT('%', @textSearch,'%') order by namejob
+            offset @pageSize*@page rows 
+            fetch next @pageSize rows only;
+    END
+    ELSE
+    BEGIN
+            SELECT @count = COUNT(*) from Job where isactive = 1;
+            SELECT * from Job where isactive = 1 order by namejob
+            offset @pageSize*@page rows 
+            fetch next @pageSize rows only;
+    END;
+
 
 END;
 

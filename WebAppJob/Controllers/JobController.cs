@@ -165,6 +165,9 @@ namespace WebAppJob.Controllers
         [HttpPost("[action]")]
         public PartialViewResult ListJobs(int page, int pageSize, string searchText)
         {
+            if(string.IsNullOrEmpty(searchText))
+                searchText = string.Empty;
+
             DtoPaginationViewModel<JobViewModel> dtoPaginationViewModel =
             new DtoPaginationViewModel<JobViewModel>();
 

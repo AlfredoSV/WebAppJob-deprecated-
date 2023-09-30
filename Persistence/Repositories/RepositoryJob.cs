@@ -22,7 +22,7 @@ namespace Domain.Repositories
 
         public PaginationList<List<Job>> ListJobsByPage(int page, int pageSize, string search)
         {
-            int count = 0;
+            
             SqlParameter[] param = new SqlParameter[] {
                         new SqlParameter() {
                             ParameterName = "@page",
@@ -30,6 +30,11 @@ namespace Domain.Repositories
                             Direction = System.Data.ParameterDirection.Input,
                             Value = page                        },
                         new SqlParameter() {
+                            ParameterName = "@search",
+                            SqlDbType =  System.Data.SqlDbType.VarChar,
+                            Direction = System.Data.ParameterDirection.Input,
+                            Value = search
+                        }, new SqlParameter() {
                             ParameterName = "@pageSize",
                             SqlDbType =  System.Data.SqlDbType.Int,
                             Direction = System.Data.ParameterDirection.Input,
@@ -43,7 +48,7 @@ namespace Domain.Repositories
                         }};
 
             List<Job> jobs = _jobContext
-                    .Jobs.FromSqlRaw("exec dbo.GetJobs @page, @pageSize, @count out", param).ToList();
+                    .Jobs.FromSqlRaw("exec dbo.GetJobs @page, @pageSize, @search, @count out", param).ToList();
 
             PaginationList<List<Job>> response = new PaginationList<List<Job>>();
 
