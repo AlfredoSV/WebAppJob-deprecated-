@@ -23,10 +23,10 @@ BEGIN
     IF @textSearch <> ''
     BEGIN
             SELECT @count = COUNT(*) from Job where isactive = 1 and 
-            namejob like  CONCAT('%', @textSearch,'%') and descriptionjob like  CONCAT('%', @textSearch,'%');
+            namejob like  CONCAT('%', @textSearch,'%') or descriptionjob like  CONCAT('%', @textSearch,'%');
 
             SELECT * from Job where isactive = 1 and 
-            namejob like  CONCAT('%', @textSearch,'%') and descriptionjob like  CONCAT('%', @textSearch,'%') order by namejob
+            namejob like  CONCAT('%', @textSearch,'%') or descriptionjob like  CONCAT('%', @textSearch,'%') order by namejob
             offset @pageSize*@page rows 
             fetch next @pageSize rows only;
     END
@@ -43,7 +43,7 @@ END;
 
 
 INSERT INTO Job Values(newid(),
-'Example',newid(),346.3,1.0,
+'Job2',newid(),346.3,1.0,
 2,newid(),'descriptiom',
 NEWID(),getdate(),getdate(),1,'1,2','logo');
 
