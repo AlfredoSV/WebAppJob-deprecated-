@@ -126,13 +126,13 @@
                     document.querySelector("#listJobs").innerHTML = text;
                 }).catch((err) => console.log(err));
 
-            let url2 = window.location.origin + '/Job/PaginationJobs';
-            fetch(url2, options)
-                .then(response => response.text())
-                .then(text => {
+            // let url2 = window.location.origin + '/Job/PaginationJobs';
+            // fetch(url2, options)
+            //     .then(response => response.text())
+            //     .then(text => {
 
-                    document.querySelector("#paginationJobs").innerHTML = text;
-                }).catch((err) => console.log(err));
+            //         document.querySelector("#paginationJobs").innerHTML = text;
+            //     }).catch((err) => console.log(err));
 
         }
 

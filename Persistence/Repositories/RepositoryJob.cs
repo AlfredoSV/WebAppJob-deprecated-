@@ -53,7 +53,7 @@ namespace Domain.Repositories
             PaginationList<List<Job>> response = new PaginationList<List<Job>>();
 
             response.Data = jobs;
-            response.Count = Convert.ToInt32(param[2].Value.ToString());
+            response.Count = Convert.ToInt32(param[3].Value.ToString());
 
             return response;
         }

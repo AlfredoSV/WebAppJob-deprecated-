@@ -178,19 +178,19 @@ namespace WebAppJob.Controllers
             _mapper.Map(response.Data,jobsResult);
             
             dtoPaginationViewModel.Data = jobsResult;
-            dtoPaginationViewModel.PaginationViewModel = new PaginationViewModel() { TotalCount = response.Count };
+            dtoPaginationViewModel.PaginationViewModel = new PaginationViewModel() { TotalCount = response.Count, PageSize = pageSize, PageIndex = page++ };
 
             return PartialView("_ListJobs", dtoPaginationViewModel);
 
         }
 
 
-        [HttpPost("[action]")]
-        public PartialViewResult PaginationJobs()
-        {
-            return PartialView("~/Views/Shared/_Pagination.cshtml",null);
+        //[HttpPost("[action]")]
+        //public PartialViewResult PaginationJobs()
+        //{
+        //    return PartialView("~/Views/Shared/_Pagination.cshtml",null);
 
-        }
+        //}
 
 
 
