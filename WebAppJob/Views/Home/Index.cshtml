@@ -90,8 +90,9 @@
 
 <div id="listJobs">
 
+</div>
 
-
+<div id="paginationJobs">
 </div>
 
 @section scripts{
@@ -115,6 +116,14 @@
                 .then(text => {
 
                     document.querySelector("#listJobs").innerHTML = text;
+                }).catch((err) => console.log(err));
+
+            let url2 = window.location.origin + '/Job/PaginationJobs';
+            fetch(url2, options)
+                .then(response => response.text())
+                .then(text => {
+
+                    document.querySelector("#paginationJobs").innerHTML = text;
                 }).catch((err) => console.log(err));
 
         }

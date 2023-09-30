@@ -1,9 +1,5 @@
 ﻿@model DtoPaginationViewModel<JobViewModel>
 
-@{
-    int elmentesCount = (int)Math.Round((decimal)Model.Data.Count() / 2, 0, MidpointRounding.AwayFromZero);
-}
-
 <div class="container-fluid mt-10">
 
     @for (int i = 0; i < Model.Data.Count(); i += 2)
@@ -191,5 +187,3 @@
     </div>-->
 
 </div>
-
-<partial name="~/Views/Shared/_Pagination.cshtml" for="PaginationViewModel">

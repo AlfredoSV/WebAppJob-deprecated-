@@ -181,5 +181,16 @@ namespace WebAppJob.Controllers
 
         }
 
+
+        [HttpPost("[action]")]
+        public PartialViewResult PaginationJobs()
+        {
+            return PartialView("~/Views/Shared/_Pagination.cshtml",null);
+
+        }
+
+
+
+
     }
 }
