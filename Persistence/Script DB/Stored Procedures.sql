@@ -43,8 +43,8 @@ END;
 
 
 INSERT INTO Job Values(newid(),
-'Job2',newid(),346.3,1.0,
-2,newid(),'descriptiom',
+'Desarrollador.Net',newid(),346.3,1.0,
+2,newid(),'Presencial',
 NEWID(),getdate(),getdate(),1,'1,2','logo');
 
 SELECT * FROM Job

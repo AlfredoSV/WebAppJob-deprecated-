@@ -3,10 +3,6 @@ using AutoMapper;
 using Domain;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.ResponseCompression;
-using System.Collections.Generic;
-using System.Globalization;
 using WebAppJob.Models;
 
 namespace WebAppJob.Controllers
@@ -21,48 +17,12 @@ namespace WebAppJob.Controllers
 
         public JobController(IServiceJob serviceJob, IMapper autoMapper, ILogger<JobController> logger)
         {
+            
             _logger = logger;
             _serviceJob = serviceJob;
             _mapper = autoMapper;
         }
 
-        [HttpGet("[action]")]
-        public IActionResult GetJobs()
-        {
-            try
-            {
-
-                IQueryCollection context = HttpContext.Request.Query;
-                //Grid Js
-                int limit = Int32.Parse(context["limit"].ToString());
-                int page = Int32.Parse(context["page"].ToString());
-                string texSearch = context["textSearch"].ToString().TrimEnd('?');
-
-                List<JobViewModel> jobs = new List<JobViewModel>();
-                DtoResponse<List<Job>> jobsResult = _serviceJob.GetJobsList(limit, page, texSearch);
-                _mapper.Map(jobsResult.Data, jobs);
-
-                #region Code for Datatable
-
-                //string searchValue = context["search[value]"];
-                //string lengtPage = context["length"];
-                //string draw = context["draw"];
-                //string start = context["start"];
-
-                #endregion
-
-                return Ok(new { results = jobs, count = jobsResult.Count });
-
-            }
-            catch (Exception ex)
-            {
-                Guid idError = Guid.NewGuid();
-                _logger.LogError(idError + ex.Message);
-                return BadRequest(new { Error = "A error was ocurred, the ticket is: " + idError });
-            }
-
-
-        }
 
         [HttpGet("[action]/{id}")]
         public IActionResult DetailJob(Guid id)
@@ -178,21 +138,12 @@ namespace WebAppJob.Controllers
             _mapper.Map(response.Data,jobsResult);
             
             dtoPaginationViewModel.Data = jobsResult;
-            dtoPaginationViewModel.PaginationViewModel = new PaginationViewModel() { TotalCount = response.Count, PageSize = pageSize, PageIndex = page++ };
+            dtoPaginationViewModel.PaginationViewModel = new PaginationViewModel() { 
+                TotalCount = response.Count, PageSize = pageSize, PageIndex = page++ };
 
             return PartialView("_ListJobs", dtoPaginationViewModel);
 
         }
-
-
-        //[HttpPost("[action]")]
-        //public PartialViewResult PaginationJobs()
-        //{
-        //    return PartialView("~/Views/Shared/_Pagination.cshtml",null);
-
-        //}
-
-
 
 
     }
