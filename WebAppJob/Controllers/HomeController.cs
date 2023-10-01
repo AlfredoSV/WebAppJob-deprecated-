@@ -29,6 +29,7 @@ namespace WebAppJob.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult About()
         {
             return View();

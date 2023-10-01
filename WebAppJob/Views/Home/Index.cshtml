@@ -7,11 +7,13 @@
     var title = @Localizer["WelcomeTitle"];
 }
 
+<a href="www.google.com">ddd</a>
+
 <div class="container-fluid cardSearch">
     <div class="mb-3 row">
         <h3 class="titleCardSearch">@title.Value - @@User</h3>
     </div>
-    <form>
+
         <div class="mb-3 row">
             <div class="col-lg-4 col-md-6 col-sm-12 m-b3">
                 <input type="text" placeholder="What, Keywords, Position" class="inputCardSearch form-control input-text" />
@@ -35,7 +37,7 @@
             </div>
 
         </div>
-    </form>
+   
 </div>
 <!-- Modal Detail Job-->
 <div class="modal fade" id="detailJobModal" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -99,17 +101,17 @@
     <script type="text/javascript">
 
         const nextPage = (num) => {
-            alert(num);
+            console.log(num);
         }
 
-        document.querySelector("#btnSearch"), addEventListener('click', (e) => {
+        document.querySelector("#btnSearch").addEventListener('click', (e) => {
             
-            
+            alert("click")    
 
             e.preventDefault();
 
         });
-
+        
         const loadJobs = ()=>{
 
             let dataVal = {
