@@ -7,37 +7,36 @@
     var title = @Localizer["WelcomeTitle"];
 }
 
-<a href="www.google.com">ddd</a>
 
 <div class="container-fluid cardSearch">
     <div class="mb-3 row">
         <h3 class="titleCardSearch">@title.Value - @@User</h3>
     </div>
 
-        <div class="mb-3 row">
-            <div class="col-lg-4 col-md-6 col-sm-12 m-b3">
-                <input type="text" placeholder="What, Keywords, Position" class="inputCardSearch form-control input-text" />
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-                <input list="ubication" placeholder="Where, City" class="inputCardSearch form-control input-text">
-                <datalist id="ubication" >
-                    <option value="México"></option>
-                    <option value="Rusia"></option>
-                </datalist>
-            </div>
-            <div class="col-lg-2 col-md-6 col-sm-12">
-                <button id="btnSearch" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    Search
-                </button>
-            </div>
-            <div class="col-lg-2 col-md-6 col-sm-12">
-                <button class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium text-sm px-4 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" href="#" id="newJob">
-                    New Job
-                </button>
-            </div>
-
+    <div class="mb-3 row">
+        <div class="col-lg-4 col-md-6 col-sm-12 m-b3">
+            <input type="text" placeholder="What, Keywords, Position" class="inputCardSearch form-control input-text" />
         </div>
-   
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+            <input list="ubication" placeholder="Where, City" class="inputCardSearch form-control input-text">
+            <datalist id="ubication">
+                <option value="México"></option>
+                <option value="Rusia"></option>
+            </datalist>
+        </div>
+        <div class="col-lg-2 col-md-6 col-sm-12">
+            <button id="btnSearch" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                Search
+            </button>
+        </div>
+        <div class="col-lg-2 col-md-6 col-sm-12">
+            <button class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium text-sm px-4 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" href="#" id="newJob">
+                New Job
+            </button>
+        </div>
+
+    </div>
+
 </div>
 <!-- Modal Detail Job-->
 <div class="modal fade" id="detailJobModal" tabindex="-1" role="dialog" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -90,7 +89,9 @@
 </div>
 
 
-<div id="listJobs">
+<div id="listJobs" class="d-flex justify-content-center mt-5">
+
+    <div class="loader"></div>
 
 </div>
 
@@ -105,23 +106,23 @@
         }
 
         document.querySelector("#btnSearch").addEventListener('click', (e) => {
-            
-            alert("click")    
+
+            alert("click")
 
             e.preventDefault();
 
         });
-        
-        const loadJobs = ()=>{
+
+        const loadJobs = () => {
 
             let dataVal = {
-                page:1,
-                pageSize :10,
+                page: 1,
+                pageSize: 10,
                 searchText: ''
             }
 
             let options = {
-                method :"POST"
+                method: "POST"
             }
 
             let url = window.location.origin + '/Job/ListJobs?' + new URLSearchParams(dataVal);
@@ -129,7 +130,11 @@
                 .then(response => response.text())
                 .then(text => {
 
-                    document.querySelector("#listJobs").innerHTML = text;
+                    let divListJobs = document.querySelector("#listJobs");
+
+                    divListJobs.classList = '';
+
+                    divListJobs.innerHTML = text;
                 }).catch((err) => console.log(err));
 
             // let url2 = window.location.origin + '/Job/PaginationJobs';

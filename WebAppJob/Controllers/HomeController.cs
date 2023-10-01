@@ -38,18 +38,28 @@ namespace WebAppJob.Controllers
         [HttpGet]
         public IActionResult SeeMyInformation()
         {
-            //Guid id = Guid.Parse(HttpContext.Session.GetString("User")??"");}
-            Guid id = Guid.Parse("115B4AB8-978A-45B1-BBCE-54DE26B0C7BC");
+            try
+            {
+                Guid id = Guid.Parse("115B4AB8-978A-45B1-BBCE-54DE26B0C7BC");
 
-            UserFkw userFkw = _serviceUser.GetUserById(id);
+                UserFkw userFkw = _serviceUser.GetUserById(id);
 
-            UserViewModel userViewModel = UserViewModel.Create(userFkw.Id,userFkw.UserName,
-                userFkw.DateCreated,Guid.NewGuid(),userFkw.UserInformation.Name,
-                userFkw.UserInformation.LastName,userFkw.UserInformation.Age,
-                userFkw.UserInformation.Address,userFkw.UserInformation.Email);
+                UserViewModel userViewModel = UserViewModel.Create(userFkw.Id, userFkw.UserName,
+                    userFkw.DateCreated, Guid.NewGuid(), userFkw.UserInformation.Name,
+                    userFkw.UserInformation.LastName, userFkw.UserInformation.Age,
+                    userFkw.UserInformation.Address, userFkw.UserInformation.Email);
 
 
-            return View(userViewModel);
+                return View(userViewModel);
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            
         }
 
     }
