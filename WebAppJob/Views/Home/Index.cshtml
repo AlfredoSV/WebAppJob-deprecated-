@@ -15,10 +15,10 @@
 
     <div class="mb-3 row">
         <div class="col-lg-4 col-md-6 col-sm-12 m-b3">
-            <input type="text" placeholder="What, Keywords, Position" class="inputCardSearch form-control input-text" />
+            <input type="text" placeholder="What, Keywords, Position" class="form-control input-text" />
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-            <input list="ubication" placeholder="Where, City" class="inputCardSearch form-control input-text">
+            <input list="ubication" placeholder="Where, City" class="form-control input-text">
             <datalist id="ubication">
                 <option value="México"></option>
                 <option value="Rusia"></option>
@@ -214,7 +214,7 @@
 
         });
 
-        function eventSubmit(e) {
+        const eventSubmit = (e) => {
 
             let api = '';
             let createJobForm = document.getElementById("createJobForm");
@@ -281,7 +281,7 @@
 
         }
 
-        async function getDetailJob(obj) {
+        const getDetailJob = async (obj) => {
 
             let urlhtml = window.location.origin + "/Job/GetDetail";
 
@@ -338,7 +338,7 @@
                 });
         }
 
-        async function getEdit(obj) {
+        const getEdit = async (obj) => {
 
 
             let urlhtml = window.location.origin + "/Job/EditJob";
@@ -404,7 +404,7 @@
             editJobForm.addEventListener("submit", eventSubmit, true);
         }
 
-        function deleteJob(obj) {
+        const deleteJob = (obj) => {
 
             let id = obj.hash.replace('#', '');
 
@@ -428,28 +428,7 @@
 
         }
 
-        function closeBtnModalCreateJob() {
-
-            $('#createJobModal').modal('hide');
-            document.querySelector("#formJob").innerHTML = '';
-
-        }
-
-        function closeBtnModalDetailJob() {
-
-            $('#detailJobModal').modal('hide');
-            document.querySelector("#jobDetail").innerHTML = '';
-
-        }
-
-        function closeBtnModalEditJob() {
-
-            $('#editJobModal').modal('hide');
-            document.querySelector("#formJobedit").innerHTML = '';
-
-        }
-
-        async function loadCatalogs() {
+        const loadCatalogs = async () => {
 
             let urlCatalogAreas = window.location.origin + '/GetAreas';
             let urlCatalogCompany = window.location.origin + '/GetCompanies';
@@ -478,6 +457,27 @@
                 alertify.error(e.message);
 
             }
+
+        }
+
+        const closeBtnModalCreateJob = () => {
+
+            $('#createJobModal').modal('hide');
+            document.querySelector("#formJob").innerHTML = '';
+
+        }
+
+        const closeBtnModalDetailJob = () => {
+
+            $('#detailJobModal').modal('hide');
+            document.querySelector("#jobDetail").innerHTML = '';
+
+        }
+
+        const closeBtnModalEditJob = () => {
+
+            $('#editJobModal').modal('hide');
+            document.querySelector("#formJobedit").innerHTML = '';
 
         }
 

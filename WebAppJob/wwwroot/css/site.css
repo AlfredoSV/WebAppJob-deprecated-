@@ -53,7 +53,8 @@ body {
 
 .input-text {
     border-radius: 0px !important;
-    border: #cccc 2.1px solid !important;
+    border: #ccc 2-6px solid !important;
+    padding:10px !important;
 }
 
 input-text:hover{
