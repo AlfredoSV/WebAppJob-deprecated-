@@ -40,7 +40,7 @@ namespace WebAppJob.Controllers
                 ModelState.AddModelError("UserName", "The user was not found");
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 ModelState.AddModelError("UserName", "An error occurred while searching for the user");
             }

@@ -22,12 +22,12 @@ namespace Application.Services
 
         public DtoResponse<ApplyCompetitorJob> ApplyNewJob(Guid idCompetitor,Guid idCreated,Guid idJob)
         {
-            ApplyCompetitorJob? applyCompetitorJob = null;
-            Job? job = _jobContext.Jobs.Where(jb => jb.Id == idJob).FirstOrDefault();
+            ApplyCompetitorJob applyCompetitorJob = null;
+            Job job = _jobContext.Jobs.Where(jb => jb.Id == idJob).FirstOrDefault();
 
             ArgumentNullException.ThrowIfNull(job);
 
-            Competitor? com = _jobContext.Competitors.Where(com => com.Id == idCompetitor)
+            Competitor com = _jobContext.Competitors.Where(com => com.Id == idCompetitor)
                                                     .FirstOrDefault();
 
             ArgumentNullException.ThrowIfNull(com);
@@ -52,7 +52,7 @@ namespace Application.Services
                     _jobContext.SaveChanges();
                     transaction.Commit();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     transaction.Rollback();
                 }

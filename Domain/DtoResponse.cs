@@ -8,7 +8,7 @@ namespace Domain
 {
     public class DtoResponse<T>
     {
-        public T? Data { set; get; }
+        public T Data { set; get; }
         public int Count { get; set; }
     }
 }
