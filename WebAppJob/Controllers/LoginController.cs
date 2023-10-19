@@ -125,5 +125,12 @@ namespace WebAppJob.Controllers
 
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SaveNewUser(UserViewModelRegister userViewModel)
+        {
+            return null;
+        }
+
     }
 }
