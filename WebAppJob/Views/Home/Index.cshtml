@@ -120,7 +120,8 @@
             let dataVal = {
                 page: 1,
                 pageSize: 10,
-                searchText: ''
+                searchText: '',
+                citySearch : '',
             }
 
             let options = {
@@ -137,6 +138,7 @@
                     divListJobs.classList = '';
 
                     divListJobs.innerHTML = text;
+
                 }).catch((err) => console.log(err));
 
             // let url2 = window.location.origin + '/Job/PaginationJobs';

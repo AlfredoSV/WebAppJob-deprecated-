@@ -20,7 +20,7 @@ namespace Domain.Repositories
             _jobContext = jobContext;
         }
 
-        public PaginationList<List<Job>> ListJobsByPage(int page, int pageSize, string search)
+        public async Task<PaginationList<List<Job>>> ListJobsByPage(int page, int pageSize, string search)
         {
             
             SqlParameter[] param = new SqlParameter[] {
@@ -47,8 +47,8 @@ namespace Domain.Repositories
                             
                         }};
 
-            List<Job> jobs = _jobContext
-                    .Jobs.FromSqlRaw("exec dbo.GetJobs @page, @pageSize, @search, @count out", param).ToList();
+            List<Job> jobs = await _jobContext
+                    .Jobs.FromSqlRaw("exec dbo.GetJobs @page, @pageSize, @search, @count out", param).ToListAsync();
 
             PaginationList<List<Job>> response = new PaginationList<List<Job>>();
 

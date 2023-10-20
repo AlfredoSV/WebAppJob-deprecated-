@@ -25,14 +25,15 @@ namespace WebAppJob.Controllers
 
 
         [HttpGet("[action]/{id}")]
-        public IActionResult DetailJob(Guid id)
+        public async Task<IActionResult> DetailJob(Guid id)
         {
             try
             {
                 IQueryCollection context = HttpContext.Request.Query;
                 JobViewModel jobViewModel = new JobViewModel();
+                Job job = (await _serviceJob.GetDetailJob(id)).Data;
 
-                _mapper.Map(_serviceJob.GetDetailJob(id).Data, jobViewModel);
+                _mapper.Map(job, jobViewModel);
 
                 return Ok(jobViewModel);
             }
@@ -56,7 +57,7 @@ namespace WebAppJob.Controllers
         public PartialViewResult EditJob() => PartialView("_EditJob");
 
         [HttpPost("[action]")]
-        public IActionResult CreateJob([FromBody] JobViewModel jobView)
+        public async Task<IActionResult> CreateJob([FromBody] JobViewModel jobView)
         {
             try
             {
@@ -64,7 +65,7 @@ namespace WebAppJob.Controllers
                 DtoRequest<Job> dtoRequ = new DtoRequest<Job>();
                 dtoRequ.Data = new Job();
                 _mapper.Map(jobView, dtoRequ.Data);
-                _serviceJob.CreateJob(dtoRequ);
+                await _serviceJob.CreateJob(dtoRequ);
 
                 return Ok(new { message = "The job was created successful" });
             }
@@ -79,11 +80,11 @@ namespace WebAppJob.Controllers
         }
 
         [HttpDelete("[action]/{id}")]
-        public IActionResult DeleteJob(Guid id)
+        public async Task<IActionResult> DeleteJob(Guid id)
         {
             try
             {
-                _serviceJob.DeleteJob(new DtoRequest<Guid> { Data = id });
+                await _serviceJob.DeleteJob(new DtoRequest<Guid> { Data = id });
                 return Ok(new { message = "The job was delete successful" });
             }
             catch (Exception ex)
@@ -97,7 +98,7 @@ namespace WebAppJob.Controllers
         }
 
         [HttpPost("[action]")]
-        public IActionResult EditJob([FromBody] JobViewModel jobView)
+        public async Task<IActionResult> EditJob([FromBody] JobViewModel jobView)
         {
             try
             {
@@ -105,7 +106,7 @@ namespace WebAppJob.Controllers
                 DtoRequest<Job> dtoRequ = new DtoRequest<Job>();
                 dtoRequ.Data = new Job();
                 _mapper.Map(jobView, dtoRequ.Data);
-                _serviceJob.UpdateJob(dtoRequ);
+                await _serviceJob.UpdateJob(dtoRequ);
 
                 return Ok(new { message = "The job was edited successful" });
             }
@@ -123,17 +124,20 @@ namespace WebAppJob.Controllers
         public IActionResult ApplicationsJobs() => View();
 
         [HttpPost("[action]")]
-        public PartialViewResult ListJobs(int page, int pageSize, string searchText)
+        public async Task<PartialViewResult> ListJobs(int page, int pageSize, string searchText, string citySearch)
         {
             if(string.IsNullOrEmpty(searchText))
                 searchText = string.Empty;
+
+            if(string.IsNullOrEmpty(citySearch))
+                citySearch = string.Empty;
 
             DtoPaginationViewModel<JobViewModel> dtoPaginationViewModel =
             new DtoPaginationViewModel<JobViewModel>();
 
             List<JobViewModel> jobsResult = new List<JobViewModel>();
 
-            DtoResponse<List<Job>> response = _serviceJob.GetJobsList(page, pageSize, searchText);
+            DtoResponse<List<Job>> response = await _serviceJob.GetJobsList(page, pageSize, searchText, citySearch);
 
             _mapper.Map(response.Data,jobsResult);
             
