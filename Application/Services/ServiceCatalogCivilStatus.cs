@@ -1,5 +1,6 @@
 ﻿using Application.IServices;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
 
 
@@ -19,10 +20,10 @@ namespace Application.Services
             _context.SaveChanges();
         }
 
-        public IEnumerable<CivilStatus> GetAll()
+        public async Task<IEnumerable<CivilStatus>> GetAllAsync()
         {
-            return _context.CivilStatus
-                           .ToList();
+            return await _context.CivilStatus
+                           .ToListAsync();
         }
 
         public CivilStatus GetById(Guid id)

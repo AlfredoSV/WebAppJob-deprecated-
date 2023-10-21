@@ -18,11 +18,11 @@ namespace WebAppJob.Controllers
         }
 
         [HttpGet("[action]")]
-        public IActionResult GetAreas()
+        public async Task<IActionResult> GetAreas()
         {
             try
             {
-                return Ok(new { list = _serviceCatalogArea.GetAll() });
+                return Ok(new { list = await _serviceCatalogArea.GetAllAsync() });
             }
             catch (Exception ex)
             {
@@ -32,11 +32,11 @@ namespace WebAppJob.Controllers
         }
 
         [HttpGet("[action]")]
-        public IActionResult GetCompanies()
+        public async Task<IActionResult> GetCompanies()
         {
             try
             {
-                return Ok(new { list = _serviceCatalogCompany.GetAll() });
+                return Ok(new { list = await _serviceCatalogCompany.GetAllAsync() });
             }
             catch (Exception ex)
             {

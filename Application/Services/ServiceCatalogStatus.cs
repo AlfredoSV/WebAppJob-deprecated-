@@ -1,5 +1,6 @@
 ﻿using Application.IServices;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
 
 
@@ -19,9 +20,9 @@ namespace Application.Services
             _context.SaveChanges();
         }
 
-        public IEnumerable<Status> GetAll()
+        public async Task<IEnumerable<Status>> GetAllAsync()
         {
-            return _context.Status.ToList();
+            return await _context.Status.ToListAsync();
         }
 
         public Status GetById(Guid id)

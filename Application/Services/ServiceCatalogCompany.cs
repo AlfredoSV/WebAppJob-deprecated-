@@ -1,5 +1,6 @@
 ﻿using Application.IServices;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
 using System;
 using System.Collections.Generic;
@@ -26,9 +27,9 @@ namespace Application.Services
             _context.SaveChanges();
         }
 
-        public IEnumerable<Company> GetAll()
+        public async Task<IEnumerable<Company>> GetAllAsync()
         {
-            return _jobContext.Companies.ToList();
+            return await _jobContext.Companies.ToListAsync();
         }
 
         public Company GetById(Guid id)

@@ -1,5 +1,6 @@
 ﻿using Application.IServices;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
 
 namespace Application.Services
@@ -18,9 +19,9 @@ namespace Application.Services
             _context.SaveChanges();
         }
 
-        public IEnumerable<Area> GetAll()
+        public async Task<IEnumerable<Area>> GetAllAsync()
         {
-            return _context.Areas.ToList();
+            return await _context.Areas.ToListAsync();
         }
 
         public Area GetById(Guid id)
