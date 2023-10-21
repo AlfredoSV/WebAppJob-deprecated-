@@ -12,35 +12,33 @@ namespace Application.Services
 {
     public class ServiceCatalogCompany : IServiceCatalog<Company>
     {
-        private CatalogContext _context;
-        private JobContext _jobContext;
+        private CatalogContext _catalogContext;
 
-        public ServiceCatalogCompany(CatalogContext context, JobContext jobContext)
+        public ServiceCatalogCompany(CatalogContext context)
         {
-            _context = context;
-            _jobContext = jobContext;
+            _catalogContext = context;
         }
 
         public void Delete(Guid id)
         {
-            _jobContext.Companies.Remove(GetById(id));
-            _context.SaveChanges();
+            _catalogContext.Companies.Remove(GetById(id));
+            _catalogContext.SaveChanges();
         }
 
         public async Task<IEnumerable<Company>> GetAllAsync()
         {
-            return await _jobContext.Companies.ToListAsync();
+            return await _catalogContext.Companies.ToListAsync();
         }
 
         public Company GetById(Guid id)
         {
-            return _jobContext.Companies.Where(ar => ar.Id == id).First();
+            return _catalogContext.Companies.Where(ar => ar.Id == id).First();
         }
 
         public void Save(Company entity)
         {
-            _jobContext.Companies.Add(entity);
-            _context.SaveChanges();
+            _catalogContext.Companies.Add(entity);
+            _catalogContext.SaveChanges();
         }
 
         public void Update(Company entity)
@@ -53,8 +51,8 @@ namespace Application.Services
                 com.IsActive = entity.IsActive;
                 com.NameCompany = entity.NameCompany;
                 com.DescriptionCompany = entity.DescriptionCompany;
-                _jobContext.Companies.Update(com);
-                _context.SaveChanges();
+                _catalogContext.Companies.Update(com);
+                _catalogContext.SaveChanges();
             }
         }
     }

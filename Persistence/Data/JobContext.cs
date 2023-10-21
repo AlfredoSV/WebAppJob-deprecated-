@@ -10,7 +10,7 @@ namespace Persistence.Data
 
         public DbSet<Job> Jobs { get; set; }
         public DbSet<ApplyCompetitorJob> CompetitorJobs { get; set; }
-        public DbSet<Company> Companies { get; set; }
+        
         public DbSet<Competitor> Competitors { get; set; }
         public DbSet<ExperiencieWork> ExperiencieWorks { get; set; }
 
