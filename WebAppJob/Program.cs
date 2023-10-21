@@ -12,6 +12,7 @@ using Framework.Security2023.Services;
 using Framework.Security2023.IServices;
 using Domain.IRepositories;
 using Domain.Repositories;
+using Domain.Entities;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");
@@ -36,6 +37,8 @@ try
 	builder.Services.AddTransient<IServiceLogin, ServiceLogin>();
     builder.Services.AddTransient<IServiceJob,ServiceJob>();
 	builder.Services.AddTransient<IServiceUser, ServiceUser>();
+    builder.Services.AddTransient<IServiceCatalog<Area>, ServiceCatalogArea>();
+    builder.Services.AddTransient<IServiceCatalog<Company>, ServiceCatalogCompany>();
 
     builder.Services.AddTransient<IRepositoryJob, RepositoryJob>();
 

@@ -99,18 +99,11 @@ namespace WebAppJob.Controllers
         [HttpPost]
         public IActionResult ForgotPassword(UserForgotPasswordViewModel userForgotPassword)
         {
-            bool valuesRequiredUserName = string.IsNullOrEmpty(userForgotPassword.UserName);
-            bool valuesRequiredUserPassword =  string.IsNullOrEmpty(userForgotPassword.Email);
-
+    
             try
             {
-                if (valuesRequiredUserName)
-                    ModelState.AddModelError("UserName", "The username was required.");
 
-                if (valuesRequiredUserPassword)
-                    ModelState.AddModelError("Email", "The email was required.");
-
-                if (valuesRequiredUserName || valuesRequiredUserPassword)
+                if(!ModelState.IsValid)
                     return View("ForgotPassword", userForgotPassword);
 
                 return RedirectToAction("Index", "Login");
@@ -118,7 +111,7 @@ namespace WebAppJob.Controllers
             catch (Exception)
             {
 
-                ModelState.AddModelError("Password", "An error occurred while update for the password of user");
+                ModelState.AddModelError("Change Password", "An error occurred while update for the password of user");
             }
 
             return RedirectToAction("ForgotPassword", new { username = userForgotPassword.UserName });

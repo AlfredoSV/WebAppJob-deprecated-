@@ -1,18 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Persistence.Data;
+﻿using Application.IServices;
+using Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebAppJob.Controllers
 {
     [Route("/")]
     public class CatalogController : Controller
     {
-        private readonly CatalogContext _catalogContext;
-        private readonly JobContext _jobContext;
+        private readonly IServiceCatalog<Area> _serviceCatalogArea;
+        private readonly IServiceCatalog<Company> _serviceCatalogCompany;
 
-        public CatalogController(CatalogContext catalogContext, JobContext jobContext)
+        public CatalogController(IServiceCatalog<Area> serviceCatalogArea,
+            IServiceCatalog<Company> serviceCatalogCompany)
         {
-            _catalogContext = catalogContext;
-            _jobContext = jobContext;
+           _serviceCatalogArea = serviceCatalogArea;
+            _serviceCatalogCompany = serviceCatalogCompany;
         }
 
         [HttpGet("[action]")]
@@ -20,7 +22,7 @@ namespace WebAppJob.Controllers
         {
             try
             {
-                return Ok(new { list = _catalogContext.Areas.ToList() });
+                return Ok(new { list = _serviceCatalogArea.GetAll() });
             }
             catch (Exception ex)
             {
@@ -34,7 +36,7 @@ namespace WebAppJob.Controllers
         {
             try
             {
-                return Ok(new { list = _jobContext.Companies.ToList() });
+                return Ok(new { list = _serviceCatalogCompany.GetAll() });
             }
             catch (Exception ex)
             {
