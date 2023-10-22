@@ -5,13 +5,16 @@ namespace WebAppJob.Models
 {
     public class UserForgotPasswordViewModel
     {
-        [DisplayName("Username")]
+
+        public Guid Id { get; set; }
+
+        [DisplayName("Password")]
         [Required]
-        public string UserName { get; set; }
+        public string Password { get; set; }
         [EmailAddress]
-        [DisplayName("Email")]
+        [DisplayName("Confirm Password")]
         [Required]
-        public string Email { get; set; }
+        public string ConfirmPassword { get; set; }
 
     }
 }

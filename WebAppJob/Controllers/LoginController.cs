@@ -59,6 +59,7 @@ namespace WebAppJob.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult LoginValidation(UserModel user)
         {
             try
@@ -97,14 +98,23 @@ namespace WebAppJob.Controllers
         }
 
         [HttpPost]
-        public IActionResult ForgotPassword(UserForgotPasswordViewModel userForgotPassword)
+        [ValidateAntiForgeryToken]
+        public IActionResult ForgotPasswordRequest(UserForgotPasswordRequestViewModel userForgotPasswordRequest)
         {
     
             try
             {
 
                 if(!ModelState.IsValid)
-                    return View("ForgotPassword", userForgotPassword);
+                    return View("ForgotPassword", userForgotPasswordRequest);
+
+
+                if (!_serviceUser.UserExist(userForgotPasswordRequest.UserName))
+                {
+                    ModelState.AddModelError("UserName", "The user was not exist");
+                    return View("ForgotPassword", userForgotPasswordRequest);
+                }
+
 
                 return RedirectToAction("Index", "Login");
             }
@@ -114,9 +124,30 @@ namespace WebAppJob.Controllers
                 ModelState.AddModelError("Change Password", "An error occurred while update for the password of user");
             }
 
-            return RedirectToAction("ForgotPassword", new { username = userForgotPassword.UserName });
+            return RedirectToAction("ForgotPassword", new { username = userForgotPasswordRequest.UserName });
 
         }
+
+        [HttpGet("[action]/{id}/{idRequest}")]
+        public IActionResult ForgotPasswordChange(Guid id, Guid idRequest)
+        {
+
+            try
+            {
+
+
+                return RedirectToAction("Index", "Login");
+            }
+            catch (Exception)
+            {
+
+                ModelState.AddModelError("Change Password", "An error occurred while update for the password of user");
+            }
+
+            return RedirectToAction("ForgotPassword", new { username = id });
+
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
