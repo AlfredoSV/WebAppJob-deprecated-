@@ -39,7 +39,6 @@ try
 	builder.Services.AddTransient<IServiceUser, ServiceUser>();
     builder.Services.AddTransient<IServiceCatalog<Area>, ServiceCatalogArea>();
     builder.Services.AddTransient<IServiceCatalog<Company>, ServiceCatalogCompany>();
-
     builder.Services.AddTransient<IRepositoryJob, RepositoryJob>();
 
 	builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

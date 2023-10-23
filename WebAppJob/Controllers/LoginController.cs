@@ -1,6 +1,8 @@
 ﻿
+using Application.IServices;
 using Framework.Security2023.Entities;
 using Framework.Security2023.IServices;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using WebAppJob.Models;
 
@@ -101,6 +103,9 @@ namespace WebAppJob.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ForgotPasswordRequest(UserForgotPasswordRequestViewModel userForgotPasswordRequest)
         {
+            string url = string.Empty;
+            string idRequest = Guid.NewGuid().ToString();
+            UserFkw user = null;
     
             try
             {
@@ -115,6 +120,10 @@ namespace WebAppJob.Controllers
                     return View("ForgotPassword", userForgotPasswordRequest);
                 }
 
+                user = _serviceUser.GetUserByUserName(userForgotPasswordRequest.UserName);
+
+                url = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + $"/ForgotPassword/ForgotPasswordChange/{user.Id}/{idRequest}";
+                
 
                 return RedirectToAction("Index", "Login");
             }
