@@ -1,5 +1,6 @@
 ﻿
 using Application.IServices;
+using Framework.Security2023.Dtos;
 using Framework.Security2023.Entities;
 using Framework.Security2023.IServices;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -36,7 +37,7 @@ namespace WebAppJob.Controllers
         {
             try
             {
-                if (_serviceUser.UserExist(userName))
+                if (_serviceUser.UserExistByUserNameAndEmail(userName,""))
                     return RedirectToAction("LoginValidation", "Login", new { userName });
 
                 ModelState.AddModelError("UserName", "The user was not found");
@@ -67,13 +68,13 @@ namespace WebAppJob.Controllers
             try
             {
 
-                Login login = Login.Create(user.UserName, user.Password);
-                Login userLogin = _serviceLogin.Login(login);
+                DtoLogin login = new DtoLogin() { UserName= user.UserName, Password = user.Password };
+                DtoLoginResponse userLogin = _serviceLogin.Login(login);
 
                 if (string.IsNullOrEmpty(user.Password))
                     ModelState.AddModelError("Password", "The credentials was not correct.");
 
-                if (userLogin.StatusLog == StatusLogin.Ok)
+                if (userLogin.StatusLogin == StatusLogin.Ok)
                 {
                     HttpContext.Session.SetString("User", userLogin.User.Id.ToString());
                     return RedirectToAction("Index", "Home", new { user.UserName });
@@ -103,9 +104,7 @@ namespace WebAppJob.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ForgotPasswordRequest(UserForgotPasswordRequestViewModel userForgotPasswordRequest)
         {
-            string url = string.Empty;
-            string idRequest = Guid.NewGuid().ToString();
-            UserFkw user = null;
+            string urlBase = string.Empty;
     
             try
             {
@@ -114,16 +113,17 @@ namespace WebAppJob.Controllers
                     return View("ForgotPassword", userForgotPasswordRequest);
 
 
-                if (!_serviceUser.UserExist(userForgotPasswordRequest.UserName))
+                if (!_serviceUser.UserExistByUserNameAndEmail(userForgotPasswordRequest.UserName,
+                    userForgotPasswordRequest.Email))
                 {
                     ModelState.AddModelError("UserName", "The user was not exist");
                     return View("ForgotPassword", userForgotPasswordRequest);
                 }
 
-                user = _serviceUser.GetUserByUserName(userForgotPasswordRequest.UserName);
+                urlBase = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/ForgotPassword/ForgotPasswordChange";
 
-                url = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + $"/ForgotPassword/ForgotPasswordChange/{user.Id}/{idRequest}";
-                
+                _serviceLogin.GenerateChangePasswordRequest( userForgotPasswordRequest.UserName,
+                    urlBase);
 
                 return RedirectToAction("Index", "Login");
             }
@@ -143,8 +143,7 @@ namespace WebAppJob.Controllers
 
             try
             {
-
-
+                
                 return RedirectToAction("Index", "Login");
             }
             catch (Exception)
