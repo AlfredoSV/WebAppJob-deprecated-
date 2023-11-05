@@ -2,7 +2,7 @@
 
 namespace Domain.Entities
 {
-    [Table("job")]
+    [Table("jobs")]
     public class Job
     {
         public Guid Id { get; set; }

@@ -22,8 +22,9 @@ namespace Domain.Repositories
 
         public async Task<PaginationList<List<Job>>> ListJobsByPage(int page, int pageSize, string search)
         {
-            
-            SqlParameter[] param = new SqlParameter[] {
+            try
+            {
+                SqlParameter[] param = new SqlParameter[] {
                         new SqlParameter() {
                             ParameterName = "@page",
                             SqlDbType =  System.Data.SqlDbType.Int,
@@ -44,18 +45,26 @@ namespace Domain.Repositories
                             ParameterName = "@count",
                             SqlDbType =  System.Data.SqlDbType.Int,
                             Direction = System.Data.ParameterDirection.Output,
-                            
+
                         }};
 
-            List<Job> jobs = await _jobContext
-                    .Jobs.FromSqlRaw("exec dbo.GetJobs @page, @pageSize, @search, @count out", param).ToListAsync();
+                List<Job> jobs = await _jobContext
+                        .Jobs.FromSqlRaw("exec dbo.GetJobs @page, @pageSize, @search, @count out", param).ToListAsync();
 
-            PaginationList<List<Job>> response = new PaginationList<List<Job>>();
+                PaginationList<List<Job>> response = new PaginationList<List<Job>>();
 
-            response.Data = jobs;
-            response.Count = Convert.ToInt32(param[3].Value.ToString());
+                response.Data = jobs;
+                response.Count = Convert.ToInt32(param[3].Value.ToString());
 
-            return response;
+                return response;
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+            
+           
         }
     }
 

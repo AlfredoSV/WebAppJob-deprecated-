@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
-    [Table("company")]
+    [Table("companies")]
     public class Company
     {
         public Guid Id { get; set; }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
-    [Table("applycompetitorjob")]
+    [Table("applycompetitorjobs")]
     public class ApplyCompetitorJob
     {
         public Guid Id { get; set; }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    [Table("area")]
+    [Table("areas")]
     public class Area
     {
         public Guid Id { get; set; }

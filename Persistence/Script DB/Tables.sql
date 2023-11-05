@@ -6,7 +6,7 @@ GO
 
 ---Tables
 
-create table job(
+create table jobs(
 id UNIQUEIDENTIFIER,
 namejob varchar(30), 
 idcompany uniqueidentifier,
@@ -22,7 +22,7 @@ isactive bit,
 tags varchar(500),
 logo varchar(max));
 
-create table company(
+create table companies(
 id UNIQUEIDENTIFIER,
 namecompany varchar(30), 
 descriptioncompany varchar(max),
@@ -31,7 +31,7 @@ updatedate date,
 createdate date,
 isactive bit);
 
-create table area(
+create table areas(
 id UNIQUEIDENTIFIER,
 namearea varchar(30), 
 descriptionarea varchar(max),
@@ -40,7 +40,7 @@ updatedate date,
 createdate date,
 isactive bit);
 
-create table applycompetitorjob(
+create table applycompetitorjobs(
 id UNIQUEIDENTIFIER,
 idcompetitor uniqueidentifier,
 idjob uniqueidentifier,
@@ -68,7 +68,7 @@ updatedate date,
 createdate date,
 isactive bit);
 
-create table englishlevel(
+create table englishlevels(
 id UNIQUEIDENTIFIER,
 namelevel uniqueidentifier,
 idusercreated uniqueidentifier,
@@ -76,7 +76,7 @@ updatedate date,
 createdate date,
 isactive bit);
 
-create table competitor(
+create table competitors(
 id UNIQUEIDENTIFIER,
 namecompetitor varchar(30), 
 lastnamecompetitor varchar(30),
@@ -109,3 +109,17 @@ idusercreated uniqueidentifier,
 updatedate date, 
 createdate date);
 
+
+create table countries(
+	
+	id uniqueidentifier not null,
+	countryName varchar(50) not null,
+	countryDescription varchar(50) not null,
+	datecreated datetime not null,
+	active bit not null
+
+);
+
+--INSERT INTO countries VALUES(NEWID(), 'México', 'México City', getdate(), 1);
+
+--SELECT * FROM countries

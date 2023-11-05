@@ -19,6 +19,7 @@ namespace Persistence.Data
         public DbSet<CivilStatus> CivilStatus { get; set; }
         public DbSet<EnglishLevel> EnglishLevel { get; set; }
         public DbSet<Company> Companies { get; set; }
+        public DbSet<Country> Countries { get; set; }
 
     }
 }

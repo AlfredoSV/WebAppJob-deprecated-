@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
-    [Table("competitor")]
+    [Table("competitors")]
     public class Competitor
     {
         public Guid Id { get; set; }
