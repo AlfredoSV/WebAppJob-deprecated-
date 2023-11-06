@@ -10,19 +10,71 @@ namespace WebAppJob.Controllers
     [Route("[controller]")]
     public class JobController : Controller
     {
+        #region Abstract services
+
         private readonly IMapper _mapper;
         private readonly IServiceJob _serviceJob;
         private readonly ILogger<JobController> _logger;
 
+        #endregion
 
+        #region Constructors
         public JobController(IServiceJob serviceJob, IMapper autoMapper, ILogger<JobController> logger)
         {
-            
+
             _logger = logger;
             _serviceJob = serviceJob;
             _mapper = autoMapper;
         }
 
+        #endregion
+
+        #region Return Partial View
+
+        [HttpGet("[action]")]
+        public PartialViewResult CreateJob() => PartialView("_CreateJob");
+
+        [HttpGet("[action]")]
+        public PartialViewResult GetDetail() => PartialView("_DetailJob");
+
+        [HttpGet("[action]")]
+        public PartialViewResult EditJob() => PartialView("_EditJob");
+
+        [HttpPost("[action]")]
+        public async Task<PartialViewResult> ListJobs(int page, int pageSize, string searchText, string citySearch)
+        {
+            List<JobViewModel> jobsResult = new List<JobViewModel>();
+
+            DtoPaginationViewModel<JobViewModel> dtoPaginationViewModel =
+            new DtoPaginationViewModel<JobViewModel>();
+
+            DtoResponse<List<Job>> response;
+
+            if (string.IsNullOrEmpty(searchText))
+                searchText = string.Empty;
+
+            if (string.IsNullOrEmpty(citySearch))
+                citySearch = string.Empty;
+
+            response = await _serviceJob.GetJobsList(page, pageSize, searchText, citySearch);
+
+            _mapper.Map(response.Data, jobsResult);
+
+            dtoPaginationViewModel.Data = jobsResult;
+            dtoPaginationViewModel.PaginationViewModel = new PaginationViewModel()
+            {
+                TotalCount = response.Count,
+                PageSize = pageSize,
+                PageIndex = page++
+            };
+
+            return PartialView("_ListJobs", dtoPaginationViewModel);
+
+        }
+
+        #endregion
+
+        #region Return object json for fetch request
 
         [HttpGet("[action]/{id}")]
         public async Task<IActionResult> DetailJob(Guid id)
@@ -46,15 +98,6 @@ namespace WebAppJob.Controllers
             }
 
         }
-
-        [HttpGet("[action]")]
-        public PartialViewResult CreateJob() => PartialView("_CreateJob");
-
-        [HttpGet("[action]")]
-        public PartialViewResult GetDetail() => PartialView("_DetailJob");
-
-        [HttpGet("[action]")]
-        public PartialViewResult EditJob() => PartialView("_EditJob");
 
         [HttpPost("[action]")]
         public async Task<IActionResult> CreateJob([FromBody] JobViewModel jobView)
@@ -100,19 +143,29 @@ namespace WebAppJob.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> EditJob([FromBody] JobViewModel jobView)
         {
+            DtoRequest<Job> dtoRequ = new DtoRequest<Job>();
+            dtoRequ.Data = new Job();
+            Guid idError = Guid.NewGuid();
             try
             {
+                if (ModelState.IsValid)
+                {
+                    _mapper.Map(jobView, dtoRequ.Data);
+                    await _serviceJob.UpdateJob(dtoRequ);
 
-                DtoRequest<Job> dtoRequ = new DtoRequest<Job>();
-                dtoRequ.Data = new Job();
-                _mapper.Map(jobView, dtoRequ.Data);
-                await _serviceJob.UpdateJob(dtoRequ);
+                    return Ok(new { message = "The job was edited successful" });
+                }
+                else
+                {
+                    _logger.LogInformation(idError + @" The data of forma is not valid.");
+                    return BadRequest(new { message = "Please, check your form data." });
+                }
 
-                return Ok(new { message = "The job was edited successful" });
+
             }
             catch (Exception ex)
             {
-                Guid idError = Guid.NewGuid();
+
                 _logger.LogError(idError + ex.Message);
                 return BadRequest(new { Error = "A error was ocurred, the ticket is: " + idError });
 
@@ -120,35 +173,14 @@ namespace WebAppJob.Controllers
 
         }
 
+        #endregion
+
+        #region Return View
+
         [HttpGet]
         public IActionResult ApplicationsJobs() => View();
 
-        [HttpPost("[action]")]
-        public async Task<PartialViewResult> ListJobs(int page, int pageSize, string searchText, string citySearch)
-        {
-            if(string.IsNullOrEmpty(searchText))
-                searchText = string.Empty;
-
-            if(string.IsNullOrEmpty(citySearch))
-                citySearch = string.Empty;
-
-            DtoPaginationViewModel<JobViewModel> dtoPaginationViewModel =
-            new DtoPaginationViewModel<JobViewModel>();
-
-            List<JobViewModel> jobsResult = new List<JobViewModel>();
-
-            DtoResponse<List<Job>> response = await _serviceJob.GetJobsList(page, pageSize, searchText, citySearch);
-
-            _mapper.Map(response.Data,jobsResult);
-            
-            dtoPaginationViewModel.Data = jobsResult;
-            dtoPaginationViewModel.PaginationViewModel = new PaginationViewModel() { 
-                TotalCount = response.Count, PageSize = pageSize, PageIndex = page++ };
-
-            return PartialView("_ListJobs", dtoPaginationViewModel);
-
-        }
-
+        #endregion
 
     }
 }
