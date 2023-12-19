@@ -3,8 +3,10 @@ using Application.IServices;
 using Framework.Security2023.Dtos;
 using Framework.Security2023.Entities;
 using Framework.Security2023.IServices;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using WebAppJob.Models;
 
 namespace WebAppJob.Controllers
@@ -76,7 +78,7 @@ namespace WebAppJob.Controllers
 
                 if (userLogin.StatusLogin == StatusLogin.Ok)
                 {
-                    HttpContext.Session.SetString("User", userLogin.User.Id.ToString());
+
                     return RedirectToAction("Index", "Home", new { user.UserName });
                 }
                 else
@@ -142,8 +144,7 @@ namespace WebAppJob.Controllers
         {
 
             try
-            {
-                
+            {             
                 return RedirectToAction("Index", "Login");
             }
             catch (Exception)

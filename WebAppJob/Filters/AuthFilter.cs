@@ -21,13 +21,13 @@ namespace WebAppJob.Filters
 
 		public void OnAuthorization(AuthorizationFilterContext context)
 		{
-			string idStr = context.HttpContext.Session.GetString("idUser")??"";
-			Guid id;
-			bool userExist = false;
-			UserFkw user = null;
+			
+			Guid id = Guid.Empty;
+			bool userExist = false;		
+            string idStr = context.HttpContext.Session.GetString("idUser") ?? "";
+            UserFkw user;
 
-			//Validate the id
-			if(Guid.TryParse(idStr, out id))
+            if (Guid.TryParse(idStr, out id))
 			{
 				user = _serviceUser.GetUserById(id);
 				userExist =  user != null;
@@ -40,19 +40,7 @@ namespace WebAppJob.Filters
 					{ "Action", "Index" } });
 					context.Result.ExecuteResultAsync(context);
 			}
-			//else
-			//{
-			//	//Validate the Role
-			//	if (user.Role is null &&
-			//		user.Role.NameRol.ToUpper().Equals(_role.ToUpper()))
-			//	{
-			//		context.Result = new RedirectToRouteResult(new RouteValueDictionary
-			//		{{ "Controller", "Home" },
-			//		{ "Action", "NoAuthorization" } });
 
-			//		context.Result.ExecuteResultAsync(context);
-			//	}
-			//}
 
 		}
 	}

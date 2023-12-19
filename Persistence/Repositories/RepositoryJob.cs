@@ -12,9 +12,9 @@ namespace Domain.Repositories
 {
     public class RepositoryJob : IRepositoryJob
     {
-        private readonly JobContext _jobContext;
+        private readonly IDbContextFactory<JobContext> _jobContext;
 
-        public RepositoryJob(JobContext jobContext)
+        public RepositoryJob(IDbContextFactory<JobContext> jobContext)
         {
 
             _jobContext = jobContext;
@@ -24,38 +24,38 @@ namespace Domain.Repositories
         {
             try
             {
-                SqlParameter[] param = new SqlParameter[] {
-                        new SqlParameter() {
-                            ParameterName = "@page",
-                            SqlDbType =  System.Data.SqlDbType.Int,
-                            Direction = System.Data.ParameterDirection.Input,
-                            Value = page                        },
-                        new SqlParameter() {
-                            ParameterName = "@search",
-                            SqlDbType =  System.Data.SqlDbType.VarChar,
-                            Direction = System.Data.ParameterDirection.Input,
-                            Value = search
-                        }, new SqlParameter() {
-                            ParameterName = "@pageSize",
-                            SqlDbType =  System.Data.SqlDbType.Int,
-                            Direction = System.Data.ParameterDirection.Input,
-                            Value = pageSize
-                        },
-                        new SqlParameter() {
-                            ParameterName = "@count",
-                            SqlDbType =  System.Data.SqlDbType.Int,
-                            Direction = System.Data.ParameterDirection.Output,
-
-                        }};
-
-                List<Job> jobs = await _jobContext
-                        .Jobs.FromSqlRaw("exec dbo.GetJobs @page, @pageSize, @search, @count out", param).ToListAsync();
+                List<Job> jobs = new List<Job>();
 
                 PaginationList<List<Job>> response = new PaginationList<List<Job>>();
 
-                response.Data = jobs;
-                response.Count = Convert.ToInt32(param[3].Value.ToString());
+                using (JobContext jobContext = _jobContext.CreateDbContext())
+                {
+                    if (page != 1)
+                        page--;
+                    else
+                        page = 0;
 
+                    if (string.IsNullOrEmpty(search))
+                    {
+                        response.Data = await jobContext
+                            .Jobs.AsQueryable().Take(pageSize).Skip(page * pageSize).ToListAsync();
+                        response.Count = jobContext
+                            .Jobs.AsQueryable().Count();
+                    }
+
+
+                    if (!string.IsNullOrEmpty(search))
+                    {
+                        response.Data = await jobContext
+                            .Jobs.AsQueryable().Where(st => st.DescriptionJob.Contains(search) && st.NameJob.Contains(search))
+                            .Take(pageSize).Skip(page * pageSize).ToListAsync();
+                        response.Count = jobContext
+                            .Jobs.AsQueryable().Where(st => st.DescriptionJob.Contains(search) && st.NameJob.Contains(search))
+                            .Count();
+
+                    }
+                }
+               
                 return response;
             }
             catch (Exception e)
@@ -63,8 +63,8 @@ namespace Domain.Repositories
 
                 throw;
             }
-            
-           
+
+
         }
     }
 

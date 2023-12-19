@@ -13,6 +13,8 @@ using Framework.Security2023.IServices;
 using Domain.IRepositories;
 using Domain.Repositories;
 using Domain.Entities;
+using System.Diagnostics.Eventing.Reader;
+using Microsoft.AspNetCore.Authorization;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("init main");
@@ -40,17 +42,20 @@ try
     builder.Services.AddTransient<IServiceCatalog<Area>, ServiceCatalogArea>();
     builder.Services.AddTransient<IServiceCatalog<Company>, ServiceCatalogCompany>();
     builder.Services.AddTransient<IRepositoryJob, RepositoryJob>();
+    builder.Services.AddSession(options => {
 
+        options.IdleTimeout = TimeSpan.FromMinutes(30); 
+
+    });
 	builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-
-
     builder.Services.AddDbContext<CatalogContext>(options => options.UseSqlServer(connectionStr));
-    builder.Services.AddDbContext<JobContext>(options => options.UseSqlServer(connectionStr));
+    builder.Services.AddDbContextFactory<JobContext>(options => options.UseSqlServer(connectionStr));
     builder.Services.AddSession();
 	builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
     builder.Services.AddMvc().AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix).AddDataAnnotationsLocalization();
 	var app = builder.Build();
+    
     app.UseSession();
 
 	var supportedCultures = new[]
@@ -77,7 +82,8 @@ try
     app.UseRouting();
 
     app.UseAuthorization();
-
+    app.UseAuthentication();
+   
     app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");

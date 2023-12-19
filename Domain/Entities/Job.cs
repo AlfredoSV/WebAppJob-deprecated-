@@ -20,6 +20,7 @@ namespace Domain.Entities
         public string Logo { get; set; }
         public string Tags { get; set; }
 
+    
     }
 
 }
