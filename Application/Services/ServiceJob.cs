@@ -11,58 +11,34 @@ namespace Application.Services
 {
     public class ServiceJob : IServiceJob
     {
-        private readonly JobContext _jobContext;
         private readonly IRepositoryJob _repositoryJob;
 
-        public ServiceJob(JobContext jobContext, IRepositoryJob repositoryJob)
+        public ServiceJob(IRepositoryJob repositoryJob)
         {
-            _jobContext = jobContext;
             _repositoryJob = repositoryJob;
         }
 
         public async Task<DtoResponse<ApplyCompetitorJob>> ApplyNewJob(Guid idCompetitor, Guid idCreated, Guid idJob)
         {
-            ApplyCompetitorJob applyCompetitorJob = null;
-            Job job = await _jobContext.Jobs.Where(jb => jb.Id == idJob).FirstOrDefaultAsync();
+            ApplyCompetitorJob applyCompetitorJob;
+
+            Competitor competitor;
+
+            Job job = (await _repositoryJob.GetJobById(idJob)).Data;
 
             ArgumentNullException.ThrowIfNull(job);
 
-            Competitor com = await _jobContext.Competitors.Where(com => com.Id == idCompetitor)
-                                                    .FirstOrDefaultAsync();
+            competitor = (await _repositoryJob.GetApplyCompetitorJobById(idCompetitor)).Data;
 
-            ArgumentNullException.ThrowIfNull(com);
+            ArgumentNullException.ThrowIfNull(competitor);
 
-            using (IDbContextTransaction transaction = _jobContext.Database.
-                BeginTransaction())
-            {
-                try
-                {
-                    job.VacancyNumbers = job.VacancyNumbers - 1;
-                    _jobContext.Jobs.Update(job);
-                    await _jobContext.SaveChangesAsync();
+            applyCompetitorJob =
+                ApplyCompetitorJob.Create(idCompetitor, idJob, Guid.NewGuid(),
+                idCreated);
 
-                    if (job.VacancyNumbers <= 0)
-                        throw new ArgumentException("Vacancy Numbers is 0");
+            await _repositoryJob.SaveApplyCompetitorJob(applyCompetitorJob);
 
-                    applyCompetitorJob =
-                        ApplyCompetitorJob.Create(idCompetitor, idJob, Guid.NewGuid(),
-                        idCreated);
-
-                    _jobContext.CompetitorJobs.Add(applyCompetitorJob);
-                    await _jobContext.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch (Exception)
-                {
-                    await transaction.RollbackAsync();
-                }
-
-
-
-            }
-
-            return new DtoResponse<ApplyCompetitorJob>()
-            { Data = applyCompetitorJob };
+            return DtoResponse<ApplyCompetitorJob>.Create(applyCompetitorJob);
 
         }
 
@@ -72,24 +48,21 @@ namespace Application.Services
             dtoRequest.Data.IdUserCreated = Guid.NewGuid();
             dtoRequest.Data.UpdateDate = DateTime.Now;
             dtoRequest.Data.CreateDate = DateTime.Now;
-            _jobContext.Jobs.Add(dtoRequest.Data);
-            await _jobContext.SaveChangesAsync();
+            await _repositoryJob.SaveJob(dtoRequest.Data);
         }
 
         public async Task DeleteJob(DtoRequest<Guid> idJob)
         {
-            _jobContext.Jobs.Remove(_jobContext.Jobs.Where(jb => jb.Id == idJob.Data).First());
-            await _jobContext.SaveChangesAsync();
+            await _repositoryJob.DeleteJob(idJob.Data);
         }
 
         public async Task<DtoResponse<Job>> GetDetailJob(Guid jobId)
         {
             DtoResponse<Job> dtoResponse = new DtoResponse<Job>();
 
-            IQueryable<Job> result = _jobContext.Jobs.Where(job => job.Id == jobId)
-                                                     .AsQueryable();
+            Job result = (await _repositoryJob.GetJobById(jobId)).Data;
 
-            dtoResponse.Data = await result.FirstOrDefaultAsync();
+            dtoResponse.Data = result;
 
             ArgumentNullException.ThrowIfNull(dtoResponse.Data);
 
@@ -99,21 +72,15 @@ namespace Application.Services
 
         public async Task<DtoResponse<List<Job>>> GetJobsList(int page, int pageSize, string search, string city)
         {
-            PaginationList<List<Job>> jobs = await _repositoryJob.ListJobsByPage(page, pageSize, search);
+            PaginationList<List<Job>> jobs = await _repositoryJob.ListJobsByPage
+                (page, pageSize, search);
 
-            return new DtoResponse<List<Job>>() { Data = jobs.Data, Count = jobs.Count };
+            return DtoResponse<List<Job>>.Create(jobs.Data, jobs.Count);
         }
 
         public async Task UpdateJob(DtoRequest<Job> dtoRequest)
         {
-            Job job = (await GetDetailJob(dtoRequest.Data.Id)).Data;
-
-            dtoRequest.Data.UpdateDate = DateTime.Now;
-            dtoRequest.Data.CreateDate = job.CreateDate;
-            dtoRequest.Data.IdUserCreated = job.IdUserCreated;
-
-            _jobContext.Jobs.Update(dtoRequest.Data);
-            _jobContext.SaveChanges();
+            
         }
 
     }

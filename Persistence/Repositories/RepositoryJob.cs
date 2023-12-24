@@ -6,6 +6,7 @@ using Domain.Entities;
 using Domain.IRepositories;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Persistence.Data;
 
 namespace Domain.Repositories
@@ -19,6 +20,7 @@ namespace Domain.Repositories
 
             _jobContext = jobContext;
         }
+
 
         public async Task<PaginationList<List<Job>>> ListJobsByPage(int page, int pageSize, string search)
         {
@@ -55,7 +57,7 @@ namespace Domain.Repositories
 
                     }
                 }
-               
+
                 return response;
             }
             catch (Exception e)
@@ -65,6 +67,168 @@ namespace Domain.Repositories
             }
 
 
+        }
+
+        public async Task<DtoResponse<Job>> GetJobById(Guid id)
+        {
+            try
+            {
+
+                using (JobContext jobContext = _jobContext.CreateDbContext())
+                {
+                    return DtoResponse<Job>.Create(await
+                        jobContext.Jobs.FirstOrDefaultAsync(j => j.Id.Equals(id)));
+                }
+
+
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+
+        }
+
+        public async Task UpdateVacancyNumbers(Guid id)
+        {
+
+            try
+            {
+
+                using (JobContext jobContext = _jobContext.CreateDbContext())
+                {
+                    Job job = (await GetJobById(id)).Data;
+                    if (job.VacancyNumbers <= 0)
+                        throw new ArgumentException("Vacancy Numbers is 0");
+
+                    job.VacancyNumbers = job.VacancyNumbers - 1;
+                    jobContext.Jobs.Update(job);
+                    await jobContext.SaveChangesAsync();         
+
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
+
+        public async Task<DtoResponse<Competitor>> GetApplyCompetitorJobById(Guid id)
+        {
+            try
+            {
+
+                using (JobContext jobContext = _jobContext.CreateDbContext())
+                {
+                    return DtoResponse<Competitor>.Create(await
+                        jobContext.Competitors.FirstOrDefaultAsync(j => j.Id.Equals(id)));
+                }
+
+
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+
+        }
+
+        public async Task SaveApplyCompetitorJob(ApplyCompetitorJob applyCompetitorJob)
+        {
+
+            try
+            {
+
+                using (JobContext jobContext = _jobContext.CreateDbContext())
+                {
+                    jobContext.Add(applyCompetitorJob);
+                    await jobContext.SaveChangesAsync();
+
+                    await Task.FromResult(applyCompetitorJob);
+                }
+
+
+            }
+            catch (Exception e)
+            {
+
+                await Task.FromException(e);
+            }
+        }
+
+        public async Task<DtoResponse> DeleteJob(Guid id)
+        {
+            try
+            {
+
+                using (JobContext jobContext = _jobContext.CreateDbContext())
+                {
+                    jobContext.Remove(id);
+                    await jobContext.SaveChangesAsync();
+                    return DtoResponse.Create(StatusRequest.Ok);
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                await Task.FromException(e);
+            }
+
+            return DtoResponse.Create(StatusRequest.OperationNotPerformed);
+        }
+
+        public async Task<DtoResponse> SaveJob(Job job)
+        {
+            try
+            {
+
+                using (JobContext jobContext = _jobContext.CreateDbContext())
+                {
+                    jobContext.Add(job);
+                    await jobContext.SaveChangesAsync();
+                    return DtoResponse.Create(StatusRequest.Ok);
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                await Task.FromException(e);
+            }
+
+            return DtoResponse.Create(StatusRequest.OperationNotPerformed);
+        }
+
+        public async Task<DtoResponse> UpdateJob(Job job)
+        {
+            try
+            {
+
+                using (JobContext jobContext = _jobContext.CreateDbContext())
+                {
+                    Job jobRes = (await GetJobById(job.Id)).Data;
+
+                    job.UpdateDate = DateTime.Now;
+                    job.CreateDate = job.CreateDate;
+                    job.IdUserCreated = job.IdUserCreated;
+                    jobContext.Jobs.Update(job);
+                    await jobContext.SaveChangesAsync();
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                await Task.FromException(e);
+            }
+
+            return DtoResponse.Create(StatusRequest.OperationNotPerformed);
         }
     }
 

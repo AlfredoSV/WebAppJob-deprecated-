@@ -15,7 +15,9 @@
         public DateTime CreateDate { get; set; }
         public bool IsActive { get; set; }
         public string Logo { get; set; }
-        public string Tags { get; set; }
+        public string Tags { get; set; } 
+
+        
 
     }
 }
