@@ -35,7 +35,7 @@ namespace WebAppJob.Controllers
         public PartialViewResult CreateJob() => PartialView("_CreateJob");
 
         [HttpGet("[action]")]
-        public PartialViewResult GetDetail() => PartialView("_DetailJob");
+        public PartialViewResult GetDetailPartial() => PartialView("_DetailJob");
 
         [HttpGet("[action]")]
         public PartialViewResult EditJob() => PartialView("_EditJob");

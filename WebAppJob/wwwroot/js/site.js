@@ -58,7 +58,7 @@ btnSearch.addEventListener('click', async (e) => {
         }
     }
 
-     url += new URLSearchParams(dataVal);
+    url += new URLSearchParams(dataVal);
 
     try {
 
@@ -79,73 +79,79 @@ btnNewJob.addEventListener("click", async (e) => {
 
     e.preventDefault();
 
-    await loadCatalogs();
+    let options = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+    }
 
     let url = window.location.origin + '/Job/CreateJob';
+    let createJobForm = document.getElementById("createJobForm");
+    let nameInput = document.getElementById("name");
+    let lastName = document.getElementById("description");
+    let vacancyNumber = document.getElementById("vacancyNumber");
+    let salaryMax = document.getElementById("salaryMax");
+    let salaryMin = document.getElementById("salaryMin");
 
-    fetch(url)
-        .then(response => response.text())
-        .then(text => {
-
-            document.querySelector("#formJob").innerHTML = text;
-            $('#createJobModal').modal('show');
-
-            let createJobForm = document.getElementById("createJobForm");
-
-            createJobForm.addEventListener("submit", eventSubmit, true);
+    try {
 
 
-            let nameInput = document.getElementById("name");
-            nameInput.addEventListener("change", () => {
+        let response = await fetch(url, options);
+        let text = await response.text();
 
-                validateStr("name", "nameValidationMessage", "This name is not valid", 6, 10, true)
+        document.querySelector("#formJob").innerHTML = text;
 
-            }, true);
+        createJobForm.addEventListener("submit", eventSubmit, true);
 
-            let lastName = document.getElementById("description");
-            lastName.addEventListener("change", () => {
+        nameInput.addEventListener("change", () => {
 
-                validateStr("description", "descriptionValidationMessage", "The description is not valid", 2, 80, true)
+            validateStr("name", "nameValidationMessage", "This name is not valid", 6, 10, true)
 
-            }, true);
+        }, true);
 
-            let vacancyNumber = document.getElementById("vacancyNumber");
-            vacancyNumber.addEventListener("change", () => {
+        lastName.addEventListener("change", () => {
 
-                validateIntegerNumber("vacancyNumber", "vacancyNumberValidationMessage", "The number is not valid", true)
+            validateStr("description", "descriptionValidationMessage", "The description is not valid", 2, 80, true)
 
-            }, true);
+        }, true);
 
-            let salaryMax = document.getElementById("salaryMax");
-            salaryMax.addEventListener("change", () => {
+        vacancyNumber.addEventListener("change", () => {
 
-                validateFloatingNumber("salaryMax", "salaryMaxValidationMessage", "The number is not valid", true)
+            validateIntegerNumber("vacancyNumber", "vacancyNumberValidationMessage", "The number is not valid", true)
 
-            }, true);
+        }, true);
 
-            let salaryMin = document.getElementById("salaryMin");
-            salaryMin.addEventListener("change", () => {
+        salaryMax.addEventListener("change", () => {
 
-                validateFloatingNumber("salaryMin", "salaryMinValidationMessage", "The number is not valid", true)
+            validateFloatingNumber("salaryMax", "salaryMaxValidationMessage", "The number is not valid", true)
 
-            }, true);
+        }, true);
 
-        });
+        salaryMin.addEventListener("change", () => {
 
-    $(".loader").hide();
+            validateFloatingNumber("salaryMin", "salaryMinValidationMessage", "The number is not valid", true)
+
+        }, true);
+
+        $(".loader").hide();
+        $('#createJobModal').modal('show');
+        await loadCatalogs();
+
+    } catch (error) {
+
+        alertify.error(error);
+    }
 
 });
 
-const eventSubmit = (e) => {
+const eventSubmit = async (e) => {
 
-    let api = '';
+    e.preventDefault();
+
     let createJobForm = document.getElementById("createJobForm");
     let editJobForm = document.getElementById("editJobForm");
-
-    if (createJobForm == undefined)
-        api = 'Job/EditJob';
-    else
-        api = 'Job/CreateJob';
+    let api = createJobForm == undefined ? 'Job/EditJob' : 'Job/CreateJob';
 
     let data = {
         'nameJob': document.querySelector("#name").value,
@@ -170,8 +176,6 @@ const eventSubmit = (e) => {
         body: JSON.stringify(data),
     }
 
-    e.preventDefault()
-
     let isValidName = validateStr("name", "nameValidationMessage", "This name is not valid", 6, 10, true);
     let isValidLastName = validateStr("description", "descriptionValidationMessage", "The description is not valid", 2, 80, true);
     let isValidIdCompany = validateSelect("idCompany", "idCompanyValidationMessage", "The company is not valid", true);
@@ -180,45 +184,31 @@ const eventSubmit = (e) => {
     let isValidMaxSalary = validateFloatingNumber("salaryMax", "salaryMaxValidationMessage", "The number is not valid", true);
     let isValidMinSalary = validateFloatingNumber("salaryMin", "salaryMinValidationMessage", "The number is not valid", true);
 
+    try {
 
-    if (isValidLastName && isValidName && isValidIdCompany
-        && isValidIdArea && isValidVacancyNumber &&
-        isValidMaxSalary && isValidMinSalary) {
+        if (isValidLastName && isValidName && isValidIdCompany
+            && isValidIdArea && isValidVacancyNumber &&
+            isValidMaxSalary && isValidMinSalary) {
 
-        fetch(api, options)
-            .then(response => response.json())
-            .then(json => {
-                $('#applyJobModal').modal('hide');
-                alertify.success(json.message);
+            let response = await fetch(api, options);
+            let json = await response.json();
+            $('#applyJobModal').modal('hide');
+            alertify.success(json.message);
 
-                setTimeout(() => {
-                }, 2000);
+        }
 
-            })
-            .catch(err => alertify.error(json.error));
+    } catch (error) {
 
+        alertify.error(error);
     }
 
 }
 
 const getDetailJob = async (obj) => {
 
-    let urlhtml = window.location.origin + "/Job/GetDetail";
-
-    fetch(urlhtml).then(res => res.text())
-        .then(text => {
-
-            document.querySelector("#jobDetail").innerHTML = text;
-
-        });
-
-    await loadCatalogs();
-
-    $('#detailJobModal').modal('show');
-
+    let urlhtml = window.location.origin + "/Job/GetDetailPartial";
     let id = obj.hash.replace('#', '');
-    const url = "Job/DetailJob/" + id
-
+    const url = window.location.origin + "Job/DetailJob/" + id
     const options = {
         method: 'GET',
         headers: {
@@ -227,57 +217,42 @@ const getDetailJob = async (obj) => {
         }
     }
 
-    fetch(url, options).then(response => response.json())
-        .then(json => {
+    try {
 
-            let area = document.querySelector("#idArea");
-            area.value = json.idArea.toString();
+        let reponseView = await fetch(urlhtml);
+        let text = await res.text();
+        document.querySelector("#jobDetail").innerHTML = text;
 
-            let company = document.querySelector("#idCompany");
-            company.value = json.idCompany;
+        await loadCatalogs();
+        $('#detailJobModal').modal('show');
 
-            let isActive = document.querySelector("#isActive");
-            isActive.checked = json.isActive;
-
-            let nameJob = document.querySelector("#name");
-            nameJob.value = json.nameJob;
-
-            let salaryMax = document.querySelector("#salaryMax");
-            salaryMax.value = json.salaryMax;
-
-            let salaryMin = document.querySelector("#salaryMin");
-            salaryMin.value = json.salaryMin;
-
-            let vacancyNumber = document.querySelector("#vacancyNumber");
-            vacancyNumber.value = json.vacancyNumbers;
+        let responseData = await fetch(url, options);
+        let json = await responseData.json();
+      
+        document.querySelector("#idArea").value = json.idArea.toString();
+        document.querySelector("#idCompany").value = json.idCompany;    
+        document.querySelector("#isActive").checked = json.isActive;     
+        document.querySelector("#name").value = json.nameJob;       
+        document.querySelector("#salaryMax").value = json.salaryMax;        
+        document.querySelector("#salaryMin").value = json.salaryMin;
+        document.querySelector("#vacancyNumber").value = json.vacancyNumbers;       
+        document.querySelector("#description").value = json.descriptionJob;
 
 
-            let description = document.querySelector("#description");
-            description.value = json.descriptionJob;
+    } catch (error) {
 
-        });
+        alertify.error(error);
+
+    }
+
 }
 
 const getEdit = async (obj) => {
 
 
     let urlhtml = window.location.origin + "/Job/EditJob";
-
-    fetch(urlhtml).then(res => res.text())
-        .then(text => {
-
-            document.querySelector("#formJobedit").innerHTML = text;
-
-        });
-
-    await loadCatalogs();
-
-
-    $('#editJobModal').modal('show');
-
     let id = obj.hash.replace('#', '');
     const url = "Job/DetailJob/" + id
-
     const options = {
         method: 'GET',
         headers: {
@@ -286,45 +261,42 @@ const getEdit = async (obj) => {
         }
     }
 
-    fetch(url, options).then(response => response.json())
-        .then(json => {
+    try {
 
-            let id = document.querySelector("#id");
-            id.value = json.id.toString();
+        let responseHtml = await fetch(urlhtml);
+        let text = await responseHtml.text();
+        document.querySelector("#formJobedit").innerHTML = text;
 
-            let area = document.querySelector("#idArea");
-            area.value = json.idArea.toString();
+        await loadCatalogs();
+        $('#editJobModal').modal('show');
 
-            let company = document.querySelector("#idCompany");
-            company.value = json.idCompany;
+        let responseData = await fetch(url, options);
+        let json = await responseData.json();
 
-            let isActive = document.querySelector("#isActive");
-            isActive.checked = json.isActive;
+        document.querySelector("#id").value = json.id.toString();
+        document.querySelector("#idArea").value = json.idArea.toString();
+        document.querySelector("#idCompany").value = json.idCompany;
+        document.querySelector("#isActive").checked = json.isActive;
+        document.querySelector("#name").value = json.nameJob;
+        document.querySelector("#salaryMax").value = json.salaryMax;
+        document.querySelector("#salaryMin").value = json.salaryMin;
+        document.querySelector("#vacancyNumber").value = json.vacancyNumbers;
+        document.querySelector("#description").value = json.descriptionJob;
+        document.getElementById("editJobForm").addEventListener("submit", eventSubmit, true);
 
-            let nameJob = document.querySelector("#name");
-            nameJob.value = json.nameJob;
+    } catch (error) {
 
-            let salaryMax = document.querySelector("#salaryMax");
-            salaryMax.value = json.salaryMax;
+        alertify.error(error);
 
-            let salaryMin = document.querySelector("#salaryMin");
-            salaryMin.value = json.salaryMin;
-
-            let vacancyNumber = document.querySelector("#vacancyNumber");
-            vacancyNumber.value = json.vacancyNumbers;
+    }
 
 
-            let description = document.querySelector("#description");
-            description.value = json.descriptionJob;
+  
 
-        });
-
-    let editJobForm = document.getElementById("editJobForm");
-
-    editJobForm.addEventListener("submit", eventSubmit, true);
+   
 }
 
-const deleteJob = (obj) => {
+const deleteJob = async (obj) => {
 
     let id = obj.hash.replace('#', '');
 
@@ -338,13 +310,14 @@ const deleteJob = (obj) => {
         }
     }
 
-    fetch(url, options).then(response => response.json())
-        .then(json => {
-
-            alertify.success(json.message);
-
-            setTimeout(() => { window.location.reload(); }, 2000);
-        });
+    try {
+        let response = await fetch(url, options);
+        let json = await response.json();
+        alertify.success(json.message);
+        setTimeout(() => { window.location.reload(); }, 2000);
+    } catch (error) {
+        alertify.error(error);
+    }
 
 }
 
