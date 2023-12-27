@@ -14,23 +14,33 @@ namespace Application.Services
             _context = catalogContext;  
         }
 
-        public void Delete(Guid id)
+        public async void Delete(Guid id)
         {
-            _context.CivilStatus.Remove(GetById(id));
+            _context.CivilStatus.Remove(await GetById(id));
             _context.SaveChanges();
         }
 
         public async Task<IEnumerable<CivilStatus>> GetAllAsync()
         {
-            return await _context.CivilStatus
+            var catCivilStatis = await _context.CivilStatus
                            .ToListAsync();
+
+            if (catCivilStatis.Count == 0)
+                throw new CommonException("Table CivilStatus is not values", "GetAllAsync");
+
+            return catCivilStatis;
         }
 
-        public CivilStatus GetById(Guid id)
+        public async Task<CivilStatus> GetById(Guid id)
         {
-            return _context.CivilStatus
-                           .Where(ar => ar.Id == id)
-                           .First();
+
+            CivilStatus civilStatus = await  _context.CivilStatus.
+                FirstOrDefaultAsync(ar => ar.Id.Equals(id));
+
+            if (civilStatus == null)
+                throw new CommonException("Civil Status not exist", "GetById");
+
+            return civilStatus; 
         }
 
         public void Save(CivilStatus entity)
@@ -39,9 +49,9 @@ namespace Application.Services
             _context.SaveChanges();
         }
 
-        public void Update(CivilStatus entity)
+        public async void Update(CivilStatus entity)
         {
-            CivilStatus civilStatus = GetById(entity.Id);
+            CivilStatus civilStatus = await GetById(entity.Id);
             if (civilStatus != null)
             {
                 civilStatus.NameStatus = entity.NameStatus;

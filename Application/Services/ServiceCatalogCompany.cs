@@ -2,11 +2,6 @@
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -19,20 +14,32 @@ namespace Application.Services
             _catalogContext = context;
         }
 
-        public void Delete(Guid id)
+        public async void Delete(Guid id)
         {
-            _catalogContext.Companies.Remove(GetById(id));
+            _catalogContext.Companies.Remove(await GetById(id));
             _catalogContext.SaveChanges();
         }
 
         public async Task<IEnumerable<Company>> GetAllAsync()
         {
-            return await _catalogContext.Companies.ToListAsync();
+
+            var companies = await _catalogContext.Companies.ToListAsync();
+
+            if (companies.Count == 0)
+                throw new CommonException("Table Companies is empty", "GetAllAsync");
+
+            return companies;
+
         }
 
-        public Company GetById(Guid id)
+        public async Task<Company> GetById(Guid id)
         {
-            return _catalogContext.Companies.Where(ar => ar.Id == id).First();
+            Company company = await _catalogContext.Companies.FirstOrDefaultAsync(ar => ar.Id.Equals(id));
+
+            if(company == null)
+                throw new CommonException("Company not exist", "GetById");
+
+            return company;
         }
 
         public void Save(Company entity)
@@ -41,9 +48,9 @@ namespace Application.Services
             _catalogContext.SaveChanges();
         }
 
-        public void Update(Company entity)
+        public async void Update(Company entity)
         {
-            Company com = GetById(entity.Id);
+            Company com = await GetById(entity.Id);
             if (com != null)
             {
 

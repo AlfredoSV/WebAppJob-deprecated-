@@ -4,6 +4,5 @@ namespace WebAppJob.Models
     {
         public Guid RequestId { get; set; }
 
-        public bool ShowRequestId => !(Guid.Empty == RequestId);
     }
 }

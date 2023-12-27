@@ -1,9 +1,6 @@
 using Framework.Security2023;
 using NLog;
 using NLog.Web;
-using System;
-using System.Configuration;
-using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
 using Application.Services;
@@ -13,10 +10,9 @@ using Framework.Security2023.IServices;
 using Domain.IRepositories;
 using Domain.Repositories;
 using Domain.Entities;
-using System.Diagnostics.Eventing.Reader;
-using Microsoft.AspNetCore.Authorization;
 
-var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().
+    GetCurrentClassLogger();
 logger.Debug("init main");
 try
 {

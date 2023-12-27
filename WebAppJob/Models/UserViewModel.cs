@@ -33,8 +33,9 @@ namespace WebAppJob.Models
 			Email = email;
 		}
 
-
-		public static UserViewModel Create(Guid id, string userName, DateTime dateCreated, Guid roleId, string name, string lastName, int age, string address, string email)
+		public static UserViewModel Create(Guid id, string userName, 
+			DateTime dateCreated, Guid roleId, string name, 
+			string lastName, int age, string address, string email)
 		{
 			return new UserViewModel( id,  userName,  dateCreated,  roleId,
 				name,  lastName,  age,  address,  email);		

@@ -38,10 +38,11 @@ namespace WebAppJob.Filters
 				context.Result = new RedirectToRouteResult(new RouteValueDictionary
 					{{ "Controller", "Login" },
 					{ "Action", "Index" } });
-					context.Result.ExecuteResultAsync(context);
+				context.Result.ExecuteResultAsync(context);
 			}
 
 
 		}
+	
 	}
 }

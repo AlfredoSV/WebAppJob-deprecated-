@@ -1,20 +1,23 @@
 ﻿using Application.IServices;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using NLog;
 
 namespace WebAppJob.Controllers
 {
     [Route("/")]
-    public class CatalogController : Controller
+    public class CatalogController : BaseController
     {
+
         private readonly IServiceCatalog<Area> _serviceCatalogArea;
         private readonly IServiceCatalog<Company> _serviceCatalogCompany;
 
         public CatalogController(IServiceCatalog<Area> serviceCatalogArea,
             IServiceCatalog<Company> serviceCatalogCompany)
         {
-           _serviceCatalogArea = serviceCatalogArea;
+            _serviceCatalogArea = serviceCatalogArea;
             _serviceCatalogCompany = serviceCatalogCompany;
+
         }
 
         [HttpGet("[action]")]
@@ -23,12 +26,16 @@ namespace WebAppJob.Controllers
             try
             {
                 return Ok(new { list = await _serviceCatalogArea.GetAllAsync() });
+            
+            }catch (CommonException ex)
+            {
+                return ReturnResponseErrorCommon(ex);
             }
             catch (Exception ex)
             {
-                return StatusCode(500,new { err = ex.Message });
+                return ReturnResponseIncorrect(ex);
             }
-            
+
         }
 
         [HttpGet("[action]")]
@@ -36,14 +43,19 @@ namespace WebAppJob.Controllers
         {
             try
             {
+
                 return Ok(new { list = await _serviceCatalogCompany.GetAllAsync() });
+            }
+            catch (CommonException ex)
+            {
+                return ReturnResponseErrorCommon(ex);
             }
             catch (Exception ex)
             {
+                return ReturnResponseIncorrect(ex);
 
-                return StatusCode(500, new { err = ex.Message });
             }
-            
+
         }
     }
 }

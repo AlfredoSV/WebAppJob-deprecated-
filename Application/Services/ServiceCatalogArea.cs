@@ -9,24 +9,36 @@ namespace Application.Services
     {
         private CatalogContext _context;
 
-        public ServiceCatalogArea(CatalogContext catalogContext) {
-            _context = catalogContext;  
+        public ServiceCatalogArea(CatalogContext catalogContext)
+        {
+            _context = catalogContext;
         }
 
-        public void Delete(Guid id)
+        public async void Delete(Guid id)
         {
-            _context.Areas.Remove(GetById(id));
+            _context.Areas.Remove(await GetById(id));
             _context.SaveChanges();
         }
 
         public async Task<IEnumerable<Area>> GetAllAsync()
         {
-            return await _context.Areas.ToListAsync();
+
+            var catArea = await _context.Areas.ToListAsync();
+
+            if (catArea.Count == 0)
+                throw new CommonException("Table Areas is noy values", "GetAllAsync");
+
+            return catArea;
         }
 
-        public Area GetById(Guid id)
+        public async Task<Area> GetById(Guid id)
         {
-            return _context.Areas.Where(ar => ar.Id == id).First();
+            Area area = await _context.Areas.FirstOrDefaultAsync(ar => ar.Id.Equals(id));
+
+            if (area == null)
+                throw new CommonException("Area not exist", "GetById");
+
+            return area;
         }
 
         public void Save(Area entity)
@@ -35,9 +47,9 @@ namespace Application.Services
             _context.SaveChanges();
         }
 
-        public void Update(Area entity)
+        public async void Update(Area entity)
         {
-            Area aree = GetById(entity.Id);
+            Area aree = await GetById(entity.Id);
             if (aree != null)
             {
                 aree.DescriptionArea = entity.DescriptionArea;

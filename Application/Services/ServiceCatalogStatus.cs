@@ -14,20 +14,31 @@ namespace Application.Services
             _context = catalogContext;  
         }
 
-        public void Delete(Guid id)
+        public async void Delete(Guid id)
         {
-            _context.Status.Remove(GetById(id));
+            _context.Status.Remove(await GetById(id));
             _context.SaveChanges();
         }
 
         public async Task<IEnumerable<Status>> GetAllAsync()
         {
-            return await _context.Status.ToListAsync();
+            var status  =  await _context.Status.ToListAsync();
+
+            if (status.Count == 0)
+                throw new CommonException("Table Status is empty", "GetAllAsync");
+
+            return status;
+
         }
 
-        public Status GetById(Guid id)
+        public async Task<Status> GetById(Guid id)
         {
-            return _context.Status.Where(ar => ar.Id == id).First();
+            Status status = await _context.Status.FirstOrDefaultAsync(ar => ar.Id == id);
+
+            if (status == null)
+                throw new CommonException("Status not exist", "GetById");
+
+            return status;
         }
 
         public void Save(Status entity)
@@ -36,9 +47,9 @@ namespace Application.Services
             _context.SaveChanges();
         }
 
-        public void Update(Status entity)
+        public async void Update(Status entity)
         {
-            Status status = GetById(entity.Id);
+            Status status = await GetById(entity.Id);
             if (status != null)
             {
                 status.NameStatus = entity.NameStatus;

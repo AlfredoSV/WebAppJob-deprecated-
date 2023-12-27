@@ -14,23 +14,34 @@ namespace Application.Services
             _context = catalogContext;  
         }
 
-        public void Delete(Guid id)
+        public async void Delete(Guid id)
         {
-            _context.EnglishLevel.Remove(GetById(id));
+            _context.EnglishLevel.Remove(await GetById(id));
             _context.SaveChanges();
         }
 
         public async Task<IEnumerable<EnglishLevel>> GetAllAsync()
         {
-            return await _context.EnglishLevel
+
+            var englishLevels = await  _context.EnglishLevel
                            .ToListAsync();
+
+            if (englishLevels.Count == 0)
+                throw new CommonException("Table englishLevel is empty", "GetAllAsync");
+
+            return englishLevels;
+
         }
 
-        public EnglishLevel GetById(Guid id)
+        public async Task<EnglishLevel> GetById(Guid id)
         {
-            return _context.EnglishLevel
-                           .Where(ar => ar.Id == id)
-                           .First();
+
+            EnglishLevel englishLevel = await _context.EnglishLevel.FirstOrDefaultAsync(ar => ar.Id.Equals(id));
+
+            if (englishLevel == null)
+                throw new CommonException("EnglishLevel not exist", "GetById");
+
+            return englishLevel;
         }
 
         public void Save(EnglishLevel entity)
@@ -39,9 +50,9 @@ namespace Application.Services
             _context.SaveChanges();
         }
 
-        public void Update(EnglishLevel entity)
+        public async void Update(EnglishLevel entity)
         {
-            EnglishLevel englishLevel = GetById(entity.Id);
+            EnglishLevel englishLevel = await GetById(entity.Id);
             if (englishLevel != null)
             {
                 englishLevel.NameLevel = entity.NameLevel;
