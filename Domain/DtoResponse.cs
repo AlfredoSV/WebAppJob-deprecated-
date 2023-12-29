@@ -11,7 +11,7 @@ namespace Domain
 
                 if (value == null)
                     throw new NullReferenceException("value");
-
+                _data = value;
             }
 
             get { return _data; }

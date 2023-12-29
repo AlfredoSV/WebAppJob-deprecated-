@@ -3,26 +3,28 @@ using AutoMapper;
 using Domain;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using WebAppJob.Models;
 
 namespace WebAppJob.Controllers
 {
     [Route("[controller]")]
-    public class JobController : Controller
+    public class JobController : BaseController
     {
         #region Abstract services
 
         private readonly IMapper _mapper;
         private readonly IServiceJob _serviceJob;
-        private readonly ILogger<JobController> _logger;
+        private readonly IServiceCatalog<Company> _serviceCatalogCompany;
+        private readonly IServiceCatalog<Area> _serviceCatalogArea;
 
         #endregion
 
         #region Constructors
-        public JobController(IServiceJob serviceJob, IMapper autoMapper, ILogger<JobController> logger)
+        public JobController(IServiceJob serviceJob, IMapper autoMapper, IServiceCatalog<Company> serviceCatalog, IServiceCatalog<Area> serviceCatalogArea)
         {
-
-            _logger = logger;
+            _serviceCatalogArea = serviceCatalogArea;
+            _serviceCatalogCompany = serviceCatalog;
             _serviceJob = serviceJob;
             _mapper = autoMapper;
         }
@@ -34,11 +36,86 @@ namespace WebAppJob.Controllers
         [HttpGet("[action]")]
         public PartialViewResult CreateJob() => PartialView("_CreateJob");
 
-        [HttpGet("[action]")]
-        public PartialViewResult GetDetailPartial() => PartialView("_DetailJob");
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> GetDetailPartial(Guid id)
+        {
+            try
+            {
+                IQueryCollection context = HttpContext.Request.Query;
+                JobViewModel jobViewModel = new JobViewModel();
+                Job job = (await _serviceJob.GetDetailJob(id)).Data;
 
-        [HttpGet("[action]")]
-        public PartialViewResult EditJob() => PartialView("_EditJob");
+                _mapper.Map(job, jobViewModel);
+
+                jobViewModel.SelectListItemsAreas = (await
+                    _serviceCatalogArea.GetAllAsync())
+                    .ToList()
+                    .Select(com => new SelectListItem() { Text = com.NameArea,
+                        Value = com.Id.ToString() }).ToList();
+
+                jobViewModel.SelectListItemsCompanies = (await
+                    _serviceCatalogCompany.GetAllAsync())
+                    .ToList()
+                    .Select(com => new SelectListItem()
+                    {
+                        Text = com.NameCompany,
+                        Value = com.Id.ToString()
+                    }).ToList();
+
+                return PartialView("_DetailJob", jobViewModel);
+            }
+            catch (CommonException ex)
+            {
+                return ReturnResponseErrorCommon(ex);
+            }
+            catch (Exception ex)
+            {
+                return ReturnResponseIncorrect(ex);
+            }
+
+
+        }
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> EditJob(Guid id)
+        {
+            try
+            {
+                IQueryCollection context = HttpContext.Request.Query;
+                JobViewModel jobViewModel = new JobViewModel();
+                Job job = (await _serviceJob.GetDetailJob(id)).Data;
+
+                _mapper.Map(job, jobViewModel);
+
+                jobViewModel.SelectListItemsAreas = (await
+                    _serviceCatalogArea.GetAllAsync())
+                    .ToList()
+                    .Select(com => new SelectListItem()
+                    {
+                        Text = com.NameArea,
+                        Value = com.Id.ToString()
+                    }).ToList();
+
+                jobViewModel.SelectListItemsCompanies = (await
+                    _serviceCatalogCompany.GetAllAsync())
+                    .ToList()
+                    .Select(com => new SelectListItem()
+                    {
+                        Text = com.NameCompany,
+                        Value = com.Id.ToString()
+                    }).ToList();
+
+                return PartialView("_EditJob", jobViewModel);
+            }
+            catch (CommonException ex)
+            {
+                return ReturnResponseErrorCommon(ex);
+            }
+            catch (Exception ex)
+            {
+                return ReturnResponseIncorrect(ex);
+            }
+            
+        } 
 
         [HttpPost("[action]")]
         public async Task<PartialViewResult> ListJobs(int page, int pageSize, string searchText, string citySearch)
@@ -91,9 +168,8 @@ namespace WebAppJob.Controllers
             }
             catch (Exception ex)
             {
-                Guid idError = Guid.NewGuid();
-                _logger.LogError(idError + ex.Message);
-                return BadRequest(new { Error = "A error was ocurred, the ticket is: " + idError });
+
+                return BadRequest(new { Error = "A error was ocurred, the ticket is: " });
 
             }
 
@@ -114,9 +190,8 @@ namespace WebAppJob.Controllers
             }
             catch (Exception ex)
             {
-                Guid idError = Guid.NewGuid();
-                _logger.LogError(idError + ex.Message);
-                return BadRequest(new { Error = "A error was ocurred, the ticket is: " + idError });
+
+                return BadRequest(new { Error = "A error was ocurred, the ticket is: " });
 
             }
 
@@ -132,9 +207,8 @@ namespace WebAppJob.Controllers
             }
             catch (Exception ex)
             {
-                Guid idError = Guid.NewGuid();
-                _logger.LogError(idError + ex.Message);
-                return BadRequest(new { Error = "A error was ocurred, the ticket is: " + idError });
+
+                return BadRequest(new { Error = "A error was ocurred, the ticket is: " });
 
             }
 
@@ -157,7 +231,6 @@ namespace WebAppJob.Controllers
                 }
                 else
                 {
-                    _logger.LogInformation(idError + @" The data of forma is not valid.");
                     return BadRequest(new { message = "Please, check your form data." });
                 }
 
@@ -166,7 +239,7 @@ namespace WebAppJob.Controllers
             catch (Exception ex)
             {
 
-                _logger.LogError(idError + ex.Message);
+
                 return BadRequest(new { Error = "A error was ocurred, the ticket is: " + idError });
 
             }

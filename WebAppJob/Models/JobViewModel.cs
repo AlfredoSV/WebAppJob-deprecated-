@@ -1,4 +1,6 @@
-﻿namespace WebAppJob.Models
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace WebAppJob.Models
 {
     public class JobViewModel
     {
@@ -16,8 +18,8 @@
         public bool IsActive { get; set; }
         public string Logo { get; set; }
         public string Tags { get; set; } 
-
-
+        public List<SelectListItem> SelectListItemsAreas { get; set; }
+        public List<SelectListItem> SelectListItemsCompanies { get; set; }
 
     }
 }

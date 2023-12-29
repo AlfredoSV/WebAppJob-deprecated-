@@ -49,10 +49,11 @@ namespace Domain.Repositories
                     if (!string.IsNullOrEmpty(search))
                     {
                         response.Data = await jobContext
-                            .Jobs.AsQueryable().Where(st => st.DescriptionJob.Contains(search) && st.NameJob.Contains(search))
+                            .Jobs.AsQueryable().Where(st => st.DescriptionJob.Contains(search) || 
+                            st.NameJob.Contains(search))
                             .Take(pageSize).Skip(page * pageSize).ToListAsync();
                         response.Count = jobContext
-                            .Jobs.AsQueryable().Where(st => st.DescriptionJob.Contains(search) && st.NameJob.Contains(search))
+                            .Jobs.AsQueryable().Where(st => st.DescriptionJob.Contains(search) || st.NameJob.Contains(search))
                             .Count();
 
                     }

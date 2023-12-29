@@ -206,60 +206,40 @@ const eventSubmit = async (e) => {
 
 const getDetailJob = async (obj) => {
 
-    let urlhtml = window.location.origin + "/Job/GetDetailPartial";
-    let id = obj.hash.replace('#', '');
-    const url = window.location.origin + "Job/DetailJob/" + id
+    let id = obj;
+    let urlhtml = window.location.origin + "/Job/GetDetailPartial/" + id;
     const options = {
         method: 'GET',
         headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'text/html'
         }
-    }
+    };
 
     try {
 
-        let reponseView = await fetch(urlhtml);
-        let text = await res.text();
+        let reponseView = await fetch(urlhtml, options);
+        let text = await reponseView.text();
         document.querySelector("#jobDetail").innerHTML = text;
-
-        await loadCatalogs();
         $('#detailJobModal').modal('show');
-
-        let responseData = await fetch(url, options);
-        let json = await responseData.json();
-      
-        document.querySelector("#idArea").value = json.idArea.toString();
-        document.querySelector("#idCompany").value = json.idCompany;    
-        document.querySelector("#isActive").checked = json.isActive;     
-        document.querySelector("#name").value = json.nameJob;       
-        document.querySelector("#salaryMax").value = json.salaryMax;        
-        document.querySelector("#salaryMin").value = json.salaryMin;
-        document.querySelector("#vacancyNumber").value = json.vacancyNumbers;       
-        document.querySelector("#description").value = json.descriptionJob;
-
 
     } catch (error) {
 
-        alertify.error(error);
-
+        alertify.error(error.message);
     }
 
 }
 
 const getEdit = async (obj) => {
 
-
-    let urlhtml = window.location.origin + "/Job/EditJob";
-    let id = obj.hash.replace('#', '');
-    const url = "Job/DetailJob/" + id
+    let id = obj;
+    let urlhtml = window.location.origin + "/Job/EditJob/" + id;
+   
     const options = {
         method: 'GET',
         headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'text/html'
         }
-    }
+    };
 
     try {
 
@@ -267,22 +247,22 @@ const getEdit = async (obj) => {
         let text = await responseHtml.text();
         document.querySelector("#formJobedit").innerHTML = text;
 
-        await loadCatalogs();
+        //await loadCatalogs();
         $('#editJobModal').modal('show');
 
-        let responseData = await fetch(url, options);
-        let json = await responseData.json();
+        //let responseData = await fetch(url, options);
+        //let json = await responseData.json();
 
-        document.querySelector("#id").value = json.id.toString();
-        document.querySelector("#idArea").value = json.idArea.toString();
-        document.querySelector("#idCompany").value = json.idCompany;
-        document.querySelector("#isActive").checked = json.isActive;
-        document.querySelector("#name").value = json.nameJob;
-        document.querySelector("#salaryMax").value = json.salaryMax;
-        document.querySelector("#salaryMin").value = json.salaryMin;
-        document.querySelector("#vacancyNumber").value = json.vacancyNumbers;
-        document.querySelector("#description").value = json.descriptionJob;
-        document.getElementById("editJobForm").addEventListener("submit", eventSubmit, true);
+        //document.querySelector("#id").value = json.id.toString();
+        //document.querySelector("#idArea").value = json.idArea.toString();
+        //document.querySelector("#idCompany").value = json.idCompany;
+        //document.querySelector("#isActive").checked = json.isActive;
+        //document.querySelector("#name").value = json.nameJob;
+        //document.querySelector("#salaryMax").value = json.salaryMax;
+        //document.querySelector("#salaryMin").value = json.salaryMin;
+        //document.querySelector("#vacancyNumber").value = json.vacancyNumbers;
+        //document.querySelector("#description").value = json.descriptionJob;
+        //document.getElementById("editJobForm").addEventListener("submit", eventSubmit, true);
 
     } catch (error) {
 
@@ -291,9 +271,9 @@ const getEdit = async (obj) => {
     }
 
 
-  
 
-   
+
+
 }
 
 const deleteJob = async (obj) => {
