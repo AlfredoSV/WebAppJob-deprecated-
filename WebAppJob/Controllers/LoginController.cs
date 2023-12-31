@@ -3,15 +3,12 @@ using Application.IServices;
 using Framework.Security2023.Dtos;
 using Framework.Security2023.Entities;
 using Framework.Security2023.IServices;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using WebAppJob.Models;
 
 namespace WebAppJob.Controllers
 {
-    public class LoginController : Controller
+    public class LoginController : BaseController
     {
         private readonly IServiceLogin _serviceLogin;
         private readonly IServiceUser _serviceUser;
@@ -39,7 +36,7 @@ namespace WebAppJob.Controllers
         {
             try
             {
-                if (_serviceUser.UserExistByUserNameAndEmail(userName,""))
+                if (_serviceUser.UserExistByUserName(userName))
                     return RedirectToAction("LoginValidation", "Login", new { userName });
 
                 ModelState.AddModelError("UserName", "The user was not found");
@@ -69,29 +66,43 @@ namespace WebAppJob.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(user.Password))
+                    ModelState.AddModelError("UserName", "The credentials was not correct.");
 
                 DtoLogin login = new DtoLogin() { UserName= user.UserName, Password = user.Password };
                 DtoLoginResponse userLogin = _serviceLogin.Login(login);
 
-                if (string.IsNullOrEmpty(user.Password))
-                    ModelState.AddModelError("Password", "The credentials was not correct.");
-
                 if (userLogin.StatusLogin == StatusLogin.Ok)
-                {
-
                     return RedirectToAction("Index", "Home", new { user.UserName });
-                }
-                else
-                    ModelState.AddModelError("Password", "The credentials was not correct.");
+
+                switch (userLogin.StatusLogin)
+                {
+                    case StatusLogin.UserOrPasswordIncorrect:
+                        ModelState.AddModelError("UserName", "The credentials was not correct.");
+                        break;
+                    case StatusLogin.UserBlocked:
+                        ModelState.AddModelError("UserName", "The user was blocked.");
+                        break;
+                    case StatusLogin.ExistSession:
+                        ModelState.AddModelError("UserName", "Exist a session.");
+                        break;
+                    case StatusLogin.TokenNotValid:
+                        ModelState.AddModelError("UserName", "The token was not correct.");
+                        break;
+                    case StatusLogin.RoleNotAssigned:
+                        ModelState.AddModelError("UserName", "Role not assigned.");
+                        break;
+                    default:
+                        break;
+                }            
+
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                ModelState.AddModelError("Password", "An error occurred while searching for the information of user");
+                ModelState.AddModelError("UserName", $"An error occurred while searching for the information of user, ticket:{SaveErrror(ex)}");
             }
 
-            return RedirectToAction("LoginValidation", new { username = user.UserName });
-
+            return View("LoginValidation", new UserModel { UserName = user.UserName } );
         }
 
         [HttpGet]
@@ -115,8 +126,8 @@ namespace WebAppJob.Controllers
                     return View("ForgotPassword", userForgotPasswordRequest);
 
 
-                if (!_serviceUser.UserExistByUserNameAndEmail(userForgotPasswordRequest.UserName,
-                    userForgotPasswordRequest.Email))
+                if (!(_serviceUser.UserExistByUserName(userForgotPasswordRequest.UserName) &&
+                    _serviceUser.UserExistByEmail(userForgotPasswordRequest.Email)))
                 {
                     ModelState.AddModelError("UserName", "The user was not exist");
                     return View("ForgotPassword", userForgotPasswordRequest);

@@ -53,16 +53,21 @@ namespace WebAppJob.Controllers
                 = $"{ex.Message}-{ex.Source}"
             });
         }
-        protected void SaveErrror(Exception ex, Guid idError)
+        protected Guid? SaveErrror(Exception ex, Guid? idError = null)
         {
+            if(idError == null)
+                idError = Guid.NewGuid();
+
             if (ex is CommonException)
             {
                 _logger.Error($"{idError}:{ex.Message}-{ex.Source}");
 
-                return;
+                return idError;
             }
 
             _logger.Fatal($"{idError}:{ex}");
+
+            return idError;
 
         }
 
