@@ -66,35 +66,40 @@ namespace WebAppJob.Controllers
         {
             try
             {
-                if (string.IsNullOrEmpty(user.Password))
-                    ModelState.AddModelError("UserName", "The credentials was not correct.");
+                string errorMessage = string.Empty;
+                DtoLogin login = new DtoLogin() { UserName = user.UserName, Password = user.Password };
 
-                DtoLogin login = new DtoLogin() { UserName= user.UserName, Password = user.Password };
-                DtoLoginResponse userLogin = _serviceLogin.Login(login);
+                if (ModelState.IsValid)
+                {                
+                    DtoLoginResponse userLogin = _serviceLogin.Login(login);
 
-                if (userLogin.StatusLogin == StatusLogin.Ok)
-                    return RedirectToAction("Index", "Home", new { user.UserName });
+                    if (userLogin.StatusLogin == StatusLogin.Ok)
+                        return RedirectToAction("Index", "Home", new { user.UserName });
 
-                switch (userLogin.StatusLogin)
-                {
-                    case StatusLogin.UserOrPasswordIncorrect:
-                        ModelState.AddModelError("UserName", "The credentials was not correct.");
-                        break;
-                    case StatusLogin.UserBlocked:
-                        ModelState.AddModelError("UserName", "The user was blocked.");
-                        break;
-                    case StatusLogin.ExistSession:
-                        ModelState.AddModelError("UserName", "Exist a session.");
-                        break;
-                    case StatusLogin.TokenNotValid:
-                        ModelState.AddModelError("UserName", "The token was not correct.");
-                        break;
-                    case StatusLogin.RoleNotAssigned:
-                        ModelState.AddModelError("UserName", "Role not assigned.");
-                        break;
-                    default:
-                        break;
-                }            
+                    switch (userLogin.StatusLogin)
+                    {
+                        case StatusLogin.UserOrPasswordIncorrect:
+                            
+                            break;
+                        case StatusLogin.UserBlocked:
+                            errorMessage = "The user was blocked.";
+                            break;
+                        case StatusLogin.ExistSession:
+                            errorMessage = "Exist a session.";
+                            break;
+                        case StatusLogin.TokenNotValid:
+                            errorMessage = "The token was not correct.";
+                            break;
+                        case StatusLogin.RoleNotAssigned:
+                            errorMessage =  "Role not assigned.";
+                            break;
+                        default:
+                            break;
+                    }
+
+                    ModelState.AddModelError("UserName", errorMessage);
+
+                }                     
 
             }
             catch (Exception ex)
