@@ -70,7 +70,7 @@ btnSearch.addEventListener('click', async (e) => {
 
     } catch (error) {
 
-        alertify.error(error);
+        alertify.error(error.message, 10);
     }
 
 });
@@ -86,13 +86,9 @@ btnNewJob.addEventListener("click", async (e) => {
         },
     }
 
-    let url = window.location.origin + '/Job/CreateJob';
-    let createJobForm = document.getElementById("createJobForm");
-    let nameInput = document.getElementById("name");
-    let lastName = document.getElementById("description");
-    let vacancyNumber = document.getElementById("vacancyNumber");
-    let salaryMax = document.getElementById("salaryMax");
-    let salaryMin = document.getElementById("salaryMin");
+    let url = window.location.origin + '/Job/CreateJob/';
+   
+    
 
     try {
 
@@ -101,7 +97,13 @@ btnNewJob.addEventListener("click", async (e) => {
         let text = await response.text();
 
         document.querySelector("#formJob").innerHTML = text;
-
+        $('#createJobModal').modal('show');
+        let createJobForm = document.getElementById("createJobForm");
+        let nameInput = document.getElementById("name");
+        let lastName = document.getElementById("description");
+        let vacancyNumber = document.getElementById("vacancyNumber");
+        let salaryMax = document.getElementById("salaryMax");
+        let salaryMin = document.getElementById("salaryMin");
         createJobForm.addEventListener("submit", eventSubmit, true);
 
         nameInput.addEventListener("change", () => {
@@ -135,12 +137,11 @@ btnNewJob.addEventListener("click", async (e) => {
         }, true);
 
         $(".loader").hide();
-        $('#createJobModal').modal('show');
-        await loadCatalogs();
+      
 
     } catch (error) {
 
-        alertify.error(error);
+        alertify.error(error.message, 10);
     }
 
 });
@@ -199,7 +200,7 @@ const eventSubmit = async (e) => {
 
     } catch (error) {
 
-        alertify.error(error);
+        alertify.error(error.message, 10);
     }
 
 }
@@ -221,10 +222,11 @@ const getDetailJob = async (obj) => {
         let text = await reponseView.text();
         document.querySelector("#jobDetail").innerHTML = text;
         $('#detailJobModal').modal('show');
+       
 
     } catch (error) {
 
-        alertify.error(error.message);
+        alertify.error(error.message,10);
     }
 
 }
@@ -266,13 +268,9 @@ const getEdit = async (obj) => {
 
     } catch (error) {
 
-        alertify.error(error);
+        alertify.error(error.message, 10);
 
     }
-
-
-
-
 
 }
 
@@ -296,7 +294,7 @@ const deleteJob = async (obj) => {
         alertify.success(json.message);
         setTimeout(() => { window.location.reload(); }, 2000);
     } catch (error) {
-        alertify.error(error);
+        alertify.error(error.message, 10);
     }
 
 }
@@ -327,7 +325,7 @@ const loadCatalogs = async () => {
 
     } catch (e) {
 
-        alertify.error(e.message);
+        alertify.error(error.message, 10);
 
     }
 

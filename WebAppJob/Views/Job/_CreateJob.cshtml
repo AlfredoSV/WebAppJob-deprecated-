@@ -2,20 +2,22 @@
     Layout = null;
 }
 
+@model JobViewModel
+
 <div class="mb-5">
     <form id="createJobForm">
         <div class="row">
             <div class="col-6">
                 <div class="form-group">
                     <label class="control-label">Name</label>
-                    <input id="name" autocomplete="off" class="form-control input-text" />
+                    <input asp-for="NameJob" id="name" autocomplete="off" class="form-control input-text" />
                     <span id="nameValidationMessage"></span>
                 </div>
             </div>
             <div class="col-6">
                 <div class="form-group">
                     <label class="control-label">Company</label>
-                    <select id="idCompany" class="form-control input-text">
+                    <select asp-for="IdCompany" asp-items="Model.SelectListItemsCompanies" id="idCompany" class="form-control input-text">
                     </select>
                     <span id="idCompanyValidationMessage"></span>
                 </div>
@@ -25,14 +27,14 @@
             <div class="col-6">
                 <div class="form-group mt-3">
                     <label class="control-label">Salary Max</label>
-                    <input id="salaryMax" class="form-control input-text" type="number" step="0.1" />
+                    <input asp-for="SalaryMax" id="salaryMax" class="form-control input-text" type="number" step="0.1" />
                     <span id="salaryMaxValidationMessage"></span>
                 </div>
             </div>
             <div class="col-6">
                 <div class="form-group mt-3">
                     <label class="control-label">Salary Min</label>
-                    <input id="salaryMin" class="form-control input-text" step="0.1" type="number" />
+                    <input asp-for="SalaryMin" id="salaryMin" class="form-control input-text" step="0.1" type="number" />
                     <span id="salaryMinValidationMessage"></span>
                 </div>
             </div>
@@ -42,14 +44,14 @@
             <div class="col-6">
                 <div class="form-group mt-3">
                     <label class="control-label">Vacancy Number</label>
-                    <input class="form-control input-text" id="vacancyNumber" type="number" />
+                    <input asp-for="VacancyNumbers" class="form-control input-text" id="vacancyNumber" type="number" />
                     <span id="vacancyNumberValidationMessage"></span>
                 </div>
             </div>
             <div class="col-6">
                 <div class="form-group mt-3">
                     <label class="control-label">Area</label>
-                    <select id="idArea" class="form-control input-text">
+                    <select asp-for="IdArea" asp-items="Model.SelectListItemsAreas" id="idArea" class="form-control input-text">
                     </select>
                     <span id="idAreaValidationMessage"></span>
                 </div>
@@ -60,7 +62,7 @@
             <div class="col">
                 <div class="form-group mt-3">
                     <label class="control-label">Description</label>
-                    <textarea id="description" cols="20" rows="6" class="form-control input-text"></textarea>
+                    <textarea asp-for="DescriptionJob" id="description" cols="20" rows="6" class="form-control input-text"></textarea>
                     <span id="descriptionValidationMessage"></span>
                 </div>
             </div>
@@ -79,7 +81,7 @@
             <div class="col-4 mt-4">
                 <div class="form-group mt-3">
                     <label class="control-label">Active</label>
-                    <input id="isActive" class="form-check-input" type="checkbox" />
+                    <input asp-for="IsActive" id="isActive" class="form-check-input" type="checkbox" />
                     <span id="isActiveValidationMessage"></span>
                 </div>
             </div>

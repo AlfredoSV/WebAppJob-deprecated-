@@ -33,9 +33,6 @@ namespace WebAppJob.Controllers
 
         #region Return Partial View
 
-        [HttpGet("[action]")]
-        public PartialViewResult CreateJob() => PartialView("_CreateJob");
-
         [HttpGet("[action]/{id}")]
         public async Task<IActionResult> GetDetailPartial(Guid id)
         {
@@ -80,7 +77,6 @@ namespace WebAppJob.Controllers
         {
             try
             {
-                IQueryCollection context = HttpContext.Request.Query;
                 JobViewModel jobViewModel = new JobViewModel();
                 Job job = (await _serviceJob.GetDetailJob(id)).Data;
 
@@ -176,22 +172,36 @@ namespace WebAppJob.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> CreateJob([FromBody] JobViewModel jobView)
+        public async Task<IActionResult> CreateJob()
         {
             try
             {
 
-                DtoRequest<Job> dtoRequ = new DtoRequest<Job>();
-                dtoRequ.Data = new Job();
-                _mapper.Map(jobView, dtoRequ.Data);
-                await _serviceJob.CreateJob(dtoRequ);
+                JobViewModel jobViewModel = new JobViewModel();
 
-                return Ok(new { message = "The job was created successful" });
+                jobViewModel.SelectListItemsAreas = (await
+                    _serviceCatalogArea.GetAllAsync())
+                    .ToList()
+                    .Select(com => new SelectListItem()
+                    {
+                        Text = com.NameArea,
+                        Value = com.Id.ToString()
+                    }).ToList();
+
+                jobViewModel.SelectListItemsCompanies = (await
+                    _serviceCatalogCompany.GetAllAsync())
+                    .ToList()
+                    .Select(com => new SelectListItem()
+                    {
+                        Text = com.NameCompany,
+                        Value = com.Id.ToString()
+                    }).ToList();
+
+                return PartialView("_CreateJob",jobViewModel);
             }
             catch (Exception ex)
             {
-
-                return BadRequest(new { Error = "A error was ocurred, the ticket is: " });
+                return BadRequest(new { Error = "A error was ocurred, the ticket is: " + SaveErrror(ex) });
 
             }
 
@@ -238,10 +248,7 @@ namespace WebAppJob.Controllers
             }
             catch (Exception ex)
             {
-
-
-                return BadRequest(new { Error = "A error was ocurred, the ticket is: " + idError });
-
+                return BadRequest(new { Error = "A error was ocurred, the ticket is: " + SaveErrror(ex) });
             }
 
         }
