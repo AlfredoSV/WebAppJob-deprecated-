@@ -1,9 +1,7 @@
 ﻿using Framework.Security2023;
 using Framework.Security2023.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Persistence.Data;
 using WebAppJob.Models;
-using WebAppJob.Filters;
 using Framework.Security2023.IServices;
 
 namespace WebAppJob.Controllers
@@ -23,8 +21,6 @@ namespace WebAppJob.Controllers
         [HttpGet]     
         public IActionResult Index(string userName)
         {
-            var str = SlqConnectionStr.Instance.SqlConnectionString;
-
 			HttpContext.Session.SetString("User", "F672DD51-56CE-41F9-B5F4-81D80EEEFF41");
             return View();
         }

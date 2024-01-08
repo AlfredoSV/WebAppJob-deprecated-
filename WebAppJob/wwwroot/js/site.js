@@ -80,13 +80,13 @@ btnNewJob.addEventListener("click", async (e) => {
     e.preventDefault();
 
     let options = {
-        method: 'POST',
+        method: 'GET',
         headers: {
             "Content-Type": "application/json"
         },
     }
 
-    let url = window.location.origin + '/Job/CreateJob/';
+    let url = window.location.origin + '/Job/CreateJobPartial';
    
     
 
@@ -162,7 +162,8 @@ const eventSubmit = async (e) => {
         'vacancyNumbers': document.querySelector("#vacancyNumber").value,
         'idArea': document.querySelector("#idArea").value,
         'descriptionJob': document.querySelector("#description").value,
-        'isActive': document.querySelector("#isActive").value === 'on'
+        'isActive': document.querySelector("#isActive").checked,
+        'Logo': document.querySelector("#logo").value
     }
 
     if (createJobForm == undefined) {
@@ -172,9 +173,10 @@ const eventSubmit = async (e) => {
     let options = {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data),
+        body: data
     }
 
     let isValidName = validateStr("name", "nameValidationMessage", "This name is not valid", 6, 10, true);
@@ -191,11 +193,9 @@ const eventSubmit = async (e) => {
             && isValidIdArea && isValidVacancyNumber &&
             isValidMaxSalary && isValidMinSalary) {
 
-            let response = await fetch(api, options);
-            let json = await response.json();
+            options.body = JSON.stringify(options.body);
+            let response = await fetch(api, options);            
             $('#applyJobModal').modal('hide');
-            alertify.success(json.message);
-
         }
 
     } catch (error) {

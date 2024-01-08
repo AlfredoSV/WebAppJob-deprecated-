@@ -4,65 +4,69 @@
 
 <div class="container-fluid mt-10">
 
-   <form>
-        <div class="row mb-2">
+    <div class="row mb-2">
 
-            <h1>Status of applications</h1>
+        <h1>Status of applications</h1>
 
-        </div>
+    </div>
 
-        <hr />
-        <div class="row">
+    <hr />
+    <div class="row">
 
-            <div class="col-4">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Folio" />
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="input-group">
-                    <select type="text" class="form-control">
-                        <option value="-1">Select a status</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-2">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Name" />
-                </div>
-            </div>
-            <div class="col-2">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Last Name" />
-                </div>
+        <div class="col-4">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Folio" />
             </div>
         </div>
+        <div class="col-4">
+            <div class="input-group">
+                <select type="text" class="form-control">
+                    <option value="-1">Select a status</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Name" />
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Last Name" />
+            </div>
+        </div>
+    </div>
 
-        <div class="row mt-4">
-            <div class="col-2">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Email" />
-                </div>
+    <div class="row mt-4">
+        <div class="col-2">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Email" />
             </div>
-            <div class="col-2">
-                <div class="input-group">
-                    <input type="date" class="form-control" placeholder="Date Created Init" />
-                </div>
+        </div>
+        <div class="col-3">
+            <div class="input-group">
+                <input type="date" class="form-control" placeholder="Date Created Init" />
             </div>
-            <div class="col-2">
-                <div class="input-group">
-                    <input type="date" class="form-control" placeholder="Date Created End" />
-                </div>
+        </div>
+        <div class="col-3">
+            <div class="input-group">
+                <input type="date" class="form-control" placeholder="Date Created End" />
             </div>
-            <div class="col-2">
-                <div class="input-group">
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </div>
+        </div>
+        <div class="col-2">
+            <div class="input-group">
+                <button type="submit" id="downloadExcel" class="btn btn-success">Download Excel</button>
+            </div>
+        </div>
+        <div class="col-1">
+            <div class="input-group">
+                <button type="submit" id="searchApplication" class="btn btn-primary">Search</button>
             </div>
         </div>
 
+    </div>
 
-    </form>
+
 
     <div class="row mb-2 mt-5">
 
@@ -70,9 +74,9 @@
 
     </div>
     <hr />
-    
+
     <div class="row carSearchApply mt-4">
-        
+
         <div class="col-10">
             <span class="mb-4 statusApplication">Postulación enviada</span>
             <h5 class="mb-2 mt-3">Desarrollador .Net</h5>
@@ -84,7 +88,11 @@
         <div class="col-2">
             <button class="btn-updatestatusapplication">Actualizar estado</button>
         </div>
-       
+
     </div>
 
 </div>
+
+@section Scripts{
+    <script src="~/js/site_applicationtsJobs.js" asp-append-version="true"></script>
+}

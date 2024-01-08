@@ -132,7 +132,6 @@ namespace WebAppJob.Controllers
             response = await _serviceJob.GetJobsList(page, pageSize, searchText, citySearch);
 
             _mapper.Map(response.Data, jobsResult);
-
             dtoPaginationViewModel.Data = jobsResult;
             dtoPaginationViewModel.PaginationViewModel = new PaginationViewModel()
             {
@@ -171,8 +170,8 @@ namespace WebAppJob.Controllers
 
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> CreateJob()
+        [HttpGet("[action]")]
+        public async Task<IActionResult> CreateJobPartial()
         {
             try
             {
@@ -203,6 +202,27 @@ namespace WebAppJob.Controllers
             {
                 return BadRequest(new { Error = "A error was ocurred, the ticket is: " + SaveErrror(ex) });
 
+            }
+
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> CreateJob([FromBody]JobViewModel data)
+        {
+            try
+            {
+                Job job = new Job();
+                _mapper.Map(data, job);
+                await _serviceJob.CreateJob(new DtoRequest<Job>() { Data = job });
+                return Ok(new { message  = "Job creado correctamente"});
+            }
+            catch (CommonException ex)
+            {
+                return ReturnResponseErrorCommon(ex);
+            }
+            catch (Exception ex)
+            {
+                return ReturnResponseIncorrect(ex);
             }
 
         }

@@ -39,7 +39,7 @@ namespace WebAppJob.Controllers
             return StatusCode(500, new
             {
                 err
-                = "Ocurrio un error inesperado, favor de revisar este ticket con soprte:" + idError
+                = "Ocurrio un error inesperado, favor de revisar este ticket con soporte:" + idError
             });
         }
 

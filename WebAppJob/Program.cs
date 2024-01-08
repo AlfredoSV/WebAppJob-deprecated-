@@ -82,7 +82,7 @@ try
    
     app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Login}/{action=Index}/{id?}");
+        pattern: "{controller=Home}/{action=Index}/{id?}");
 
     app.Run();
 }

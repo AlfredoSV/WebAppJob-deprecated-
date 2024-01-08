@@ -16,7 +16,7 @@ namespace WebAppJob.Models
         public DateTime UpdateDate { get; set; }
         public DateTime CreateDate { get; set; }
         public bool IsActive { get; set; }
-        public string Logo { get; set; }
+        public string Logo { get; set; } 
         public string Tags { get; set; } 
         public List<SelectListItem> SelectListItemsAreas { get; set; }
         public List<SelectListItem> SelectListItemsCompanies { get; set; }
