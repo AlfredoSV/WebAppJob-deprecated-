@@ -114,33 +114,46 @@ namespace WebAppJob.Controllers
         } 
 
         [HttpPost("[action]")]
-        public async Task<PartialViewResult> ListJobs(int page, int pageSize, string searchText, string citySearch)
+        public async Task<IActionResult> ListJobs(int page, int pageSize, string searchText, string citySearch)
         {
-            List<JobViewModel> jobsResult = new List<JobViewModel>();
 
-            DtoPaginationViewModel<JobViewModel> dtoPaginationViewModel =
-            new DtoPaginationViewModel<JobViewModel>();
-
-            DtoResponse<List<Job>> response;
-
-            if (string.IsNullOrEmpty(searchText))
-                searchText = string.Empty;
-
-            if (string.IsNullOrEmpty(citySearch))
-                citySearch = string.Empty;
-
-            response = await _serviceJob.GetJobsList(page, pageSize, searchText, citySearch);
-
-            _mapper.Map(response.Data, jobsResult);
-            dtoPaginationViewModel.Data = jobsResult;
-            dtoPaginationViewModel.PaginationViewModel = new PaginationViewModel()
+            try
             {
-                TotalCount = response.Count,
-                PageSize = pageSize,
-                PageIndex = page++
-            };
 
-            return PartialView("_ListJobs", dtoPaginationViewModel);
+                List<JobViewModel> jobsResult = new List<JobViewModel>();
+
+                DtoPaginationViewModel<JobViewModel> dtoPaginationViewModel =
+                new DtoPaginationViewModel<JobViewModel>();
+
+                DtoResponse<List<Job>> response;
+
+                if (string.IsNullOrEmpty(searchText))
+                    searchText = string.Empty;
+
+                if (string.IsNullOrEmpty(citySearch))
+                    citySearch = string.Empty;
+
+                response = await _serviceJob.GetJobsList(page, pageSize, searchText, citySearch);
+
+                _mapper.Map(response.Data, jobsResult);
+                dtoPaginationViewModel.Data = jobsResult;
+                dtoPaginationViewModel.PaginationViewModel = new PaginationViewModel()
+                {
+                    TotalCount = response.Count,
+                    PageSize = pageSize,
+                    PageIndex = page++
+                };
+
+                return PartialView("_ListJobs", dtoPaginationViewModel);
+            }
+            catch (CommonException ex)
+            {
+                return ReturnResponseErrorCommon(ex);
+            }
+            catch (Exception ex)
+            {
+                return ReturnResponseIncorrect(ex);
+            }
 
         }
 
@@ -161,11 +174,13 @@ namespace WebAppJob.Controllers
 
                 return Ok(jobViewModel);
             }
+            catch (CommonException ex)
+            {
+                return ReturnResponseErrorCommon(ex);
+            }
             catch (Exception ex)
             {
-
-                return BadRequest(new { Error = "A error was ocurred, the ticket is: " });
-
+                return ReturnResponseIncorrect(ex);
             }
 
         }
@@ -198,10 +213,13 @@ namespace WebAppJob.Controllers
 
                 return PartialView("_CreateJob",jobViewModel);
             }
+            catch (CommonException ex)
+            {
+                return ReturnResponseErrorCommon(ex);
+            }
             catch (Exception ex)
             {
-                return BadRequest(new { Error = "A error was ocurred, the ticket is: " + SaveErrror(ex) });
-
+                return ReturnResponseIncorrect(ex);
             }
 
         }
@@ -235,11 +253,13 @@ namespace WebAppJob.Controllers
                 await _serviceJob.DeleteJob(new DtoRequest<Guid> { Data = id });
                 return Ok(new { message = "The job was delete successful" });
             }
+            catch (CommonException ex)
+            {
+                return ReturnResponseErrorCommon(ex);
+            }
             catch (Exception ex)
             {
-
-                return BadRequest(new { Error = "A error was ocurred, the ticket is: " });
-
+                return ReturnResponseIncorrect(ex);
             }
 
         }
@@ -266,9 +286,13 @@ namespace WebAppJob.Controllers
 
 
             }
+            catch (CommonException ex)
+            {
+                return ReturnResponseErrorCommon(ex);
+            }
             catch (Exception ex)
             {
-                return BadRequest(new { Error = "A error was ocurred, the ticket is: " + SaveErrror(ex) });
+                return ReturnResponseIncorrect(ex);
             }
 
         }
@@ -278,7 +302,22 @@ namespace WebAppJob.Controllers
         #region Return View
 
         [HttpGet]
-        public IActionResult ApplicationsJobs() => View();
+        public IActionResult ApplicationsJobs()
+        {
+            try
+            {
+                return View();
+            }
+            catch (CommonException ex)
+            {
+                return ReturnResponseErrorCommon(ex);
+            }
+            catch (Exception ex)
+            {
+                return ReturnResponseIncorrect(ex);
+            }
+
+        }
 
         #endregion
 

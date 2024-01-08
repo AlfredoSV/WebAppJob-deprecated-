@@ -3,32 +3,57 @@ using Framework.Security2023.Entities;
 using Microsoft.AspNetCore.Mvc;
 using WebAppJob.Models;
 using Framework.Security2023.IServices;
+using Domain.Entities;
 
 namespace WebAppJob.Controllers
 {
 
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IServiceUser _serviceUser;
-		public HomeController(ILogger<HomeController> logger, IServiceUser serviceUser)
+        public HomeController(ILogger<HomeController> logger, IServiceUser serviceUser)
         {
-			_serviceUser = serviceUser;
-			_logger = logger;
+            _serviceUser = serviceUser;
+            _logger = logger;
         }
 
         //[AuthFilter]
-        [HttpGet]     
+        [HttpGet]
         public IActionResult Index(string userName)
         {
-			HttpContext.Session.SetString("User", "F672DD51-56CE-41F9-B5F4-81D80EEEFF41");
-            return View();
+            try
+            {
+                HttpContext.Session.SetString("User", "F672DD51-56CE-41F9-B5F4-81D80EEEFF41");
+                return View();
+            }
+            catch (CommonException ex)
+            {
+                return ReturnResponseErrorCommon(ex);
+            }
+            catch (Exception ex)
+            {
+                return ReturnResponseIncorrect(ex);
+            }
+
         }
 
         [HttpGet]
         public IActionResult About()
         {
-            return View();
+            try
+            {
+                return View();
+            }
+            catch (CommonException ex)
+            {
+                return ReturnResponseErrorCommon(ex);
+            }
+            catch (Exception ex)
+            {
+                return ReturnResponseIncorrect(ex);
+            }
+
         }
 
         [HttpGet]
@@ -49,13 +74,16 @@ namespace WebAppJob.Controllers
                 return View(userViewModel);
 
             }
-            catch (Exception)
+            catch (CommonException ex)
             {
-
-                throw;
+                return ReturnResponseErrorCommon(ex);
+            }
+            catch (Exception ex)
+            {
+                return ReturnResponseIncorrect(ex);
             }
 
-            
+
         }
 
     }
