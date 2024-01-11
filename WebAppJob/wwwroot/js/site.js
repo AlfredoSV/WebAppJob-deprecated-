@@ -276,7 +276,7 @@ const getEdit = async (obj) => {
 
 const deleteJob = async (obj) => {
 
-    let id = obj.hash.replace('#', '');
+    let id = obj;
 
     const url = "Job/DeleteJob/" + id
 
@@ -291,10 +291,16 @@ const deleteJob = async (obj) => {
     try {
         let response = await fetch(url, options);
         let json = await response.json();
+
+        if (response.status != 200) {
+            alertify.error(json.err, 10);
+            return;
+        }
+
         alertify.success(json.message);
-        setTimeout(() => { window.location.reload(); }, 2000);
-    } catch (error) {
-        alertify.error(error.message, 10);
+        setTimeout(() => { loadJobs(); }, 2000);
+    } catch (error) { 
+        alertify.error(error.message , 10);
     }
 
 }

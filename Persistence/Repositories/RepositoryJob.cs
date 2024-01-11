@@ -169,19 +169,18 @@ namespace Domain.Repositories
 
                 using (JobContext jobContext = _jobContext.CreateDbContext())
                 {
-                    jobContext.Remove(id);
+                    jobContext.Remove(new Job() { Id = id});
                     await jobContext.SaveChangesAsync();
                     return DtoResponse.Create(StatusRequest.Ok);
                 }
 
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                await Task.FromException(e);
+                throw;
             }
 
-            return DtoResponse.Create(StatusRequest.OperationNotPerformed);
         }
 
         public async Task<DtoResponse> SaveJob(Job job)
