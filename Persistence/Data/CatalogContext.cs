@@ -1,19 +1,29 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
+
 
 namespace Persistence.Data
 {
     public class CatalogContext : DbContext
     {
         public CatalogContext(DbContextOptions<CatalogContext> options)
-        : base(options)
+        : base(options){}
+
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
+            configurationBuilder.Properties<DateTime>().HaveColumnType("date");
+
+            base.ConfigureConventions(configurationBuilder);
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            base.OnModelCreating(modelBuilder);
+        }
+
         public DbSet<Area> Areas { get; set; }
         public DbSet<Status> Status { get; set; }
         public DbSet<CivilStatus> CivilStatus { get; set; }

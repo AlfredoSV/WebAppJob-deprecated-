@@ -87,8 +87,8 @@ btnNewJob.addEventListener("click", async (e) => {
     }
 
     let url = window.location.origin + '/Job/CreateJobPartial';
-   
-    
+
+
 
     try {
 
@@ -137,7 +137,7 @@ btnNewJob.addEventListener("click", async (e) => {
         }, true);
 
         $(".loader").hide();
-      
+
 
     } catch (error) {
 
@@ -194,7 +194,7 @@ const eventSubmit = async (e) => {
             isValidMaxSalary && isValidMinSalary) {
 
             options.body = JSON.stringify(options.body);
-            let response = await fetch(api, options);            
+            let response = await fetch(api, options);
             $('#applyJobModal').modal('hide');
         }
 
@@ -222,11 +222,11 @@ const getDetailJob = async (obj) => {
         let text = await reponseView.text();
         document.querySelector("#jobDetail").innerHTML = text;
         $('#detailJobModal').modal('show');
-       
+
 
     } catch (error) {
 
-        alertify.error(error.message,10);
+        alertify.error(error.message, 10);
     }
 
 }
@@ -235,7 +235,7 @@ const getEdit = async (obj) => {
 
     let id = obj;
     let urlhtml = window.location.origin + "/Job/EditJob/" + id;
-   
+
     const options = {
         method: 'GET',
         headers: {
@@ -248,28 +248,10 @@ const getEdit = async (obj) => {
         let responseHtml = await fetch(urlhtml);
         let text = await responseHtml.text();
         document.querySelector("#formJobedit").innerHTML = text;
-
-        //await loadCatalogs();
         $('#editJobModal').modal('show');
 
-        //let responseData = await fetch(url, options);
-        //let json = await responseData.json();
-
-        //document.querySelector("#id").value = json.id.toString();
-        //document.querySelector("#idArea").value = json.idArea.toString();
-        //document.querySelector("#idCompany").value = json.idCompany;
-        //document.querySelector("#isActive").checked = json.isActive;
-        //document.querySelector("#name").value = json.nameJob;
-        //document.querySelector("#salaryMax").value = json.salaryMax;
-        //document.querySelector("#salaryMin").value = json.salaryMin;
-        //document.querySelector("#vacancyNumber").value = json.vacancyNumbers;
-        //document.querySelector("#description").value = json.descriptionJob;
-        //document.getElementById("editJobForm").addEventListener("submit", eventSubmit, true);
-
     } catch (error) {
-
         alertify.error(error.message, 10);
-
     }
 
 }
@@ -296,11 +278,13 @@ const deleteJob = async (obj) => {
             alertify.error(json.err, 10);
             return;
         }
-
+        $(".loader").show();
         alertify.success(json.message);
-        setTimeout(() => { loadJobs(); }, 2000);
-    } catch (error) { 
-        alertify.error(error.message , 10);
+        await loadJobs();
+        $(".loader").hide();
+
+    } catch (error) {
+        alertify.error(error.message, 10);
     }
 
 }

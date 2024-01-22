@@ -11,10 +11,12 @@ namespace Domain.Entities
     public  class Country
     {
         public Guid Id { get; set; }
-        public string CountryName { get; set; }
-        public string CountryDescription { get; set; }
-        public DateTime DateCreated { get; set; }
-        public bool Active { get; set; }
+        public string NameCountry{ get; set; }
+        public string DescriptionCountry { get; set; }
+        public Guid IdUserCreated { get; set; }
+        public DateTime UpdateDate { get; set; }
+        public DateTime CreateDate { get; set; }
+        public bool IsActive { get; set; }
 
     }
 }

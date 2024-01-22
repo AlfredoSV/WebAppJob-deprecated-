@@ -24,21 +24,23 @@ logo varchar(max));
 
 create table companies(
 id UNIQUEIDENTIFIER,
-namecompany varchar(30), 
-descriptioncompany varchar(max),
-idusercreated uniqueidentifier,
-updatedate date, 
-createdate date,
-isactive bit);
+namecompany varchar(30) not null, 
+descriptioncompany varchar(max) not null,
+idusercreated uniqueidentifier not null,
+updatedate date not null, 
+createdate date not null,
+isactive bit not null,
+PRIMARY KEY(id));
 
 create table areas(
 id UNIQUEIDENTIFIER,
-namearea varchar(30), 
-descriptionarea varchar(max),
-idusercreated uniqueidentifier,
-updatedate date, 
-createdate date,
-isactive bit);
+namearea varchar(30) not null, 
+descriptionarea varchar(max) not null,
+idusercreated uniqueidentifier not null,
+updatedate date not null, 
+createdate date not null,
+isactive bit not null,
+PRIMARY KEY(id));
 
 create table applycompetitorjobs(
 id UNIQUEIDENTIFIER,
