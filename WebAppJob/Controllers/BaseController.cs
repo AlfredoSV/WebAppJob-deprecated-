@@ -20,11 +20,13 @@ namespace WebAppJob.Controllers
 
         protected void SignIn(DtoLoginResponse dtoLogin)
         {
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity();
-            Claim[] claims = new Claim[3];
-            claims[0] = new Claim("", dtoLogin.UserName);
-            claims[0] = new Claim("", dtoLogin.User.Id.ToString());
+
             ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal();
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity();
+            Claim[] claims = new Claim[2];
+
+            claims[0] = new Claim("userName", dtoLogin.User.UserName);
+            claims[0] = new Claim("id", dtoLogin.User.Id.ToString());
 
             claimsIdentity.AddClaims(claims);
             claimsPrincipal.AddIdentity(claimsIdentity);

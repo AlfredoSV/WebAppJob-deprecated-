@@ -14,10 +14,10 @@ namespace Application.Services
             _context = catalogContext;  
         }
 
-        public async void Delete(Guid id)
+        public async Task Delete(Guid id)
         {
             _context.Status.Remove(await GetById(id));
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Status>> GetAllAsync()
@@ -41,13 +41,13 @@ namespace Application.Services
             return status;
         }
 
-        public void Save(Status entity)
+        public async Task Save(Status entity)
         {
             _context.Status.Add(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public async void Update(Status entity)
+        public async Task Update(Status entity)
         {
             Status status = await GetById(entity.Id);
             if (status != null)
@@ -56,7 +56,7 @@ namespace Application.Services
                 status.UpdateDate = DateTime.Now;
                 status.IsActive = entity.IsActive;
                 _context.Status.Update(status);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

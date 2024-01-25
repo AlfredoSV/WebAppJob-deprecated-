@@ -21,8 +21,7 @@ namespace WebAppJob.Models
         [Required]
         public int Age { get;  set; }
         public DateTime Birthdate { get; set; }
-        [Required]
-        public string Address { get; set; }
+
         [EmailAddress]
         [Required]
         public string Email { get; set; }

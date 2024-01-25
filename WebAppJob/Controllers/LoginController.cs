@@ -1,9 +1,11 @@
 ﻿
 using Application.IServices;
+using Domain.Entities;
 using Framework.Security2023.Dtos;
 using Framework.Security2023.Entities;
 using Framework.Security2023.IServices;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices;
 using WebAppJob.Models;
 
 namespace WebAppJob.Controllers
@@ -70,16 +72,19 @@ namespace WebAppJob.Controllers
                 DtoLogin login = new DtoLogin() { UserName = user.UserName, Password = user.Password };
 
                 if (ModelState.IsValid)
-                {                
+                {
                     DtoLoginResponse userLogin = _serviceLogin.Login(login);
 
                     if (userLogin.StatusLogin == StatusLogin.Ok)
+                    {
+                        SignIn(userLogin);
                         return RedirectToAction("Index", "Home", new { user.UserName });
+                    }
 
                     switch (userLogin.StatusLogin)
                     {
                         case StatusLogin.UserOrPasswordIncorrect:
-                            
+
                             break;
                         case StatusLogin.UserBlocked:
                             errorMessage = "The user was blocked.";
@@ -91,7 +96,7 @@ namespace WebAppJob.Controllers
                             errorMessage = "The token was not correct.";
                             break;
                         case StatusLogin.RoleNotAssigned:
-                            errorMessage =  "Role not assigned.";
+                            errorMessage = "Role not assigned.";
                             break;
                         default:
                             break;
@@ -99,7 +104,7 @@ namespace WebAppJob.Controllers
 
                     ModelState.AddModelError("UserName", errorMessage);
 
-                }                     
+                }
 
             }
             catch (Exception ex)
@@ -107,7 +112,7 @@ namespace WebAppJob.Controllers
                 ModelState.AddModelError("UserName", $"An error occurred while searching for the information of user, ticket:{SaveErrror(ex)}");
             }
 
-            return View("LoginValidation", new UserModel { UserName = user.UserName } );
+            return View("LoginValidation", new UserModel { UserName = user.UserName });
         }
 
         [HttpGet]
@@ -123,11 +128,11 @@ namespace WebAppJob.Controllers
         public IActionResult ForgotPasswordRequest(UserForgotPasswordRequestViewModel userForgotPasswordRequest)
         {
             string urlBase = string.Empty;
-    
+
             try
             {
 
-                if(!ModelState.IsValid)
+                if (!ModelState.IsValid)
                     return View("ForgotPassword", userForgotPasswordRequest);
 
 
@@ -140,7 +145,7 @@ namespace WebAppJob.Controllers
 
                 urlBase = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/ForgotPassword/ForgotPasswordChange";
 
-                _serviceLogin.GenerateChangePasswordRequest( userForgotPasswordRequest.UserName,
+                _serviceLogin.GenerateChangePasswordRequest(userForgotPasswordRequest.UserName,
                     urlBase);
 
                 return RedirectToAction("Index", "Login");
@@ -160,7 +165,7 @@ namespace WebAppJob.Controllers
         {
 
             try
-            {             
+            {
                 return RedirectToAction("Index", "Login");
             }
             catch (Exception)
@@ -178,7 +183,40 @@ namespace WebAppJob.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult SaveNewUser(UserViewModelRegister userViewModel)
         {
-            return null;
+            try
+            {
+                if (!ModelState.IsValid)
+                    return View(viewName: "Register");
+
+                if (_serviceUser.UserExistByEmail(userViewModel.Email) ||
+                   _serviceUser.UserExistByUserName(userViewModel.UserName))
+                {
+                    ModelState.AddModelError("UserName", "The username or email was registred");
+                    return View(viewName: "Register");
+                }
+
+                UserFkw userFkw = UserFkw.Create(
+                    userViewModel.Name,
+                    userViewModel.Password, 
+                    Guid.NewGuid(), false,
+                    Guid.Parse("35AE4DB6-0243-4B44-9B8B-C4E49ABD17E3"));
+
+                userFkw.UserInformation = UserInformation.Create(
+                    userViewModel.UserName, userViewModel.LastName,userViewModel.Age,
+                    string.Empty,userViewModel.Email,Guid.NewGuid());   
+
+                _serviceUser.CreateUser(userFkw,false);
+
+                return RedirectToAction(actionName: "index", controllerName: "Login");
+
+
+            }
+            catch (Exception ex)
+            {
+                SaveErrror(ex);
+                return View(viewName: "Register");
+            }
+           
         }
 
     }

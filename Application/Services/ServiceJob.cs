@@ -2,10 +2,6 @@
 using Domain;
 using Domain.Entities;
 using Domain.IRepositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage;
-using Persistence.Data;
 
 namespace Application.Services
 {
@@ -21,15 +17,12 @@ namespace Application.Services
         public async Task<DtoResponse<ApplyCompetitorJob>> ApplyNewJob(Guid idCompetitor, Guid idCreated, Guid idJob)
         {
             ApplyCompetitorJob applyCompetitorJob;
-
             Competitor competitor;
 
             Job job = (await _repositoryJob.GetJobById(idJob)).Data;
-
             ArgumentNullException.ThrowIfNull(job);
 
             competitor = (await _repositoryJob.GetApplyCompetitorJobById(idCompetitor)).Data;
-
             ArgumentNullException.ThrowIfNull(competitor);
 
             applyCompetitorJob =
@@ -37,7 +30,6 @@ namespace Application.Services
                 idCreated);
 
             await _repositoryJob.SaveApplyCompetitorJob(applyCompetitorJob);
-
             return DtoResponse<ApplyCompetitorJob>.Create(applyCompetitorJob);
 
         }
@@ -59,13 +51,9 @@ namespace Application.Services
         public async Task<DtoResponse<Job>> GetDetailJob(Guid jobId)
         {
             DtoResponse<Job> dtoResponse = new DtoResponse<Job>();
-
             Job result = (await _repositoryJob.GetJobById(jobId)).Data;
-
             dtoResponse.Data = result;
-
             ArgumentNullException.ThrowIfNull(dtoResponse.Data);
-
             return dtoResponse;
 
         }
@@ -74,7 +62,6 @@ namespace Application.Services
         {
             PaginationList<List<Job>> jobs = await _repositoryJob.ListJobsByPage
                 (page, pageSize, search);
-
             return DtoResponse<List<Job>>.Create(jobs.Data, jobs.Count);
         }
 

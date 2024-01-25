@@ -1,12 +1,6 @@
-
-
-using System.Numerics;
-using System.Reflection.Emit;
 using Domain.Entities;
 using Domain.IRepositories;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Persistence.Data;
 
 namespace Domain.Repositories
@@ -17,7 +11,6 @@ namespace Domain.Repositories
 
         public RepositoryJob(IDbContextFactory<JobContext> jobContext)
         {
-
             _jobContext = jobContext;
         }
 
@@ -32,10 +25,7 @@ namespace Domain.Repositories
 
                 using (JobContext jobContext = _jobContext.CreateDbContext())
                 {
-                    if (page != 1)
-                        page--;
-                    else
-                        page = 0;
+                    page = (page != 1) ? page-- : 0;
 
                     if (string.IsNullOrEmpty(search))
                     {
@@ -78,7 +68,7 @@ namespace Domain.Repositories
                 using (JobContext jobContext = _jobContext.CreateDbContext())
                 {
                     return DtoResponse<Job>.Create(await
-                        jobContext.Jobs.FirstOrDefaultAsync(j => j.Id.Equals(id)));
+                        jobContext.Jobs.AsQueryable().FirstOrDefaultAsync(j => j.Id.Equals(id)));
                 }
 
 
@@ -126,7 +116,7 @@ namespace Domain.Repositories
                 using (JobContext jobContext = _jobContext.CreateDbContext())
                 {
                     return DtoResponse<Competitor>.Create(await
-                        jobContext.Competitors.FirstOrDefaultAsync(j => j.Id.Equals(id)));
+                        jobContext.Competitors.AsQueryable().FirstOrDefaultAsync(j => j.Id.Equals(id)));
                 }
 
 
@@ -147,9 +137,8 @@ namespace Domain.Repositories
 
                 using (JobContext jobContext = _jobContext.CreateDbContext())
                 {
-                    jobContext.Add(applyCompetitorJob);
+                    await jobContext.AddAsync(applyCompetitorJob);
                     await jobContext.SaveChangesAsync();
-
                     await Task.FromResult(applyCompetitorJob);
                 }
 
@@ -190,7 +179,7 @@ namespace Domain.Repositories
 
                 using (JobContext jobContext = _jobContext.CreateDbContext())
                 {
-                    jobContext.Add(job);
+                    await jobContext.AddAsync(job);
                     await jobContext.SaveChangesAsync();
                     return DtoResponse.Create(StatusRequest.Ok);
                 }

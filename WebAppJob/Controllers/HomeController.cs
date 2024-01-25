@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using WebAppJob.Models;
 using Framework.Security2023.IServices;
 using Domain.Entities;
+using DocumentFormat.OpenXml.InkML;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace WebAppJob.Controllers
 {
@@ -24,7 +26,6 @@ namespace WebAppJob.Controllers
         {
             try
             {
-                HttpContext.Session.SetString("User", "F672DD51-56CE-41F9-B5F4-81D80EEEFF41");
                 return View();
             }
             catch (CommonException ex)
@@ -61,17 +62,23 @@ namespace WebAppJob.Controllers
         {
             try
             {
-                Guid id = Guid.Parse("115B4AB8-978A-45B1-BBCE-54DE26B0C7BC");
+                Guid id;
+                string idStr = HttpContext.Session.GetString("userId") ?? "";
 
-                UserFkw userFkw = _serviceUser.GetUserById(id);
+                if (Guid.TryParse(idStr, out id))
+                {
+                    UserFkw userFkw = _serviceUser.GetUserById(id);
 
-                UserViewModel userViewModel = UserViewModel.Create(userFkw.Id, userFkw.UserName,
-                    userFkw.DateCreated, Guid.NewGuid(), userFkw.UserInformation.Name,
-                    userFkw.UserInformation.LastName, userFkw.UserInformation.Age,
-                    userFkw.UserInformation.Address, userFkw.UserInformation.Email);
+                    UserViewModel userViewModel = UserViewModel.Create(userFkw.Id, userFkw.UserName,
+                        userFkw.DateCreated, Guid.NewGuid(), userFkw.UserInformation.Name,
+                        userFkw.UserInformation.LastName, userFkw.UserInformation.Age,
+                        userFkw.UserInformation.Address, userFkw.UserInformation.Email);
 
 
-                return View(userViewModel);
+                    return View(userViewModel);
+                }
+
+                return RedirectToAction("Index","Login");
 
             }
             catch (CommonException ex)

@@ -14,16 +14,16 @@ namespace Application.Services
             _context = catalogContext;
         }
 
-        public async void Delete(Guid id)
+        public async Task Delete(Guid id)
         {
             _context.Areas.Remove(await GetById(id));
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Area>> GetAllAsync()
         {
 
-            var catArea = await _context.Areas.ToListAsync();
+            var catArea = await _context.Areas.AsNoTracking().ToListAsync();
 
             if (catArea.Count == 0)
                 throw new CommonException("Table Areas is noy values", "GetAllAsync");
@@ -41,13 +41,13 @@ namespace Application.Services
             return area;
         }
 
-        public void Save(Area entity)
+        public async Task Save(Area entity)
         {
             _context.Areas.Add(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public async void Update(Area entity)
+        public async Task Update(Area entity)
         {
             Area aree = await GetById(entity.Id);
             if (aree != null)
@@ -57,8 +57,10 @@ namespace Application.Services
                 aree.IsActive = entity.IsActive;
                 aree.NameArea = entity.NameArea;
                 _context.Areas.Update(aree);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
+
+        
     }
 }

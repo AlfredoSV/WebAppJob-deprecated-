@@ -14,10 +14,10 @@ namespace Application.Services
             _context = catalogContext;  
         }
 
-        public async void Delete(Guid id)
+        public async Task Delete(Guid id)
         {
             _context.EnglishLevel.Remove(await GetById(id));
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<EnglishLevel>> GetAllAsync()
@@ -44,13 +44,13 @@ namespace Application.Services
             return englishLevel;
         }
 
-        public void Save(EnglishLevel entity)
+        public async Task Save(EnglishLevel entity)
         {
             _context.EnglishLevel.Add(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public async void Update(EnglishLevel entity)
+        public async Task Update(EnglishLevel entity)
         {
             EnglishLevel englishLevel = await GetById(entity.Id);
             if (englishLevel != null)
@@ -60,7 +60,7 @@ namespace Application.Services
                 englishLevel.IsActive = entity.IsActive;
                 _context.EnglishLevel
                         .Update(englishLevel);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
     }

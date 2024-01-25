@@ -24,7 +24,7 @@ namespace WebAppJob.Filters
 			
 			Guid id = Guid.Empty;
 			bool userExist = false;		
-            string idStr = context.HttpContext.Session.GetString("idUser") ?? "";
+            string idStr = context.HttpContext.Session.GetString("userId") ?? "";
             UserFkw user;
 
             if (Guid.TryParse(idStr, out id))

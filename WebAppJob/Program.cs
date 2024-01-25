@@ -38,10 +38,9 @@ try
     builder.Services.AddTransient<IServiceCatalog<Area>, ServiceCatalogArea>();
     builder.Services.AddTransient<IServiceCatalog<Company>, ServiceCatalogCompany>();
     builder.Services.AddTransient<IRepositoryJob, RepositoryJob>();
+
     builder.Services.AddSession(options => {
-
-        options.IdleTimeout = TimeSpan.FromMinutes(30); 
-
+        options.IdleTimeout = TimeSpan.FromMinutes(60); 
     });
 	builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

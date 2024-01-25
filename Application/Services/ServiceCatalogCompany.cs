@@ -14,10 +14,10 @@ namespace Application.Services
             _catalogContext = context;
         }
 
-        public async void Delete(Guid id)
+        public async Task Delete(Guid id)
         {
             _catalogContext.Companies.Remove(await GetById(id));
-            _catalogContext.SaveChanges();
+            await _catalogContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Company>> GetAllAsync()
@@ -42,13 +42,13 @@ namespace Application.Services
             return company;
         }
 
-        public void Save(Company entity)
+        public async Task Save(Company entity)
         {
             _catalogContext.Companies.Add(entity);
-            _catalogContext.SaveChanges();
+            await _catalogContext.SaveChangesAsync();
         }
 
-        public async void Update(Company entity)
+        public async Task Update(Company entity)
         {
             Company com = await GetById(entity.Id);
             if (com != null)
@@ -59,7 +59,7 @@ namespace Application.Services
                 com.NameCompany = entity.NameCompany;
                 com.DescriptionCompany = entity.DescriptionCompany;
                 _catalogContext.Companies.Update(com);
-                _catalogContext.SaveChanges();
+                await _catalogContext.SaveChangesAsync();
             }
         }
     }

@@ -16,6 +16,5 @@ namespace WebAppJob.Models
 
         public string Cv { get; set; }
 
-
     }
 }
