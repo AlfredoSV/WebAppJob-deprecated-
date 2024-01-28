@@ -2,6 +2,8 @@
 using AutoMapper;
 using Domain;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WebAppJob.Models;
@@ -114,6 +116,7 @@ namespace WebAppJob.Controllers
         } 
 
         [HttpPost("[action]")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> ListJobs(int page, int pageSize, string searchText, string citySearch)
         {
 

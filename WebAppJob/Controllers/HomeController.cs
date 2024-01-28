@@ -6,6 +6,8 @@ using Framework.Security2023.IServices;
 using Domain.Entities;
 using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace WebAppJob.Controllers
 {
@@ -22,6 +24,7 @@ namespace WebAppJob.Controllers
 
         //[AuthFilter]
         [HttpGet]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme,Roles ="Admi")]
         public IActionResult Index(string userName)
         {
             try
@@ -40,6 +43,7 @@ namespace WebAppJob.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult About()
         {
             try

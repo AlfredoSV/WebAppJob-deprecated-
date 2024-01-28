@@ -195,7 +195,17 @@ const eventSubmit = async (e) => {
 
             options.body = JSON.stringify(options.body);
             let response = await fetch(api, options);
-            $('#applyJobModal').modal('hide');
+            let json = await response.json();
+
+            if (response.status != 200) {
+                alertify.error(json.err, 10);
+                return;
+            }
+
+            $('#createJobModal').modal('hide');
+            await loadJobs();
+            alertify.success(json.message, 10);
+
         }
 
     } catch (error) {

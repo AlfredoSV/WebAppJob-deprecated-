@@ -1,11 +1,14 @@
 ﻿
 using Application.IServices;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Domain.Entities;
 using Framework.Security2023.Dtos;
 using Framework.Security2023.Entities;
 using Framework.Security2023.IServices;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
+using System.Security.Claims;
 using WebAppJob.Models;
 
 namespace WebAppJob.Controllers
@@ -25,7 +28,16 @@ namespace WebAppJob.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index() => View();
+        public IActionResult Index()
+        {
+
+            if (HttpContext.User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Home", new { HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value });
+            return View();
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult AccesDenied() => View();
 
         [HttpGet]
         public IActionResult Register() => View();
@@ -56,7 +68,8 @@ namespace WebAppJob.Controllers
         [HttpGet]
         public IActionResult LoginValidation(string userName)
         {
-
+            if (HttpContext.User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Home", new { HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value });
             UserModel user = new UserModel();
             user.UserName = userName;
             return View(user);
@@ -64,47 +77,46 @@ namespace WebAppJob.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult LoginValidation(UserModel user)
+        public async Task<IActionResult> LoginValidation(UserModel user)
         {
             try
             {
                 string errorMessage = string.Empty;
                 DtoLogin login = new DtoLogin() { UserName = user.UserName, Password = user.Password };
 
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
+                    return View("LoginValidation", new UserModel { UserName = user.UserName });
+
+                DtoLoginResponse userLogin = _serviceLogin.Login(login);
+
+                if (userLogin.StatusLogin == StatusLogin.Ok)
                 {
-                    DtoLoginResponse userLogin = _serviceLogin.Login(login);
-
-                    if (userLogin.StatusLogin == StatusLogin.Ok)
-                    {
-                        SignIn(userLogin);
-                        return RedirectToAction("Index", "Home", new { user.UserName });
-                    }
-
-                    switch (userLogin.StatusLogin)
-                    {
-                        case StatusLogin.UserOrPasswordIncorrect:
-
-                            break;
-                        case StatusLogin.UserBlocked:
-                            errorMessage = "The user was blocked.";
-                            break;
-                        case StatusLogin.ExistSession:
-                            errorMessage = "Exist a session.";
-                            break;
-                        case StatusLogin.TokenNotValid:
-                            errorMessage = "The token was not correct.";
-                            break;
-                        case StatusLogin.RoleNotAssigned:
-                            errorMessage = "Role not assigned.";
-                            break;
-                        default:
-                            break;
-                    }
-
-                    ModelState.AddModelError("UserName", errorMessage);
-
+                    await SignIn(userLogin);
+                    return RedirectToAction("Index", "Home", new { user.UserName });
                 }
+
+                switch (userLogin.StatusLogin)
+                {
+                    case StatusLogin.UserOrPasswordIncorrect:
+
+                        break;
+                    case StatusLogin.UserBlocked:
+                        errorMessage = "The user was blocked.";
+                        break;
+                    case StatusLogin.ExistSession:
+                        errorMessage = "Exist a session.";
+                        break;
+                    case StatusLogin.TokenNotValid:
+                        errorMessage = "The token was not correct.";
+                        break;
+                    case StatusLogin.RoleNotAssigned:
+                        errorMessage = "Role not assigned.";
+                        break;
+                    default:
+                        break;
+                }
+
+                ModelState.AddModelError("UserName", errorMessage);
 
             }
             catch (Exception ex)
@@ -116,11 +128,26 @@ namespace WebAppJob.Controllers
         }
 
         [HttpGet]
-        public IActionResult Singout()
+        public async Task<IActionResult> Singout()
         {
-            HttpContext.Session.Remove("User");
+
+            try
+            {
+                Guid userId = Guid.Parse(HttpContext.Session.GetString("userId"));
+                _serviceLogin.SignOut(userId);
+                HttpContext.Session.Remove("userId");
+                await HttpContext.SignOutAsync();
+                
+
+            }
+            catch (Exception ex)
+            {
+                Guid error = SaveErrror(ex);
+                return View("Error", new ErrorViewModel() { RequestId = error });
+            }
 
             return RedirectToAction("Index");
+
         }
 
         [HttpPost]
@@ -197,15 +224,15 @@ namespace WebAppJob.Controllers
 
                 UserFkw userFkw = UserFkw.Create(
                     userViewModel.Name,
-                    userViewModel.Password, 
+                    userViewModel.Password,
                     Guid.NewGuid(), false,
                     Guid.Parse("35AE4DB6-0243-4B44-9B8B-C4E49ABD17E3"));
 
                 userFkw.UserInformation = UserInformation.Create(
-                    userViewModel.UserName, userViewModel.LastName,userViewModel.Age,
-                    string.Empty,userViewModel.Email,Guid.NewGuid());   
+                    userViewModel.UserName, userViewModel.LastName, userViewModel.Age,
+                    string.Empty, userViewModel.Email, Guid.NewGuid());
 
-                _serviceUser.CreateUser(userFkw,false);
+                _serviceUser.CreateUser(userFkw, false);
 
                 return RedirectToAction(actionName: "index", controllerName: "Login");
 
@@ -216,7 +243,7 @@ namespace WebAppJob.Controllers
                 SaveErrror(ex);
                 return View(viewName: "Register");
             }
-           
+
         }
 
     }

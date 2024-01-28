@@ -18,20 +18,21 @@ namespace WebAppJob.Controllers
             _logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
         }
 
-        protected void SignIn(DtoLoginResponse dtoLogin)
+        protected async Task SignIn(DtoLoginResponse dtoLogin)
         {
 
             ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal();
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity();
-            Claim[] claims = new Claim[2];
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity("CookieAuth");
+            Claim[] claims = new Claim[3];
 
-            claims[0] = new Claim("userName", dtoLogin.User.UserName);
-            claims[0] = new Claim("id", dtoLogin.User.Id.ToString());
-
+            claims[0] = new Claim(ClaimTypes.Name, dtoLogin.User.UserName);
+            claims[1] = new Claim(ClaimTypes.NameIdentifier, dtoLogin.User.Id.ToString());
+            claims[2] = new Claim(ClaimTypes.Role, "Admin");
+            
             claimsIdentity.AddClaims(claims);
             claimsPrincipal.AddIdentity(claimsIdentity);
             HttpContext.Session.SetString("userId", dtoLogin.User.Id.ToString());
-            HttpContext.SignInAsync(claimsPrincipal);
+            await HttpContext.SignInAsync(claimsPrincipal);
         }
 
         protected ObjectResult ReturnResponseIncorrect(Exception ex)
@@ -55,7 +56,7 @@ namespace WebAppJob.Controllers
                 = $"{ex.Message}-{ex.Source}"
             });
         }
-        protected Guid? SaveErrror(Exception ex, Guid? idError = null)
+        protected Guid SaveErrror(Exception ex, Guid? idError = null)
         {
             if(idError == null)
                 idError = Guid.NewGuid();
@@ -64,12 +65,12 @@ namespace WebAppJob.Controllers
             {
                 _logger.Error($"{idError}:{ex.Message}-{ex.Source}");
 
-                return idError;
+                return (Guid)idError;
             }
 
             _logger.Fatal($"{idError}:{ex}");
 
-            return idError;
+            return (Guid)idError;
 
         }
 

@@ -1,11 +1,14 @@
 ﻿using Application.IServices;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NLog;
 
 namespace WebAppJob.Controllers
 {
     [Route("/")]
+    [ApiController]
+    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme,Roles ="Admi")]
     public class CatalogController : BaseController
     {
 
@@ -21,13 +24,15 @@ namespace WebAppJob.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetAreas()
+        [ResponseCache(Duration = 15)]    
+        public async Task<ActionResult> GetAreas()
         {
             try
             {
                 return Ok(new { list = await _serviceCatalogArea.GetAllAsync() });
-            
-            }catch (CommonException ex)
+
+            }
+            catch (CommonException ex)
             {
                 return ReturnResponseErrorCommon(ex);
             }
@@ -39,6 +44,7 @@ namespace WebAppJob.Controllers
         }
 
         [HttpGet("[action]")]
+        [ResponseCache(Duration = 15)]
         public async Task<IActionResult> GetCompanies()
         {
             try
