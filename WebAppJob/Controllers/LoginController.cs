@@ -17,14 +17,10 @@ namespace WebAppJob.Controllers
     {
         private readonly IServiceLogin _serviceLogin;
         private readonly IServiceUser _serviceUser;
-        private readonly ILogger<LoginController> _logger;
-
-        public LoginController(ILogger<LoginController> logger, IServiceUser serviceUser, IServiceLogin serviceLogin)
+        public LoginController(IServiceUser serviceUser, IServiceLogin serviceLogin)
         {
             this._serviceUser = serviceUser;
             this._serviceLogin = serviceLogin;
-            this._logger = logger;
-            _logger.LogDebug("NLog injected into LoginController");
         }
 
         [HttpGet]

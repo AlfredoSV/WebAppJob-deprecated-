@@ -14,12 +14,10 @@ namespace WebAppJob.Controllers
 
     public class HomeController : BaseController
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly IServiceUser _serviceUser;
-        public HomeController(ILogger<HomeController> logger, IServiceUser serviceUser)
+        public HomeController(IServiceUser serviceUser)
         {
             _serviceUser = serviceUser;
-            _logger = logger;
         }
 
         //[AuthFilter]
