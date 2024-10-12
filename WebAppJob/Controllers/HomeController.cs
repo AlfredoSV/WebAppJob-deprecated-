@@ -8,6 +8,8 @@ using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Framework.Utilities2023.IServices;
+using Framework.Utilities202.Entities;
 
 namespace WebAppJob.Controllers
 {
@@ -15,18 +17,22 @@ namespace WebAppJob.Controllers
     public class HomeController : BaseController
     {
         private readonly IServiceUser _serviceUser;
-        public HomeController(IServiceUser serviceUser)
+        private readonly IServiceLogBook _logBook;
+        public HomeController(IServiceUser serviceUser, IServiceLogBook serviceLogBook)
         {
             _serviceUser = serviceUser;
+            _logBook = serviceLogBook;
+
         }
 
         //[AuthFilter]
         [HttpGet]
-        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme,Roles ="Admi")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme,Roles ="Admin")]
         public IActionResult Index(string userName)
         {
             try
             {
+                
                 return View();
             }
             catch (CommonException ex)

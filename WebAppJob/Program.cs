@@ -11,7 +11,10 @@ using Domain.IRepositories;
 using Domain.Repositories;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
+using Framework.Utilities2023.Log.Services;
+using Framework.Utilities2023.IServices;
+using Framework.Utilities2023;
+using Framework.Utilities2023.Services;
 
 var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().
     GetCurrentClassLogger();
@@ -48,6 +51,7 @@ try
     string languaje = builder.Configuration.GetSection("DefaultLanguaje").Value;
     SlqConnectionStr.Instance.SqlConnectionString = connectionStrFkw;
 
+
     // Add services to the container.
     builder.Services.AddControllersWithViews();  
     //CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(languaje);
@@ -55,11 +59,13 @@ try
     builder.Host.UseNLog();   
     builder.Services.AddResponseCaching();
     builder.Services.AddTransient<IServiceLogin, ServiceLogin>();
+    builder.Services.AddTransient<IRepositoryJob, RepositoryJob>();
     builder.Services.AddTransient<IServiceJob, ServiceJob>();
     builder.Services.AddTransient<IServiceUser, ServiceUser>();
     builder.Services.AddTransient<IServiceCatalog<Area>, ServiceCatalogArea>();
     builder.Services.AddTransient<IServiceCatalog<Company>, ServiceCatalogCompany>();
-    builder.Services.AddTransient<IRepositoryJob, RepositoryJob>();
+    builder.Services.AddInitialServices();
+
     //builder.Services.AddSession(options =>
     //{
     //    options.IdleTimeout = TimeSpan.FromMinutes(60);

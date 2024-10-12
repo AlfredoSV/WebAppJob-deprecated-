@@ -5,6 +5,8 @@ using Domain.Entities;
 using Framework.Security2023.Dtos;
 using Framework.Security2023.Entities;
 using Framework.Security2023.IServices;
+using Framework.Utilities202.Entities;
+using Framework.Utilities2023.IServices;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
@@ -17,10 +19,12 @@ namespace WebAppJob.Controllers
     {
         private readonly IServiceLogin _serviceLogin;
         private readonly IServiceUser _serviceUser;
-        public LoginController(IServiceUser serviceUser, IServiceLogin serviceLogin)
+        private readonly IServiceLogBook _serviceLogBook;
+        public LoginController(IServiceUser serviceUser, IServiceLogin serviceLogin, IServiceLogBook serviceLogBook)
         {
             this._serviceUser = serviceUser;
             this._serviceLogin = serviceLogin;
+            this._serviceLogBook = serviceLogBook;
         }
 
         [HttpGet]
@@ -47,8 +51,11 @@ namespace WebAppJob.Controllers
             try
             {
                 if (_serviceUser.UserExistByUserName(userName))
+                {
                     return RedirectToAction("LoginValidation", "Login", new { userName });
-
+                }
+                LogBook logBook = LogBook.Create("HomeController", "Index", "Test1");
+                this._serviceLogBook.SaveInformationLog(logBook);
                 ModelState.AddModelError("UserName", "The user was not found");
 
             }
@@ -58,7 +65,6 @@ namespace WebAppJob.Controllers
             }
 
             return View("Index");
-
         }
 
         [HttpGet]
@@ -94,7 +100,7 @@ namespace WebAppJob.Controllers
                 switch (userLogin.StatusLogin)
                 {
                     case StatusLogin.UserOrPasswordIncorrect:
-
+                        errorMessage = "Password Incorrect.";
                         break;
                     case StatusLogin.UserBlocked:
                         errorMessage = "The user was blocked.";
