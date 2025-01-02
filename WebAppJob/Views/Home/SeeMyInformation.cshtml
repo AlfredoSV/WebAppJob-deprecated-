@@ -1,4 +1,5 @@
 ﻿@model UserViewModel
+
 @{
     ViewData["Title"] = "SeeMyInformation";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,15 +7,8 @@
 
 <h1>My information</h1>
 <hr />
-<form class="container" enctype="multipart/form-data">
+<form class="container" enctype="multipart/form-data" asp-route-id="@Model.Id" method="post" asp-controller="Home" asp-action="EditInformation">
     <div class="row mt-3">
-        <div class="col-4">
-            <div class="form-group">
-                <label class="control-label">Id</label>
-                <input type="text" asp-for="Id" readonly class="form-control input-text" />
-            </div>
-        </div>
-
         <div class="col-4">
             <div class="form-group">
                 <label class="control-label">User Name</label>
@@ -35,6 +29,7 @@
             <div class="form-group">
                 <label class="control-label">Name</label>
                 <input type="text" asp-for="Name" class="form-control input-text" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
         </div>
 

@@ -11,12 +11,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Framework.Utilities2023" Version="1.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.21" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.21" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Repositories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Framework.Utilities2023">
+      <HintPath>..\WebAppJob\Dependencies\Framework.Utilities2023.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

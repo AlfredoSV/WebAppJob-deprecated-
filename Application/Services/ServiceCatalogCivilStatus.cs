@@ -8,7 +8,7 @@ namespace Application.Services
 {
     public class ServiceCatalogCivilStatus : IServiceCatalog<CivilStatus>
     {
-        private CatalogContext _context;
+        private readonly CatalogContext _context;
 
         public ServiceCatalogCivilStatus(CatalogContext catalogContext) {
             _context = catalogContext;  
@@ -16,7 +16,7 @@ namespace Application.Services
 
         public async Task Delete(Guid id)
         {
-            _context.CivilStatus.Remove(await GetById(id));
+            _context.CivilStatus.Remove(new CivilStatus() { Id = id});
             await _context.SaveChangesAsync();
         }
 
@@ -24,9 +24,6 @@ namespace Application.Services
         {
             var catCivilStatis = await _context.CivilStatus
                            .ToListAsync();
-
-            if (catCivilStatis.Count == 0)
-                throw new CommonException("Table CivilStatus is not values", "GetAllAsync");
 
             return catCivilStatis;
         }

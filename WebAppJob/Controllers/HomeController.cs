@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Framework.Utilities2023.IServices;
 using Framework.Utilities202.Entities;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace WebAppJob.Controllers
 {
@@ -18,7 +19,7 @@ namespace WebAppJob.Controllers
     {
         private readonly IServiceUser _serviceUser;
         private readonly IServiceLogBook _logBook;
-        public HomeController(IServiceUser serviceUser, IServiceLogBook serviceLogBook)
+        public HomeController(IServiceUser serviceUser, IServiceLogBook serviceLogBook) : base(serviceLogBook)
         {
             _serviceUser = serviceUser;
             _logBook = serviceLogBook;
@@ -27,12 +28,12 @@ namespace WebAppJob.Controllers
 
         //[AuthFilter]
         [HttpGet]
-        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme,Roles ="Admin")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult Index(string userName)
         {
             try
             {
-                
+
                 return View();
             }
             catch (CommonException ex)
@@ -66,7 +67,7 @@ namespace WebAppJob.Controllers
         }
 
         [HttpGet]
-        public IActionResult SeeMyInformation()
+        public async Task<IActionResult> SeeMyInformation()
         {
             try
             {
@@ -75,7 +76,7 @@ namespace WebAppJob.Controllers
 
                 if (Guid.TryParse(idStr, out id))
                 {
-                    UserFkw userFkw = _serviceUser.GetUserById(id);
+                    UserFkw userFkw = await _serviceUser.GetUserById(id);
 
                     UserViewModel userViewModel = UserViewModel.Create(userFkw.Id, userFkw.UserName,
                         userFkw.DateCreated, Guid.NewGuid(), userFkw.UserInformation.Name,
@@ -86,7 +87,7 @@ namespace WebAppJob.Controllers
                     return View(userViewModel);
                 }
 
-                return RedirectToAction("Index","Login");
+                return RedirectToAction("Index", "Login");
 
             }
             catch (CommonException ex)
@@ -100,6 +101,41 @@ namespace WebAppJob.Controllers
 
 
         }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        [Route("/{id}")]
+        public async Task<IActionResult> EditInformation(UserViewModel userViewModel, string id)
+        {
+            UserFkw userFkw = await _serviceUser.GetUserById(Guid.Parse(id));
+
+            if (ModelState.IsValid)
+            {
+                userFkw.UserInformation.Address = userViewModel.Address;
+                userFkw.UserInformation.Name = userViewModel.Name;
+                userFkw.UserInformation.LastName = userViewModel.LastName;
+                userFkw.UserInformation.Age = userViewModel.Age;
+                userFkw.UserInformation.Email = userViewModel.Email;
+
+                var result = _serviceUser.UpdateUser(userFkw);
+
+                return RedirectToAction("SeeMyInformation", "Home");
+            }           
+
+            UserViewModel userViewModelRet = UserViewModel.Create(userFkw.Id, userFkw.UserName,
+                userFkw.DateCreated, Guid.NewGuid(), userFkw.UserInformation.Name,
+                userFkw.UserInformation.LastName, userFkw.UserInformation.Age,
+                userFkw.UserInformation.Address, userFkw.UserInformation.Email);
+
+            userViewModelRet.Address = userViewModel.Address;
+            userViewModelRet.Name = userViewModel.Name;
+            userViewModelRet.LastName = userViewModel.LastName;
+            userViewModelRet.Age = userViewModel.Age;
+            userViewModelRet.Email = userViewModel.Email;
+
+            return View("SeeMyInformation", userViewModelRet);
+        }
+
 
     }
 

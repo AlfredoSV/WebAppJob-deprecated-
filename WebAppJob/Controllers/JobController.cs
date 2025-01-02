@@ -2,6 +2,7 @@
 using AutoMapper;
 using Domain;
 using Domain.Entities;
+using Framework.Utilities2023.IServices;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ namespace WebAppJob.Controllers
         #endregion
 
         #region Constructors
-        public JobController(IServiceJob serviceJob, IMapper autoMapper, IServiceCatalog<Company> serviceCatalog, IServiceCatalog<Area> serviceCatalogArea)
+        public JobController(IServiceLogBook serviceLogBook , IServiceJob serviceJob, IMapper autoMapper, IServiceCatalog<Company> serviceCatalog, IServiceCatalog<Area> serviceCatalogArea):base(serviceLogBook)
         {
             _serviceCatalogArea = serviceCatalogArea;
             _serviceCatalogCompany = serviceCatalog;

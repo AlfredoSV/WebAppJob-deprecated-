@@ -20,7 +20,7 @@ namespace WebAppJob.Controllers
         private readonly IServiceLogin _serviceLogin;
         private readonly IServiceUser _serviceUser;
         private readonly IServiceLogBook _serviceLogBook;
-        public LoginController(IServiceUser serviceUser, IServiceLogin serviceLogin, IServiceLogBook serviceLogBook)
+        public LoginController(IServiceLogBook serviceLogBook, IServiceUser serviceUser, IServiceLogin serviceLogin):base(serviceLogBook)
         {
             this._serviceUser = serviceUser;
             this._serviceLogin = serviceLogin;
@@ -46,16 +46,17 @@ namespace WebAppJob.Controllers
         public IActionResult ForgotPassword() => View();
 
         [HttpPost]
-        public IActionResult LoginUser(string userName)
+        public async Task<IActionResult> LoginUser(string userName)
         {
             try
             {
-                if (_serviceUser.UserExistByUserName(userName))
+                if (await _serviceUser.UserExist(userName:userName))
                 {
                     return RedirectToAction("LoginValidation", "Login", new { userName });
                 }
+
                 LogBook logBook = LogBook.Create("HomeController", "Index", "Test1");
-                this._serviceLogBook.SaveInformationLog(logBook);
+                //await this._serviceLogBook.SaveInformationLog(logBook);
                 ModelState.AddModelError("UserName", "The user was not found");
 
             }
@@ -89,7 +90,7 @@ namespace WebAppJob.Controllers
                 if (!ModelState.IsValid)
                     return View("LoginValidation", new UserModel { UserName = user.UserName });
 
-                DtoLoginResponse userLogin = _serviceLogin.Login(login);
+                DtoLoginResponse userLogin = await _serviceLogin.Login(login);
 
                 if (userLogin.StatusLogin == StatusLogin.Ok)
                 {
@@ -139,8 +140,6 @@ namespace WebAppJob.Controllers
                 _serviceLogin.SignOut(userId);
                 HttpContext.Session.Remove("userId");
                 await HttpContext.SignOutAsync();
-                
-
             }
             catch (Exception ex)
             {
@@ -154,19 +153,16 @@ namespace WebAppJob.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ForgotPasswordRequest(UserForgotPasswordRequestViewModel userForgotPasswordRequest)
+        public async Task<IActionResult> ForgotPasswordRequest(UserForgotPasswordRequestViewModel userForgotPasswordRequest)
         {
             string urlBase = string.Empty;
 
             try
             {
-
                 if (!ModelState.IsValid)
                     return View("ForgotPassword", userForgotPasswordRequest);
 
-
-                if (!(_serviceUser.UserExistByUserName(userForgotPasswordRequest.UserName) &&
-                    _serviceUser.UserExistByEmail(userForgotPasswordRequest.Email)))
+                if (!(await _serviceUser.UserExist(userForgotPasswordRequest.Email, userForgotPasswordRequest.UserName)))
                 {
                     ModelState.AddModelError("UserName", "The user was not exist");
                     return View("ForgotPassword", userForgotPasswordRequest);
@@ -174,14 +170,13 @@ namespace WebAppJob.Controllers
 
                 urlBase = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" + "/ForgotPassword/ForgotPasswordChange";
 
-                _serviceLogin.GenerateChangePasswordRequest(userForgotPasswordRequest.UserName,
+                await _serviceLogin.GenerateChangePasswordRequest(userForgotPasswordRequest.UserName,
                     urlBase);
 
                 return RedirectToAction("Index", "Login");
             }
             catch (Exception)
             {
-
                 ModelState.AddModelError("Change Password", "An error occurred while update for the password of user");
             }
 
@@ -210,15 +205,14 @@ namespace WebAppJob.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SaveNewUser(UserViewModelRegister userViewModel)
+        public async Task<IActionResult> SaveNewUser(UserViewModelRegister userViewModel)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return View(viewName: "Register");
 
-                if (_serviceUser.UserExistByEmail(userViewModel.Email) ||
-                   _serviceUser.UserExistByUserName(userViewModel.UserName))
+                if (!(await _serviceUser.UserExist(userViewModel.Email, userViewModel.UserName)))
                 {
                     ModelState.AddModelError("UserName", "The username or email was registred");
                     return View(viewName: "Register");
@@ -231,19 +225,17 @@ namespace WebAppJob.Controllers
                     Guid.Parse("35AE4DB6-0243-4B44-9B8B-C4E49ABD17E3"));
 
                 userFkw.UserInformation = UserInformation.Create(
-                    userViewModel.UserName, userViewModel.LastName, userViewModel.Age,
+                    userViewModel.Name, userViewModel.LastName, userViewModel.Age,
                     string.Empty, userViewModel.Email, Guid.NewGuid());
 
-                _serviceUser.CreateUser(userFkw, false);
+                await _serviceUser.CreateUser(userFkw, false);
 
                 return RedirectToAction(actionName: "index", controllerName: "Login");
-
 
             }
             catch (Exception ex)
             {
-                SaveErrror(ex);
-                return View(viewName: "Register");
+                return View(viewName: "Error", new ErrorViewModel() { RequestId = SaveErrror(ex) });
             }
 
         }

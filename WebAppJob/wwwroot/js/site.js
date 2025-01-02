@@ -255,9 +255,9 @@ const getEdit = async (obj) => {
 
     try {
 
-        let responseHtml = await fetch(urlhtml);
-        let text = await responseHtml.text();
-        document.querySelector("#formJobedit").innerHTML = text;
+        let responseHtml = await fetch(urlhtml, options);
+        let responseModal = await responseHtml.text();
+        document.querySelector("#formJobedit").innerHTML = responseModal;
         $('#editJobModal').modal('show');
 
     } catch (error) {

@@ -1,5 +1,6 @@
 ﻿using Application.IServices;
 using Domain.Entities;
+using Framework.Utilities2023.IServices;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,8 +16,8 @@ namespace WebAppJob.Controllers
         private readonly IServiceCatalog<Area> _serviceCatalogArea;
         private readonly IServiceCatalog<Company> _serviceCatalogCompany;
 
-        public CatalogController(IServiceCatalog<Area> serviceCatalogArea,
-            IServiceCatalog<Company> serviceCatalogCompany)
+        public CatalogController(IServiceLogBook serviceLogBook, IServiceCatalog<Area> serviceCatalogArea,
+            IServiceCatalog<Company> serviceCatalogCompany):base(serviceLogBook)
         {
             _serviceCatalogArea = serviceCatalogArea;
             _serviceCatalogCompany = serviceCatalogCompany;

@@ -19,7 +19,7 @@ namespace WebAppJob.Filters
 			_serviceUser = new ServiceUser();
 		}
 
-		public void OnAuthorization(AuthorizationFilterContext context)
+		public async void OnAuthorization(AuthorizationFilterContext context)
 		{
 			
 			Guid id = Guid.Empty;
@@ -29,7 +29,7 @@ namespace WebAppJob.Filters
 
             if (Guid.TryParse(idStr, out id))
 			{
-				user = _serviceUser.GetUserById(id);
+				user = await _serviceUser.GetUserById(id);
 				userExist =  user != null;
 			}
 				
@@ -38,9 +38,8 @@ namespace WebAppJob.Filters
 				context.Result = new RedirectToRouteResult(new RouteValueDictionary
 					{{ "Controller", "Login" },
 					{ "Action", "Index" } });
-				context.Result.ExecuteResultAsync(context);
+				await context.Result.ExecuteResultAsync(context);
 			}
-
 
 		}
 	

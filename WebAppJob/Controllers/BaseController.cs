@@ -1,8 +1,13 @@
-﻿using Domain.Entities;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Domain.Entities;
 using Framework.Security2023.Dtos;
+using Framework.Utilities202.Entities;
+using Framework.Utilities2023.IServices;
+using Framework.Utilities2023.Log.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.CodeModifier.CodeChange;
 using NLog;
 using NLog.Web;
 using System.Security.Claims;
@@ -11,11 +16,11 @@ namespace WebAppJob.Controllers
 {
     public class BaseController : Controller
     {
-        public readonly Logger _logger;
+        public IServiceLogBook Log { get; set; }
 
-        public BaseController()
+        public BaseController(IServiceLogBook log)
         {
-            _logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+            this.Log = log;
         }
 
         protected async Task SignIn(DtoLoginResponse dtoLogin)
@@ -28,7 +33,7 @@ namespace WebAppJob.Controllers
             claims[0] = new Claim(ClaimTypes.Name, dtoLogin.User.UserName);
             claims[1] = new Claim(ClaimTypes.NameIdentifier, dtoLogin.User.Id.ToString());
             claims[2] = new Claim(ClaimTypes.Role, "Admin");
-            
+
             claimsIdentity.AddClaims(claims);
             claimsPrincipal.AddIdentity(claimsIdentity);
             HttpContext.Session.SetString("userId", dtoLogin.User.Id.ToString());
@@ -52,28 +57,17 @@ namespace WebAppJob.Controllers
             SaveErrror(ex, idError);
             return StatusCode(400, new
             {
-                err
-                = $"{ex.Message}-{ex.Source}"
+                err = $"{ex.Message}-{ex.Source}"
             });
         }
         protected Guid SaveErrror(Exception ex, Guid? idError = null)
         {
-            if(idError == null)
-                idError = Guid.NewGuid();
-
-            if (ex is CommonException)
-            {
-                _logger.Error($"{idError}:{ex.Message}-{ex.Source}");
-
-                return (Guid)idError;
-            }
-
-            _logger.Fatal($"{idError}:{ex}");
+            idError = idError == null ? Guid.NewGuid() : idError;
+            LogBook logBook = LogBook.Create(nameof(BaseController), nameof(SaveErrror), $"{ex.Message}-{ex.InnerException}");
+            logBook.IdName = (Guid)idError;
+            this.Log.SaveErrorLog(logBook);
 
             return (Guid)idError;
-
         }
-
-
     }
 }

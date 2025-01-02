@@ -1,5 +1,6 @@
 using Domain.Entities;
 using Domain.IRepositories;
+using Framework.Utilities2023.IServices;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
 
@@ -9,19 +10,22 @@ namespace Domain.Repositories
     {
         private readonly IDbContextFactory<JobContext> _jobContext;
 
-        public RepositoryJob(IDbContextFactory<JobContext> jobContext)
+        public IServiceLogBook ServiceLogBook { get; set; }
+
+        public RepositoryJob(IDbContextFactory<JobContext> jobContext, IServiceLogBook serviceLogBook)
         {
             _jobContext = jobContext;
+            this.ServiceLogBook = serviceLogBook;
         }
 
 
         public async Task<PaginationList<List<Job>>> ListJobsByPage(int page, int pageSize, string search)
         {
+            PaginationList<List<Job>> response = new PaginationList<List<Job>>();
+            
             try
             {
-                List<Job> jobs = new List<Job>();
-
-                PaginationList<List<Job>> response = new PaginationList<List<Job>>();
+                List<Job> jobs = new List<Job>();              
 
                 using (JobContext jobContext = _jobContext.CreateDbContext())
                 {
@@ -33,10 +37,7 @@ namespace Domain.Repositories
                             .Jobs.AsQueryable().Take(pageSize).Skip(page * pageSize).ToListAsync();
                         response.Count = jobContext
                             .Jobs.AsQueryable().Count();
-                    }
-
-
-                    if (!string.IsNullOrEmpty(search))
+                    }else 
                     {
                         response.Data = await jobContext
                             .Jobs.AsQueryable().Where(st => st.DescriptionJob.Contains(search) || 
@@ -48,16 +49,14 @@ namespace Domain.Repositories
 
                     }
                 }
-
-                return response;
+               
             }
             catch (Exception e)
             {
-
-                throw;
+                await this.ServiceLogBook.SaveErrorLog(e);
             }
 
-
+            return response;
         }
 
         public async Task<DtoResponse<Job>> GetJobById(Guid id)
@@ -75,10 +74,9 @@ namespace Domain.Repositories
             }
             catch (Exception e)
             {
-
-                throw;
+                await this.ServiceLogBook.SaveErrorLog(e);
             }
-
+            return DtoResponse<Job>.Create(new Job());
         }
 
         public async Task UpdateVacancyNumbers(Guid id)
@@ -100,10 +98,9 @@ namespace Domain.Repositories
                 }
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                await this.ServiceLogBook.SaveErrorLog(e);
             }
 
         }
@@ -123,9 +120,10 @@ namespace Domain.Repositories
             }
             catch (Exception e)
             {
-
-                throw;
+                await this.ServiceLogBook.SaveErrorLog(e);
             }
+
+            return DtoResponse<Competitor>.Create(new Competitor());
 
         }
 
@@ -139,15 +137,12 @@ namespace Domain.Repositories
                 {
                     await jobContext.AddAsync(applyCompetitorJob);
                     await jobContext.SaveChangesAsync();
-                    await Task.FromResult(applyCompetitorJob);
                 }
-
 
             }
             catch (Exception e)
             {
-
-                await Task.FromException(e);
+                await this.ServiceLogBook.SaveErrorLog(e);
             }
         }
 
@@ -165,9 +160,10 @@ namespace Domain.Repositories
 
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                await this.ServiceLogBook.SaveErrorLog(e);
+                return DtoResponse.Create(StatusRequest.Error);
             }
 
         }
@@ -188,10 +184,10 @@ namespace Domain.Repositories
             }
             catch (Exception e)
             {
-                await Task.FromException(e);
+                await this.ServiceLogBook.SaveErrorLog(e);
+                return DtoResponse.Create(StatusRequest.Error);
             }
 
-            return DtoResponse.Create(StatusRequest.OperationNotPerformed);
         }
 
         public async Task<DtoResponse> UpdateJob(Job job)
@@ -214,7 +210,8 @@ namespace Domain.Repositories
             }
             catch (Exception e)
             {
-                await Task.FromException(e);
+                await this.ServiceLogBook.SaveErrorLog(e);
+                return DtoResponse.Create(StatusRequest.Error);
             }
 
             return DtoResponse.Create(StatusRequest.OperationNotPerformed);

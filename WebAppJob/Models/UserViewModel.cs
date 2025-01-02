@@ -12,14 +12,21 @@ namespace WebAppJob.Models
 		public string ConfirmPasword { get; private set; }
 		public DateTime DateCreated { get; private set; }
 		public Guid RoleId { get; set; }
-		public string Name { get; private set; }
-		public string LastName { get; private set; }
-		public int Age { get; private set; }
+
+		[Required]
+		[StringLength(15)]
+		public string Name { get;  set; }
+		public string LastName { get;  set; }
+		public int Age { get;  set; }
 		public string Address { get; set; }
 		public string Email { get; set; }
 		public IFormFile CvFile { get; set; }
 
-		private UserViewModel(Guid id, string userName, DateTime dateCreated,
+        public UserViewModel()
+        {
+            
+        }
+        private UserViewModel(Guid id, string userName, DateTime dateCreated,
 			Guid roleId, string name, string lastName, int age, string address, string email)
 		{
 			Id = id;

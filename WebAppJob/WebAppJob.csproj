@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Framework.Utilities2023" Version="1.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.14" />
@@ -26,7 +27,7 @@
       <HintPath>..\Dependencies\Framework.Security2023.dll</HintPath>
     </Reference>
     <Reference Include="Framework.Utilities2023">
-      <HintPath>ResourcesLib\Framework.Utilities2023.dll</HintPath>
+      <HintPath>Dependencies\Framework.Utilities2023.dll</HintPath>
     </Reference>
   </ItemGroup>
 
