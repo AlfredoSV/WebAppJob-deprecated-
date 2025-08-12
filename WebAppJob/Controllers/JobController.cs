@@ -2,7 +2,7 @@
 using AutoMapper;
 using Domain;
 using Domain.Entities;
-using Framework.Utilities2023.IServices;
+using Framework.Utilities.IServices;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -126,21 +126,13 @@ namespace WebAppJob.Controllers
 
                 List<JobViewModel> jobsResult = new List<JobViewModel>();
 
-                DtoPaginationViewModel<JobViewModel> dtoPaginationViewModel =
-                new DtoPaginationViewModel<JobViewModel>();
+                DtoPaginationViewModel<JobViewModel> dtoPaginationViewModel = new DtoPaginationViewModel<JobViewModel>();
 
-                DtoResponse<List<Job>> response;
-
-                if (string.IsNullOrEmpty(searchText))
-                    searchText = string.Empty;
-
-                if (string.IsNullOrEmpty(citySearch))
-                    citySearch = string.Empty;
-
-                response = await _serviceJob.GetJobsList(page, pageSize, searchText, citySearch);
+                DtoResponse<List<Job>> response = await _serviceJob.GetJobsList(page, pageSize, searchText, citySearch);
 
                 _mapper.Map(response.Data, jobsResult);
                 dtoPaginationViewModel.Data = jobsResult;
+
                 dtoPaginationViewModel.PaginationViewModel = new PaginationViewModel()
                 {
                     TotalCount = response.Count,

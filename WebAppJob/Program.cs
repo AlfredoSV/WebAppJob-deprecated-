@@ -1,5 +1,4 @@
 using Framework.Security2023;
-using NLog;
 using NLog.Web;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
@@ -11,14 +10,9 @@ using Domain.IRepositories;
 using Domain.Repositories;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Framework.Utilities2023.Log.Services;
-using Framework.Utilities2023.IServices;
-using Framework.Utilities2023;
-using Framework.Utilities2023.Services;
+using Framework.Utilities.Services;
+using DocumentFormat.OpenXml.InkML;
 
-var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().
-    GetCurrentClassLogger();
-logger.Debug("init main");
 try
 {
     var builder = WebApplication.CreateBuilder(args);
@@ -35,7 +29,7 @@ try
         options.Events = new CookieAuthenticationEvents() { 
             OnRedirectToLogin = x =>
             {
-                x.Response.Redirect("Login");
+                x.Response.Redirect("/login");
                 return Task.CompletedTask;
             },
             OnRedirectToAccessDenied = x =>
@@ -62,6 +56,7 @@ try
     builder.Services.AddTransient<IRepositoryJob, RepositoryJob>();
     builder.Services.AddTransient<IServiceJob, ServiceJob>();
     builder.Services.AddTransient<IServiceUser, ServiceUser>();
+    builder.Services.AddTransient<IServiceRole, ServiceRole>();
     builder.Services.AddTransient<IServiceCatalog<Area>, ServiceCatalogArea>();
     builder.Services.AddTransient<IServiceCatalog<Company>, ServiceCatalogCompany>();
     builder.Services.AddInitialServices();
@@ -70,6 +65,7 @@ try
     //{
     //    options.IdleTimeout = TimeSpan.FromMinutes(60);
     //});
+
     builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
     builder.Services.AddDbContext<CatalogContext>(options => options.UseSqlServer(connectionStr));
     builder.Services.AddDbContextFactory<JobContext>(options => options.UseSqlServer(connectionStr));
@@ -114,13 +110,9 @@ try
 
     app.Run();
 }
-catch (Exception exception)
+catch (Exception ex)
 {
-    logger.Error(exception, "Stopped program because of exception");
     throw;
 }
-finally
-{
-    NLog.LogManager.Shutdown();
-}
+
 

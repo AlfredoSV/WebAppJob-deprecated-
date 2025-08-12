@@ -1,6 +1,6 @@
 ﻿using Application.IServices;
 using Domain.Entities;
-using Framework.Utilities2023.IServices;
+using Framework.Utilities.IServices;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +25,7 @@ namespace WebAppJob.Controllers
         }
 
         [HttpGet("[action]")]
-        [ResponseCache(Duration = 15)]    
+        [ResponseCache(Duration = 15, Location = ResponseCacheLocation.Client)]    
         public async Task<ActionResult> GetAreas()
         {
             try
@@ -45,7 +45,7 @@ namespace WebAppJob.Controllers
         }
 
         [HttpGet("[action]")]
-        [ResponseCache(Duration = 15)]
+        [ResponseCache(Duration = 15, Location = ResponseCacheLocation.Client)]
         public async Task<IActionResult> GetCompanies()
         {
             try

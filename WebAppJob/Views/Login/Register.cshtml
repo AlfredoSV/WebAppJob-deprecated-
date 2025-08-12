@@ -8,22 +8,28 @@
     <hr />
     <form asp-action="SaveNewUser" method="post" asp-controller="Login">
         <div class="row mt-3">
-            <div class="col-3">
+            <div class="col-2">
                 <div class="form-group">
                     <label class="control-label">User Name</label>
                     <input type="text" asp-for="UserName" class="form-control" />
                     <span class="text-danger" asp-validation-for="UserName"></span>
                 </div>
             </div>
-            <div class="col-3">
+            <div class="col-2">
                 <div class="form-group">
                     <label class="control-label">Email</label>
                     <input asp-for="Email" class="form-control" />
                     <span class="text-danger" asp-validation-for="Email"></span>
-
                 </div>
             </div>
             <div class="col-3">
+                <div class="form-group">
+                    <label class="control-label">Rol</label>
+                    <select class="form-control" size="1" asp-for="Roles"></select>
+                    <span class="text-danger" asp-validation-for="Roles"></span>
+                </div>
+            </div>
+            <div class="col-2">
                 <div class="form-group">
                     <label class="control-label">Password</label>
                     <input type="password" asp-for="Password" class="form-control" />
@@ -31,7 +37,7 @@
                 </div>
             </div>
 
-            <div class="col-3">
+            <div class="col-2">
                 <div class="form-group">
                     <label class="control-label">Confirm Password</label>
                     <input type="password" asp-for="ConfirmPassword" class="form-control" />
@@ -57,7 +63,6 @@
             </div>
         </div>
         <div class="row mt-3">
-           
             <div class="col-4">
                 <div class="form-group">
                     <label class="control-label">Birthdate</label>
@@ -85,13 +90,10 @@
 
     <div class="row mt-3">
         <div class="col d-flex justify-content-center">
-
             <a asp-action="Index" asp-fragment="Login">
                 Log in
             </a>
-
         </div>
-
     </div>
     <div class="row mt-3">
         <div class="form-group mt-3">

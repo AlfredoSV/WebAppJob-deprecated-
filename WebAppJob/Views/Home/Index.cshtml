@@ -10,27 +10,27 @@
 
 <div class="container-fluid cardSearch">
     <div class="mb-3 row">
-        <h3 class="titleCardSearch">@title.Value - @@User</h3>
+        <h3 class="titleCardSearch">@title.Value - @ViewData["userName"]</h3>
     </div>
 
     <div class="mb-3 row">
         <div class="col-lg-4 col-md-6 col-sm-12 m-b3">
-            <input type="text" id="searchText" placeholder="What, Keywords, Position" class="form-control input-text" />
+            <input type="text" id="searchText" placeholder="What, Keywords, Position" class="form-control form-control-sm input-text" />
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-            <input list="ubication" id="citySearch" placeholder="Where, City" class="form-control input-text">
+            <input list="ubication" id="citySearch" placeholder="Where, City" class="form-control form-control-sm input-text">
             <datalist id="ubication">
                 <option value="México"></option>
                 <option value="Rusia"></option>
             </datalist>
         </div>
         <div class="col-lg-1 mr-16 col-md-6 col-sm-12">
-            <button id="btnSearch" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+            <button id="btnSearch" class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 Search
             </button>
         </div>
         <div class="col-lg-2 col-md-6 col-sm-12">
-            <button class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" href="#" id="newJob">
+            <button class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium text-sm px-5 py-2 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" href="#" id="newJob">
                 New Job
             </button>
         </div>

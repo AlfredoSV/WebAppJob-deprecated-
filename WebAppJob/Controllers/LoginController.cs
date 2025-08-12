@@ -1,38 +1,36 @@
-﻿
-using Application.IServices;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Domain.Entities;
-using Framework.Security2023.Dtos;
+﻿using Framework.Security2023.Dtos;
 using Framework.Security2023.Entities;
 using Framework.Security2023.IServices;
-using Framework.Utilities202.Entities;
-using Framework.Utilities2023.IServices;
+using Framework.Utilities.Entities;
+using Framework.Utilities.IServices;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.InteropServices;
-using System.Security.Claims;
 using WebAppJob.Models;
 
 namespace WebAppJob.Controllers
 {
+    [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
     public class LoginController : BaseController
     {
         private readonly IServiceLogin _serviceLogin;
         private readonly IServiceUser _serviceUser;
-        private readonly IServiceLogBook _serviceLogBook;
-        public LoginController(IServiceLogBook serviceLogBook, IServiceUser serviceUser, IServiceLogin serviceLogin):base(serviceLogBook)
+        private readonly IServiceRole _serviceRole;
+        public LoginController(IServiceLogBook serviceLogBook, IServiceUser serviceUser, IServiceLogin serviceLogin, IServiceRole serviceRole) : base(serviceLogBook)
         {
+            this._serviceRole = serviceRole;
             this._serviceUser = serviceUser;
             this._serviceLogin = serviceLogin;
-            this._serviceLogBook = serviceLogBook;
         }
 
-        [HttpGet]
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+        [HttpGet("login")]
         public IActionResult Index()
         {
-
-            if (HttpContext.User.Identity.IsAuthenticated)
-                return RedirectToAction("Index", "Home", new { HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value });
+            if ((bool)User.Identity?.IsAuthenticated)
+            {
+                // Redirigir a página protegida si ya está autenticado
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -40,7 +38,10 @@ namespace WebAppJob.Controllers
         public IActionResult AccesDenied() => View();
 
         [HttpGet]
-        public IActionResult Register() => View();
+        public IActionResult Register()
+        {
+            return View(new UserViewModelRegister() { Roles = new List<Role>()});
+        }
 
         [HttpGet]
         public IActionResult ForgotPassword() => View();
@@ -50,33 +51,37 @@ namespace WebAppJob.Controllers
         {
             try
             {
-                if (await _serviceUser.UserExist(userName:userName))
+                if (await _serviceUser.UserExist(userName))
                 {
                     return RedirectToAction("LoginValidation", "Login", new { userName });
                 }
 
-                LogBook logBook = LogBook.Create("HomeController", "Index", "Test1");
-                //await this._serviceLogBook.SaveInformationLog(logBook);
+                await this.Log.SaveInformationLog(LogBook.Create("LoginController", "LoginUser", $"The user {userName} was not found"));
                 ModelState.AddModelError("UserName", "The user was not found");
-
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                ModelState.AddModelError("UserName", "An error occurred while searching for the user");
+                ModelState.AddModelError("UserName", $"An error occurred while searching for the user: {SaveErrror(ex)}");
             }
 
             return View("Index");
         }
 
+
         [HttpGet]
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         public IActionResult LoginValidation(string userName)
         {
-            if (HttpContext.User.Identity.IsAuthenticated)
-                return RedirectToAction("Index", "Home", new { HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.Name)).Value });
+            if ((bool)User.Identity?.IsAuthenticated)
+            {
+                // Redirigir a página protegida si ya está autenticado
+                return RedirectToAction("Index", "Home");
+            }
             UserModel user = new UserModel();
             user.UserName = userName;
             return View(user);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -85,21 +90,22 @@ namespace WebAppJob.Controllers
             try
             {
                 string errorMessage = string.Empty;
-                DtoLogin login = new DtoLogin() { UserName = user.UserName, Password = user.Password };
+                DtoLogin login = default;
 
                 if (!ModelState.IsValid)
+                {
                     return View("LoginValidation", new UserModel { UserName = user.UserName });
+                }
+
+                login = new DtoLogin() { UserName = user.UserName, Password = user.Password };
 
                 DtoLoginResponse userLogin = await _serviceLogin.Login(login);
 
-                if (userLogin.StatusLogin == StatusLogin.Ok)
-                {
-                    await SignIn(userLogin);
-                    return RedirectToAction("Index", "Home", new { user.UserName });
-                }
-
                 switch (userLogin.StatusLogin)
                 {
+                    case StatusLogin.Ok:
+                        await SignIn(userLogin);
+                        return RedirectToAction("Index", "Home", new { user.UserName });
                     case StatusLogin.UserOrPasswordIncorrect:
                         errorMessage = "Password Incorrect.";
                         break;
@@ -119,12 +125,13 @@ namespace WebAppJob.Controllers
                         break;
                 }
 
-                ModelState.AddModelError("UserName", errorMessage);
-
+                await this.Log.SaveErrorLog(LogBook.Create(nameof(LoginController), nameof(LoginValidation), errorMessage));
+                ModelState.AddModelError("UserName", "An error occurred.");
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("UserName", $"An error occurred while searching for the information of user, ticket:{SaveErrror(ex)}");
+                ModelState.AddModelError("UserName", $"An error occurred while searching for the information of user, ticket: {
+                    SaveErrror(ex)}");
             }
 
             return View("LoginValidation", new UserModel { UserName = user.UserName });
@@ -139,6 +146,7 @@ namespace WebAppJob.Controllers
                 Guid userId = Guid.Parse(HttpContext.Session.GetString("userId"));
                 _serviceLogin.SignOut(userId);
                 HttpContext.Session.Remove("userId");
+                HttpContext.Session.Remove("userName");
                 await HttpContext.SignOutAsync();
             }
             catch (Exception ex)
@@ -162,6 +170,7 @@ namespace WebAppJob.Controllers
                 if (!ModelState.IsValid)
                     return View("ForgotPassword", userForgotPasswordRequest);
 
+                //Revisa, porqué está mal
                 if (!(await _serviceUser.UserExist(userForgotPasswordRequest.Email, userForgotPasswordRequest.UserName)))
                 {
                     ModelState.AddModelError("UserName", "The user was not exist");
@@ -175,9 +184,9 @@ namespace WebAppJob.Controllers
 
                 return RedirectToAction("Index", "Login");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                ModelState.AddModelError("Change Password", "An error occurred while update for the password of user");
+                ModelState.AddModelError("Change Password", $"An error occurred while update for the password of user: {SaveErrror(ex)}");
             }
 
             return RedirectToAction("ForgotPassword", new { username = userForgotPasswordRequest.UserName });
@@ -192,14 +201,13 @@ namespace WebAppJob.Controllers
             {
                 return RedirectToAction("Index", "Login");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                ModelState.AddModelError("Change Password", "An error occurred while update for the password of user");
+                ModelState.AddModelError("Change Password", $"An error occurred while update for the password of user: {SaveErrror(ex)}");
             }
 
             return RedirectToAction("ForgotPassword", new { username = id });
-
         }
 
 
@@ -210,12 +218,14 @@ namespace WebAppJob.Controllers
             try
             {
                 if (!ModelState.IsValid)
+                {
                     return View(viewName: "Register");
-
+                }
+                    
                 if (!(await _serviceUser.UserExist(userViewModel.Email, userViewModel.UserName)))
                 {
                     ModelState.AddModelError("UserName", "The username or email was registred");
-                    return View(viewName: "Register");
+                    return View(viewName: "Register", userViewModel);
                 }
 
                 UserFkw userFkw = UserFkw.Create(

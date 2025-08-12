@@ -21,7 +21,6 @@ namespace WebAppJob.Filters
 
 		public async void OnAuthorization(AuthorizationFilterContext context)
 		{
-			
 			Guid id = Guid.Empty;
 			bool userExist = false;		
             string idStr = context.HttpContext.Session.GetString("userId") ?? "";

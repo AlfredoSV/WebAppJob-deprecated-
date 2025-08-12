@@ -1,15 +1,9 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Framework.Security2023.Dtos;
-using Framework.Utilities202.Entities;
-using Framework.Utilities2023.IServices;
-using Framework.Utilities2023.Log.Services;
+using Framework.Utilities.Entities;
+using Framework.Utilities.IServices;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.DotNet.Scaffolding.Shared.CodeModifier.CodeChange;
-using NLog;
-using NLog.Web;
 using System.Security.Claims;
 
 namespace WebAppJob.Controllers
@@ -25,18 +19,20 @@ namespace WebAppJob.Controllers
 
         protected async Task SignIn(DtoLoginResponse dtoLogin)
         {
-
             ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal();
             ClaimsIdentity claimsIdentity = new ClaimsIdentity("CookieAuth");
-            Claim[] claims = new Claim[3];
-
-            claims[0] = new Claim(ClaimTypes.Name, dtoLogin.User.UserName);
-            claims[1] = new Claim(ClaimTypes.NameIdentifier, dtoLogin.User.Id.ToString());
-            claims[2] = new Claim(ClaimTypes.Role, "Admin");
+            Claim[] claims =
+            [
+                new Claim(ClaimTypes.Name, dtoLogin.User.UserName),
+                new Claim(ClaimTypes.NameIdentifier, dtoLogin.User.Id.ToString()),
+                new Claim(ClaimTypes.Role, dtoLogin.User.Role.RolName),
+            ];
 
             claimsIdentity.AddClaims(claims);
             claimsPrincipal.AddIdentity(claimsIdentity);
+            //HttpContext.Response.Cookies.Append()
             HttpContext.Session.SetString("userId", dtoLogin.User.Id.ToString());
+            HttpContext.Session.SetString("userName", dtoLogin.User.UserName);
             await HttpContext.SignInAsync(claimsPrincipal);
         }
 
@@ -60,11 +56,12 @@ namespace WebAppJob.Controllers
                 err = $"{ex.Message}-{ex.Source}"
             });
         }
+
         protected Guid SaveErrror(Exception ex, Guid? idError = null)
         {
             idError = idError == null ? Guid.NewGuid() : idError;
             LogBook logBook = LogBook.Create(nameof(BaseController), nameof(SaveErrror), $"{ex.Message}-{ex.InnerException}");
-            logBook.IdName = (Guid)idError;
+            logBook.Id = (Guid)idError;
             this.Log.SaveErrorLog(logBook);
 
             return (Guid)idError;

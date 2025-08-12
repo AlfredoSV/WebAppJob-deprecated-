@@ -1,16 +1,12 @@
-﻿using Framework.Security2023;
-using Framework.Security2023.Entities;
+﻿using Framework.Security2023.Entities;
 using Microsoft.AspNetCore.Mvc;
 using WebAppJob.Models;
 using Framework.Security2023.IServices;
 using Domain.Entities;
-using DocumentFormat.OpenXml.InkML;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Framework.Utilities2023.IServices;
-using Framework.Utilities202.Entities;
-using DocumentFormat.OpenXml.Office2010.Excel;
+using Framework.Utilities.IServices;
+using WebAppJob.Filters;
 
 namespace WebAppJob.Controllers
 {
@@ -26,14 +22,15 @@ namespace WebAppJob.Controllers
 
         }
 
-        //[AuthFilter]
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+        [AuthFilter]
         [HttpGet]
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = "Admin")]
         public IActionResult Index(string userName)
         {
             try
             {
-
+                ViewData["userName"] = HttpContext.Session.GetString("userName");
                 return View();
             }
             catch (CommonException ex)
@@ -67,6 +64,7 @@ namespace WebAppJob.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Roles = "Admin")]
         public async Task<IActionResult> SeeMyInformation()
         {
             try
@@ -135,9 +133,5 @@ namespace WebAppJob.Controllers
 
             return View("SeeMyInformation", userViewModelRet);
         }
-
-
     }
-
-
 }

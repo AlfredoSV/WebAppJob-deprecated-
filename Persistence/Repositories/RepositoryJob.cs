@@ -1,6 +1,6 @@
 using Domain.Entities;
 using Domain.IRepositories;
-using Framework.Utilities2023.IServices;
+using Framework.Utilities.IServices;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
 
@@ -69,8 +69,6 @@ namespace Domain.Repositories
                     return DtoResponse<Job>.Create(await
                         jobContext.Jobs.AsQueryable().FirstOrDefaultAsync(j => j.Id.Equals(id)));
                 }
-
-
             }
             catch (Exception e)
             {
@@ -94,7 +92,6 @@ namespace Domain.Repositories
                     job.VacancyNumbers = job.VacancyNumbers - 1;
                     jobContext.Jobs.Update(job);
                     await jobContext.SaveChangesAsync();         
-
                 }
 
             }
@@ -109,13 +106,11 @@ namespace Domain.Repositories
         {
             try
             {
-
                 using (JobContext jobContext = _jobContext.CreateDbContext())
                 {
                     return DtoResponse<Competitor>.Create(await
                         jobContext.Competitors.AsQueryable().FirstOrDefaultAsync(j => j.Id.Equals(id)));
                 }
-
 
             }
             catch (Exception e)
